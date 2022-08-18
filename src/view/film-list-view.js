@@ -2,13 +2,14 @@ import { getFilmListTemplate } from '../template/film-list-template';
 import AbstractView from './abstrack-view';
 
 export default class FilmListView extends AbstractView {
-  constructor(isTitleHidden, isExtra) {
+  constructor(films, title, isExtra) {
     super();
-    this.isTitleHidden = isTitleHidden;
+    this.title = title;
     this.isExtra = isExtra;
+    this.films = films;
   }
 
   innerGetTemlate() {
-    return getFilmListTemplate(this.isTitleHidden, this.isExtra);
+    return getFilmListTemplate(this.title, this.isExtra);
   }
 }
