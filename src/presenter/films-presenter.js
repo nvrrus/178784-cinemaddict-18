@@ -1,36 +1,37 @@
 import { Constants } from '../constants.module';
+import FilmsModel from '../model/films';
 import { render } from '../render';
 import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 
 export default class FilmsPresenter {
-  init = (mainContainer) => {
+  init = (filmsModel) => {
+    const mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
+    const allFilms = filmsModel.get();
+    const allFilmsView = new FilmListView(allFilms, null, false);
 
-    const filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
-    const allFilmsView = new FilmListView(true, false);
-    const allFilmsConainer = allFilmsView.getElement().querySelector(Constants.FILMS_CONTAINER_SELECTOR);
+    const topRatedFilms = allFilms.sort(FilmsModel.compareByRatingDesc).slice(0, Constants.TOP_RATED_FILMS_COUNT);
+    const topRatedFilmsView = new FilmListView(topRatedFilms, 'Top rated', true);
 
-    const topRatedFilmsView = new FilmListView(false, true);
-    const topRatedFilmsContainer = topRatedFilmsView.getElement().querySelector(Constants.FILMS_CONTAINER_SELECTOR);
+    const mostCommentedFilms = allFilms.sort(FilmsModel.compareByCommentsCountDesc).slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
+    const mostCommentedFilmsView = new FilmListView(mostCommentedFilms, 'Most commented', true);
 
-    const mostCommentedFilmsView = new FilmListView(false, true);
-    const mostCommentedFilmsContainer = mostCommentedFilmsView.getElement().querySelector(Constants.FILMS_CONTAINER_SELECTOR);
+    this.filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
 
-    render(allFilmsView, filmsContainer);
-    for (let i = 0; i < 4; i++) {
-      render(new FilmCardView(), allFilmsConainer);
-    }
+    this.renderFilms(allFilmsView, allFilms);
     render(new ShowMoreButtonView(), allFilmsView.element);
 
-    render(topRatedFilmsView, filmsContainer);
-    for (let i = 0; i < 2; i++) {
-      render(new FilmCardView(), topRatedFilmsContainer);
-    }
-
-    render(mostCommentedFilmsView, filmsContainer);
-    for (let i = 0; i < 2; i++) {
-      render(new FilmCardView(), mostCommentedFilmsContainer);
-    }
+    this.renderFilms(topRatedFilmsView, topRatedFilms);
+    this.renderFilms(mostCommentedFilmsView, mostCommentedFilms);
   };
+
+  renderFilms(filmsView, films) {
+    render(filmsView, this.filmsContainer);
+
+    const allFilmsConainer = filmsView.getElement().querySelector(Constants.FILMS_CONTAINER_SELECTOR);
+    for (const film of films) {
+      render(new FilmCardView(film), allFilmsConainer);
+    }
+  }
 }
