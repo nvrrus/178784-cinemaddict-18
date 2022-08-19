@@ -1,10 +1,12 @@
+import { formatStringToDate, formatMinutesToTime } from '../utils';
+
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
 export const getFilterPopupTemplate = (film) =>
 {
-  const { poster, title, rating, director, writers, actors, releaseDate, duration,
-    country, age, genres, description, commentIds } = film;
+  const { poster, title, alternativeTitle, rating, director, writers, actors, release, runtime,
+    age, genres, description, comments } = film;
   return `
   <section class="film-details">
     <div class="film-details__inner">
@@ -23,7 +25,7 @@ export const getFilterPopupTemplate = (film) =>
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
                 <h3 class="film-details__title">${title}</h3>
-                <p class="film-details__title-original">Original: ${title}</p>
+                <p class="film-details__title-original">Original: ${alternativeTitle}</p>
               </div>
 
               <div class="film-details__rating">
@@ -38,23 +40,23 @@ export const getFilterPopupTemplate = (film) =>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers}</td>
+                <td class="film-details__cell">${writers.join(', ')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${actors}</td>
+                <td class="film-details__cell">${actors.join(', ')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate}</td>
+                <td class="film-details__cell">${formatStringToDate(release.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${duration}</td>
+                <td class="film-details__cell">${formatMinutesToTime(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${country}</td>
+                <td class="film-details__cell">${release.country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
@@ -79,7 +81,7 @@ export const getFilterPopupTemplate = (film) =>
 
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentIds.length}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
 

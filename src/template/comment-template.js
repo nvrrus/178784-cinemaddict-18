@@ -1,18 +1,16 @@
-import moment from 'moment';
+import { formatStringToDateAndTime, getEmojiUrl } from '../utils';
 
-const formatDate = (date) => moment(date).format('YYYY/MM/DD HH:mm');
-
-export const getCommentTemplate = (comment) => {
-  const { emoji, text, author, date } = comment;
+export const getCommentTemplate = (commentObj) => {
+  const { emotion, comment, author, date } = commentObj;
   return ` <li class="film-details__comment">
   <span class="film-details__comment-emoji">
-    <img src="${emoji}" width="55" height="55" alt="emoji-smile">
+    <img src="${getEmojiUrl(emotion)}" width="55" height="55" alt="emoji-smile">
   </span>
   <div>
-    <p class="film-details__comment-text">${text}</p>
+    <p class="film-details__comment-text">${comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${formatDate(date)}</span>
+      <span class="film-details__comment-day">${formatStringToDateAndTime(date)}</span>
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>

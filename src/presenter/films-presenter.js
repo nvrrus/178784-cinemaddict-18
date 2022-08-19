@@ -8,7 +8,7 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 export default class FilmsPresenter {
   init = (filmsModel) => {
     const mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
-    const allFilms = filmsModel.getFilms();
+    const allFilms = filmsModel.get();
     const allFilmsView = new FilmListView(allFilms, null, false);
 
     const topRatedFilms = allFilms.sort(FilmsModel.compareByRatingDesc).slice(0, Constants.TOP_RATED_FILMS_COUNT);
