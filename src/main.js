@@ -1,7 +1,6 @@
 import { Constants } from './constants.module.js';
 import CommentsModel from './model/comments.js';
 import FilmsModel from './model/films.js';
-import FilmPopupPresenter from './presenter/film-popup-presenter.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import { render, RenderPosition } from './render.js';
 import FiltersView from './view/fliters-view.js';
@@ -17,5 +16,4 @@ render(new ProfileView(), headerContainer);
 render(new FiltersView(), mainContainer, RenderPosition.AFTERBEGIN);
 render(new SortView(), mainContainer, RenderPosition.AFTERBEGIN);
 
-new FilmsPresenter().init(filmsModel);
-new FilmPopupPresenter().init(filmsModel, commentsModel);
+new FilmsPresenter(filmsModel, commentsModel).init();
