@@ -10,7 +10,7 @@ export default class FilmPopupPresenter {
     const footerContainer = document.querySelector(Constants.FOOTER_SELECTOR);
     const randomFilm = getRandomElement(filmsModel.get());
     const filmPopupView = new FilmPopupView(randomFilm);
-    const commentsListContainer = filmPopupView.getElement().querySelector(Constants.COMMENTS_CONTAINER_SELECTOR);
+    const commentsListContainer = filmPopupView.element.querySelector(Constants.COMMENTS_CONTAINER_SELECTOR);
     const filmComments = commentsModel.get(randomFilm);
 
     render(filmPopupView, footerContainer);

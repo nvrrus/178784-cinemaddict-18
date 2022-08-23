@@ -1,16 +1,21 @@
 import { createElement } from '../render';
 
 export default class AbstractView {
-  getElement() {
-    if (this.element) {
-      return this.element;
+  #element;
+  get element() {
+    if (this.#element) {
+      return this.#element;
     }
 
-    this.element = createElement(this.innerGetTemlate());
-    return this.element;
+    this.#element = createElement(this._innerGetTemlate());
+    return this.#element;
   }
 
-  innerGetTemlate() {
+  removeElement() {
+    this.#element = null;
+  }
+
+  _innerGetTemlate() {
     throw new Error('Method must be implemented in extend class');
   }
 }

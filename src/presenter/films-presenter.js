@@ -6,6 +6,7 @@ import FilmListView from '../view/film-list-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 
 export default class FilmsPresenter {
+  #filmsContainer;
   init = (filmsModel) => {
     const mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
     const allFilms = filmsModel.get();
@@ -17,19 +18,19 @@ export default class FilmsPresenter {
     const mostCommentedFilms = allFilms.sort(FilmsModel.compareByCommentsCountDesc).slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
     const mostCommentedFilmsView = new FilmListView(mostCommentedFilms, 'Most commented', true);
 
-    this.filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
+    this.#filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
 
-    this.renderFilms(allFilmsView, allFilms);
+    this.#renderFilms(allFilmsView, allFilms);
     render(new ShowMoreButtonView(), allFilmsView.element);
 
-    this.renderFilms(topRatedFilmsView, topRatedFilms);
-    this.renderFilms(mostCommentedFilmsView, mostCommentedFilms);
+    this.#renderFilms(topRatedFilmsView, topRatedFilms);
+    this.#renderFilms(mostCommentedFilmsView, mostCommentedFilms);
   };
 
-  renderFilms(filmsView, films) {
-    render(filmsView, this.filmsContainer);
+  #renderFilms(filmsView, films) {
+    render(filmsView, this.#filmsContainer);
 
-    const allFilmsConainer = filmsView.getElement().querySelector(Constants.FILMS_CONTAINER_SELECTOR);
+    const allFilmsConainer = filmsView.element.querySelector(Constants.FILMS_CONTAINER_SELECTOR);
     for (const film of films) {
       render(new FilmCardView(film), allFilmsConainer);
     }
