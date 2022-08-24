@@ -5,6 +5,13 @@ export const Constants = {
   FILMS_SELECTOR: '.films',
   FILMS_CONTAINER_SELECTOR: '.films-list__container',
   COMMENTS_CONTAINER_SELECTOR: '.film-details__comments-list',
+  FILM_POSTER_SELECTOR: '.film-card__poster',
+  FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
+  BODY_SELECTOR: 'body',
+  HIDE_OVERFLOW_CLASS: 'hide-overflow',
+  CLICK_EVENT_TYPE: 'click',
+  KEYDOWN_EVENT_TYPE: 'keydown',
+  ESCAPE_KEY: 'Escape',
   TOP_RATED_FILMS_COUNT: 2,
   MOST_COMMENTED_FILMS_COUNT: 2,
 };
