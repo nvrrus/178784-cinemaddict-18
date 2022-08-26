@@ -1,7 +1,7 @@
 import { getRandomArray, getRandomElement, getRandomFloat, getRandomInteger } from '../utils';
 import { getComment } from './mock-comment';
 import dayjs from 'dayjs';
-import { Constants } from './const';
+import { MockConstants } from './mock-constants';
 
 const getRuntime = () => `${getRandomInteger(1, 3)}h ${getRandomFloat(1, 59)}m`;
 
@@ -12,23 +12,23 @@ const getReleaseDate = () => {
   return dayjs(new Date(year, month, day));
 };
 
-const getCountry = () => getRandomElement(Constants.COUNTRIES);
+const getCountry = () => getRandomElement(MockConstants.COUNTRIES);
 
 export const getFilm = () =>
 {
   const comments = Array.from({length: getRandomInteger(1, 15)}, getComment);
   return {
-    title: getRandomElement(Constants.TITLES),
-    alternativeTitle: getRandomElement(Constants.ALTERNATIVE_TITLES),
+    title: getRandomElement(MockConstants.TITLES),
+    alternativeTitle: getRandomElement(MockConstants.ALTERNATIVE_TITLES),
     rating: getRandomFloat(1, 10, 1),
     year: getRandomInteger(1951, 2022),
     runtime: getRuntime(),
-    genres: getRandomArray(Constants.GENRES),
-    poster: `./images/posters/${getRandomElement(Constants.POSTERS)}`,
-    description: getRandomElement(Constants.DESCRIPTION),
-    director: getRandomElement(Constants.DIRECTORS),
-    writers: getRandomArray(Constants.WRITERS),
-    actors: getRandomArray(Constants.ACTORS),
+    genres: getRandomArray(MockConstants.GENRES),
+    poster: `./images/posters/${getRandomElement(MockConstants.POSTERS)}`,
+    description: getRandomElement(MockConstants.DESCRIPTION),
+    director: getRandomElement(MockConstants.DIRECTORS),
+    writers: getRandomArray(MockConstants.WRITERS),
+    actors: getRandomArray(MockConstants.ACTORS),
     release: {
       date: getReleaseDate(),
       country: getCountry(),

@@ -25,13 +25,13 @@ export default class FilmsPresenter {
   init = () => {
     const mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
     const allFilms = this.#filmsModel.get();
-    const allFilmsView = new FilmListView(allFilms, null, false);
+    const allFilmsView = new FilmListView(null, false);
 
     const topRatedFilms = allFilms.sort(compareFilmsByRatingDesc).slice(0, Constants.TOP_RATED_FILMS_COUNT);
-    const topRatedFilmsView = new FilmListView(topRatedFilms, 'Top rated', true);
+    const topRatedFilmsView = new FilmListView('Top rated', true);
 
     const mostCommentedFilms = allFilms.sort(compareFilmsByCommentsCountDesc).slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
-    const mostCommentedFilmsView = new FilmListView(mostCommentedFilms, 'Most commented', true);
+    const mostCommentedFilmsView = new FilmListView('Most commented', true);
 
     this.#filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
 
