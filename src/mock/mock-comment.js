@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRandomElement, getRandomInteger } from '../utils';
-import { Constants } from './const';
+import { MockConstants } from './mock-constants';
 
 const startCommentDate = dayjs('2022-08-01T13:12:34');
 const allCommentByIds = new Map();
@@ -11,9 +11,9 @@ const getNewCommentDate = () => startCommentDate.add(getRandomInteger(1, 10), 'm
 export const getComment = () => {
   const newComment = {
     id: currentId++,
-    comment: getRandomElement(Constants.COMMENTS),
-    author: getRandomElement(Constants.AUTHORS),
-    emotion: getRandomElement(Constants.EMOJIES),
+    comment: getRandomElement(MockConstants.COMMENTS),
+    author: getRandomElement(MockConstants.AUTHORS),
+    emotion: getRandomElement(MockConstants.EMOJIES),
     date: getNewCommentDate(),
   };
   allCommentByIds.set(newComment.id, newComment);

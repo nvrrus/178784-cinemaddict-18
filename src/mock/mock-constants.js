@@ -1,4 +1,4 @@
-export const Constants = {
+export const MockConstants = {
   TITLES:  ['Santa Claus Conquers the Martians', 'Popeye the Sailor Meets Sindbad the Sailor',
     'The Man with the Golden Arm', 'The Great Flamarion'],
   ALTERNATIVE_TITLES:  ['Phasellus eros mauris', 'condimentum sed nibh vitae', 'sodales efficitur ipsum', 'Sed blandit', 'eros vel aliquam faucibus'],
@@ -17,5 +17,6 @@ export const Constants = {
   COMMENTS: ['Interesting setting and a good cast', 'Booooooooooring', 'Very very old. Meh',
     'Almost two hours? Seriously?'],
   EMOJIES: ['angry', 'puke', 'sleeping', 'smile'],
-  AUTHORS: ['John Doe', 'Tim Macoveev', 'Joe Trumen', 'Harry Pother']
+  AUTHORS: ['John Doe', 'Tim Macoveev', 'Joe Trumen', 'Harry Pother'],
+  FILMS_COUNT: 12,
 };
