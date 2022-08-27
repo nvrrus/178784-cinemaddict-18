@@ -18,5 +18,5 @@ export const MockConstants = {
     'Almost two hours? Seriously?'],
   EMOJIES: ['angry', 'puke', 'sleeping', 'smile'],
   AUTHORS: ['John Doe', 'Tim Macoveev', 'Joe Trumen', 'Harry Pother'],
-  FILMS_COUNT: 23,
+  FILMS_COUNT: 12,
 };
