@@ -1,8 +1,8 @@
 import { Constants } from './constants.module.js';
+import { render, RenderPosition } from './framework/render.js';
 import CommentsModel from './model/comments.js';
 import FilmsModel from './model/films.js';
 import FilmsPresenter from './presenter/films-presenter.js';
-import { render, RenderPosition } from './render.js';
 import FiltersView from './view/fliters-view.js';
 import ProfileView from './view/profile-view.js';
 import SortView from './view/sort-view.js';

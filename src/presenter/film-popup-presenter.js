@@ -1,7 +1,7 @@
 import { Constants } from '../constants.module';
+import { render } from '../framework/render';
 import CommentsModel from '../model/comments';
-import { render } from '../render';
-import { getRandomElement } from '../utils';
+import { getRandomElement } from '../utils/film';
 import FilmCommentView from '../view/comment-view';
 import FilmPopupView from '../view/film-popup-view';
 

@@ -1,7 +1,8 @@
 import Batcher from '../batcher';
 import { Constants } from '../constants.module';
-import { render } from '../render';
-import { compareCommentsByDate, compareFilmsByCommentsCountDesc, compareFilmsByRatingDesc, isEscapeKey } from '../utils';
+import { remove, render } from '../framework/render';
+import { isEscapeKey } from '../utils/common';
+import { compareCommentsByDate, compareFilmsByCommentsCountDesc, compareFilmsByRatingDesc } from '../utils/film';
 import FilmCommentView from '../view/comment-view';
 import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
@@ -10,7 +11,10 @@ import ShowMoreButtonView from '../view/show-more-button-view';
 
 export default class FilmsPresenter {
   #filmsContainer;
+
+  /** @type {FilmsModel} */
   #filmsModel;
+
   #commentsModel;
   #bodyElement;
   #footerElement;
@@ -20,10 +24,14 @@ export default class FilmsPresenter {
   #topRatedFilmsView;
   #mostCommentedFilms;
   #mostCommentedFilmsView;
+
+  /** @type {FilmPopupView} */
   #filmPopupView;
 
   /** @type {Batcher} */
   #batcher;
+
+  /** @type {ShowMoreButtonView} */
   #showMoreButtonView;
 
   constructor(filmsModel, commentsModel) {
@@ -59,7 +67,7 @@ export default class FilmsPresenter {
     if (this.#batcher.isAny()) {
       this.#showMoreButtonView = new ShowMoreButtonView();
       render(this.#showMoreButtonView, this.#allFilmsView.element);
-      this.#showMoreButtonView.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onShowMoreClick);
+      this.#showMoreButtonView.setClickHandler(this.#onShowMoreClick);
     } else {
       this.#hideShowMoreButton();
     }
@@ -95,16 +103,16 @@ export default class FilmsPresenter {
   #renderFilmCard(film, filmsContainer) {
     const filmView = new FilmCardView(film);
     render(filmView, filmsContainer);
-    filmView.element.querySelector(Constants.FILM_POSTER_SELECTOR)
-      .addEventListener('click', this.#onFilmPosterClick.bind(this, film));
+    filmView.setPosterClickHandler(this.#onFilmPosterClick);
   }
 
   #hideShowMoreButton() {
-    this.#showMoreButtonView.element.remove();
+    remove(this.#showMoreButtonView);
     this.#showMoreButtonView.element.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onShowMoreClick);
   }
 
-  #onFilmPosterClick(film) {
+  #onFilmPosterClick = (evt) => {
+    const film = this.#filmsModel.getById(+evt.target.dataset.id);
     this.#filmPopupView = new FilmPopupView(film);
     const commentsListContainer = this.#filmPopupView.element.querySelector(Constants.COMMENTS_CONTAINER_SELECTOR);
     const filmComments = this.#commentsModel.get(film);
@@ -116,25 +124,22 @@ export default class FilmsPresenter {
       .sort(compareCommentsByDate)
       .forEach((comment) => render(new FilmCommentView(comment), commentsListContainer));
 
-    this.#filmPopupView.element.querySelector(Constants.FILM_POPUP_CLOSE_BTN_SELECTOR)
-      .addEventListener(Constants.CLICK_EVENT_TYPE, () => this.#onClickPopupCloseBtn.call(this));
+    this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
+    document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
+  };
 
-    document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, (evt) => this.#onPopupEscapeKeyDown.call(this, evt));
-  }
-
-  #onPopupEscapeKeyDown(evt) {
+  #onPopupEscapeKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       this.#removePopup();
     }
-  }
+  };
 
-  #onClickPopupCloseBtn() {
+  #onClickPopupCloseBtn = () => {
     this.#removePopup();
-  }
+  };
 
   #removePopup() {
-    this.#footerElement.removeChild(this.#filmPopupView.element);
-    this.#filmPopupView.removeElement();
+    remove(this.#filmPopupView);
     this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);
     document.removeEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
     document.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickPopupCloseBtn);

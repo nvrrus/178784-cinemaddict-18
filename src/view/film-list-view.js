@@ -1,5 +1,5 @@
+import AbstractView from '../framework/view/abstract-view';
 import { getFilmListTemplate } from '../template/film-list-template';
-import AbstractView from './abstrack-view';
 
 export default class FilmListView extends AbstractView {
   #title;
@@ -11,7 +11,7 @@ export default class FilmListView extends AbstractView {
     this.#isExtra = isExtra;
   }
 
-  _innerGetTemlate() {
+  get template() {
     return getFilmListTemplate(this.#title, this.#isExtra);
   }
 }
