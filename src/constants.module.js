@@ -3,7 +3,7 @@ export const Constants = {
   MAIN_SELECTOR: '.main',
   FOOTER_SELECTOR: '.footer',
   FILMS_SELECTOR: '.films',
-  FILMS_CONTAINER_SELECTOR: '.films-list__container',
+  FILM_CARDS_CONTAINER_SELECTOR: '.films-list__container',
   COMMENTS_CONTAINER_SELECTOR: '.film-details__comments-list',
   FILM_POSTER_SELECTOR: '.film-card__poster',
   FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
