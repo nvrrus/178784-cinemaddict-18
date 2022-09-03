@@ -1,8 +1,9 @@
 import { Constants } from './constants.module.js';
+import { render, RenderPosition } from './framework/render.js';
 import CommentsModel from './model/comments.js';
 import FilmsModel from './model/films.js';
+import FilmPopupPresenter from './presenter/film-popup-presenter.js';
 import FilmsPresenter from './presenter/films-presenter.js';
-import { render, RenderPosition } from './render.js';
 import FiltersView from './view/fliters-view.js';
 import ProfileView from './view/profile-view.js';
 import SortView from './view/sort-view.js';
@@ -12,8 +13,14 @@ const mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 
+const bodyElement = document.querySelector(Constants.BODY_SELECTOR);
+const footerElement = document.querySelector(Constants.FOOTER_SELECTOR);
+const filmsContainer = mainContainer.querySelector(Constants.FILMS_SELECTOR);
+
 render(new ProfileView(), headerContainer);
 render(new FiltersView(), mainContainer, RenderPosition.AFTERBEGIN);
 render(new SortView(), mainContainer, RenderPosition.AFTERBEGIN);
 
-new FilmsPresenter(filmsModel, commentsModel).init();
+const filmPopupPresenter = new FilmPopupPresenter(commentsModel, footerElement, bodyElement);
+const filmsPresenter = new FilmsPresenter(filmPopupPresenter, filmsModel, filmsContainer);
+filmsPresenter.init();

@@ -1,6 +1,6 @@
-export const getFilmListTemplate = (title, isExtra) => `
+export const getFilmListTemplate = (title) => `
 
-  <section class="films-list ${isExtra ? 'films-list--extra' : ''}">
+  <section class="films-list ${title ? 'films-list--extra' : ''}">
     <h2 class="films-list__title ${title ? '' : 'visually-hidden'}">${title}</h2>
 
     <div class="films-list__container">

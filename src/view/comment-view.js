@@ -1,5 +1,5 @@
+import AbstractView from '../framework/view/abstract-view';
 import { getCommentTemplate } from '../template/comment-template';
-import AbstractView from './abstrack-view';
 
 export default class FilmCommentView extends AbstractView {
   #comment;
@@ -8,7 +8,7 @@ export default class FilmCommentView extends AbstractView {
     this.#comment = comment;
   }
 
-  _innerGetTemlate() {
+  get template() {
     return getCommentTemplate(this.#comment);
   }
 }

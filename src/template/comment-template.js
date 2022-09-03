@@ -1,4 +1,4 @@
-import { formatStringToDateAndTime, getEmojiUrl } from '../utils';
+import { formatStringToDateAndTime, getEmojiUrl } from '../utils/film';
 
 export const getCommentTemplate = (commentObj) => {
   const { emotion, comment, author, date } = commentObj;

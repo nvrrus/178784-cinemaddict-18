@@ -1,4 +1,4 @@
-import { formatStringToDate, formatMinutesToTime } from '../utils';
+import { formatStringToDate, formatMinutesToTime } from '../utils/film';
 
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');

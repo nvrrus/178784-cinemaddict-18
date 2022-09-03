@@ -1,7 +1,7 @@
-import { getRandomArray, getRandomElement, getRandomFloat, getRandomInteger } from '../utils';
 import { getComment } from './mock-comment';
 import dayjs from 'dayjs';
 import { MockConstants } from './mock-constants';
+import { getRandomArray, getRandomElement, getRandomFloat, getRandomInteger } from '../utils/common';
 
 const getRuntime = () => `${getRandomInteger(1, 3)}h ${getRandomFloat(1, 59)}m`;
 
@@ -14,10 +14,12 @@ const getReleaseDate = () => {
 
 const getCountry = () => getRandomElement(MockConstants.COUNTRIES);
 
+let currentId = 1;
 export const getFilm = () =>
 {
   const comments = Array.from({length: getRandomInteger(1, 15)}, getComment);
   return {
+    id: currentId++,
     title: getRandomElement(MockConstants.TITLES),
     alternativeTitle: getRandomElement(MockConstants.ALTERNATIVE_TITLES),
     rating: getRandomFloat(1, 10, 1),

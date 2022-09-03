@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomElement, getRandomInteger } from '../utils';
+import { getRandomElement, getRandomInteger } from '../utils/common';
 import { MockConstants } from './mock-constants';
 
 const startCommentDate = dayjs('2022-08-01T13:12:34');

@@ -1,7 +1,7 @@
-import { formatMinutesToTime } from '../utils';
+import { formatMinutesToTime } from '../utils/film';
 
 export const getFilmCardTemlate = (film) => {
-  const { title, rating, year, runtime, genres, poster, description, comments } = film;
+  const { id, title, rating, year, runtime, genres, poster, description, comments } = film;
   return `<article class="film-card">
     <a class="film-card__link">
       <h3 class="film-card__title">${title}</h3>
@@ -11,7 +11,7 @@ export const getFilmCardTemlate = (film) => {
         <span class="film-card__duration">${formatMinutesToTime(runtime)}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
-      <img src="${poster}" alt="" class="film-card__poster">
+      <img src="${poster}" alt="" class="film-card__poster" data-id="${id}">
       <p class="film-card__description">${description}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
