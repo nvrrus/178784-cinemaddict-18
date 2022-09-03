@@ -3,7 +3,7 @@ import { formatStringToDate, formatMinutesToTime } from '../utils/film';
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
-export const getFilterPopupTemplate = (film) =>
+export const getFilterPopupTemplate = (film, commentsTemplate) =>
 {
   const { poster, title, alternativeTitle, rating, director, writers, actors, release, runtime,
     age, genres, description, comments } = film;
@@ -84,7 +84,7 @@ export const getFilterPopupTemplate = (film) =>
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-
+            ${commentsTemplate}
           </ul>
 
           <form class="film-details__new-comment" action="" method="get">

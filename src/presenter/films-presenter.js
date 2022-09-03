@@ -20,9 +20,6 @@ export default class FilmsPresenter {
   /** @type {FilmListView} */
   #allFilmListView;
 
-  /** @type {FilmPopupView} */
-  #filmPopupView;
-
   /** @type {Batcher} */
   #batcher;
 
@@ -75,13 +72,19 @@ export default class FilmsPresenter {
 
   #renderTopRated() {
     const topRatedFilmListView = new FilmListView('Top rated', true);
-    const topRatedFilms = this.#allFilms.sort(compareFilmsByRatingDesc).slice(0, Constants.TOP_RATED_FILMS_COUNT);
+    const topRatedFilms = this.#allFilms
+      .slice()
+      .sort(compareFilmsByRatingDesc)
+      .slice(0, Constants.TOP_RATED_FILMS_COUNT);
     this.#renderFilmList(topRatedFilmListView, topRatedFilms);
   }
 
   #renderMostCommented() {
     const mostCommentedFilmListView = new FilmListView('Most commented', true);
-    const mostCommentedFilms = this.#allFilms.sort(compareFilmsByCommentsCountDesc).slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
+    const mostCommentedFilms = this.#allFilms
+      .slice()
+      .sort(compareFilmsByCommentsCountDesc)
+      .slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
     this.#renderFilmList(mostCommentedFilmListView, mostCommentedFilms);
   }
 
@@ -89,17 +92,6 @@ export default class FilmsPresenter {
     render(filmListView, this.#filmsContainer);
     this.#allFilmListView.setClickHandler(this.#onFilmPosterClick);
     this.#renderFilmCards(filmListView, films);
-  }
-
-  #onShowMoreClick = () => this.#showMore();
-
-  #showMore() {
-    const batch = this.#batcher.nextBatch();
-
-    this.#renderFilmCards(this.#allFilmListView, batch);
-    if (!this.#batcher.isAny()) {
-      this.#hideShowMoreButton();
-    }
   }
 
   #renderFilmCards(filmListView, films) {
@@ -112,6 +104,14 @@ export default class FilmsPresenter {
   #renderFilmCard(film, filmsContainer) {
     const filmView = new FilmCardView(film);
     render(filmView, filmsContainer);
+  }
+
+  #onShowMoreClick = () => {
+    const batch = this.#batcher.nextBatch();
+    this.#renderFilmCards(this.#allFilmListView, batch);
+    if (!this.#batcher.isAny()) {
+      this.#hideShowMoreButton();
+    }
   }
 
   #hideShowMoreButton() {

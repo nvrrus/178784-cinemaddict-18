@@ -1,8 +1,6 @@
 import { Constants } from '../constants.module';
 import { remove, render } from '../framework/render';
 import { isEscapeKey } from '../utils/common';
-import { compareCommentsByDate } from '../utils/film';
-import FilmCommentView from '../view/comment-view';
 import FilmPopupView from '../view/film-popup-view';
 
 export default class FilmPopupPresenter {
@@ -18,17 +16,10 @@ export default class FilmPopupPresenter {
   }
 
   init = (film) => {
-    this.#filmPopupView = new FilmPopupView(film);
-    const commentsListContainer = this.#filmPopupView.element.querySelector(Constants.COMMENTS_CONTAINER_SELECTOR);
-    const filmComments = this.#commentsModel.get(film);
-
+    const filmComments = this.#commentsModel.get(film.id);
+    this.#filmPopupView = new FilmPopupView(film, filmComments);
     render(this.#filmPopupView, this.#footerElement);
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
-
-    filmComments
-      .sort(compareCommentsByDate)
-      .forEach((comment) => render(new FilmCommentView(comment), commentsListContainer));
-
     this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
     document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
   };

@@ -1,16 +1,30 @@
 import { Constants } from '../constants.module';
 import AbstractView from '../framework/view/abstract-view';
+import CommentsModel from '../model/comments';
 import { getFilterPopupTemplate } from '../template/film-popup-template';
+import { compareCommentsByDate } from '../utils/film';
+import FilmCommentView from './comment-view';
 
 export default class FilmPopupView extends AbstractView {
   #film;
-  constructor(film) {
+
+  /** @type {Array} */
+  #filmComments;
+    
+  constructor(film, filmComments) {
     super();
     this.#film = film;
+    this.#filmComments = filmComments;
   }
 
   get template() {
-    return getFilterPopupTemplate(this.#film);
+  const commentsTemplate = this.#filmComments
+    .slice()
+    .sort(compareCommentsByDate)
+    .map((comment) => new FilmCommentView(comment).template)
+    .join('');
+
+    return getFilterPopupTemplate(this.#film, commentsTemplate);
   }
 
   setCloseClickHandler(callback) {
