@@ -4,7 +4,6 @@ import { getFilmListTemplate } from '../template/film-list-template';
 
 export default class FilmListView extends AbstractView {
   #title;
-  #isExtra;
 
   constructor(title) {
     super();
@@ -12,21 +11,60 @@ export default class FilmListView extends AbstractView {
   }
 
   get template() {
-    return getFilmListTemplate(this.#title, this.#isExtra);
+    return getFilmListTemplate(this.#title);
   }
 
   getFilmCardsContainer() {
     return this.element.querySelector(Constants.FILM_CARDS_CONTAINER_SELECTOR);
   }
 
-  setClickHandler(callback) {
-    this._callback.click = callback;
+  setClickHandlers(posterClick, controlButtonClick) {
+    this._callback.posterClick = posterClick;
+    this._callback.controlButtonClick = controlButtonClick;
+    
     this.element.querySelector(Constants.FILM_CARDS_CONTAINER_SELECTOR)
       .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
   }
 
   #onClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.click(evt);
+    
+    const filmId = this.#getFilmId(evt.target);
+    if (!filmId) {
+      return;
+    }
+
+    if (evt.target.tagName === Constants.IMG_TAG) {
+      this._callback.posterClick(filmId);
+      return;
+    } 
+    
+    if (evt.target.tagName !== Constants.BUTTON_TAG) {
+      return;
+    }
+
+    if (evt.target.classList.contains(Constants.TO_FAVORITE_CARD_BTN_CLASS)) {
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.favorite, filmId);
+      return;
+    }
+
+    if (evt.target.classList.contains(Constants.TO_WATCH_LIST_CARD_BTN_CLASS)) {
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watchlist, filmId);
+      return;
+    }
+
+    if (evt.target.classList.contains(Constants.MARK_WATCHED_CARD_BTN_CLASS)) {
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watched, filmId);
+    }
   };
+
+  #getFilmId = (targetElement) => {
+    while (targetElement) {
+      if ('id' in targetElement.dataset) {
+        return targetElement.dataset.id;
+      }
+      
+      targetElement = targetElement.parentElement;
+    }
+  }
 }

@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { MockConstants } from './mock-constants';
 import { getRandomArray, getRandomElement, getRandomFloat, getRandomInteger } from '../utils/common';
 import { createFilmComments } from './mock-comment';
+import { nanoid } from 'nanoid';
 
 const getRuntime = () => `${getRandomInteger(1, 3)}h ${getRandomFloat(1, 59)}m`;
 
@@ -12,13 +13,28 @@ const getReleaseDate = () => {
   return dayjs(new Date(year, month, day));
 };
 
+const getWatchingDate = (alreadyWatched) => {
+  if (!alreadyWatched) {
+    return null;
+  }
+  const year = getRandomInteger(2018, 2022);
+  const month = getRandomInteger(1, 12);
+  const day = getRandomInteger(1, 28);
+  return dayjs(new Date(year, month, day)).toISOString();
+}
+
 const getCountry = () => getRandomElement(MockConstants.COUNTRIES);
 
-let currentId = 0;
+const isInWatchList = () => Boolean(getRandomInteger(0, 1));
+const isAlreadyWatched = () => Boolean(getRandomInteger(0, 1));
+const isFavorite = () => Boolean(getRandomInteger(0, 1));
+
 export const getFilm = () =>
 {
+  const filmId = nanoid();
+  const alreadyWatched = isAlreadyWatched();
   return {
-    id: ++currentId,
+    id: filmId,
     title: getRandomElement(MockConstants.TITLES),
     alternativeTitle: getRandomElement(MockConstants.ALTERNATIVE_TITLES),
     rating: getRandomFloat(1, 10, 1),
@@ -35,7 +51,11 @@ export const getFilm = () =>
       country: getCountry(),
     },
     age: getRandomInteger(0, 18),
-    comments: createFilmComments(currentId)
+    comments: createFilmComments(filmId),
+    isInWatchlist: isInWatchList(),
+    isAlreadyWatched: alreadyWatched,
+    watchingDate: getWatchingDate(alreadyWatched),
+    isFavorite: isFavorite()
   };
 };
 

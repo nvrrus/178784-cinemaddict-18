@@ -1,16 +1,15 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { getRandomElement, getRandomInteger } from '../utils/common';
 import { MockConstants } from './mock-constants';
 
 const startCommentDate = dayjs('2022-08-01T13:12:34');
 const commentsByFilmIds = new Map();
-let currentId = 1;
-
 const getNewCommentDate = () => startCommentDate.add(getRandomInteger(1, 10), 'minutes').toDate();
 
 const getComment = () => {
   const newComment = {
-    id: currentId++,
+    id: nanoid(),
     comment: getRandomElement(MockConstants.COMMENTS),
     author: getRandomElement(MockConstants.AUTHORS),
     emotion: getRandomElement(MockConstants.EMOJIES),

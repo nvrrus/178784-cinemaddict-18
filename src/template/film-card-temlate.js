@@ -1,8 +1,42 @@
+import { Constants } from '../constants.module';
 import { formatMinutesToTime } from '../utils/film';
 
+const getButtonTypeClass = (buttonType) => {
+  switch(buttonType) {
+    case 'watchlist':
+      return 'film-card__controls-item--add-to-watchlist';
+    case 'watched': 
+      return 'film-card__controls-item--mark-as-watched';
+    case 'favorite':
+      return 'film-card__controls-item--favorite';
+    default:
+      throw new Error($`Control type: ${buttonType} not supported`);
+  }
+}
+
+const getButtonName = (buttonType, isActive) => {
+  switch(buttonType) {
+    case 'watchlist':
+      return isActive ? 'Already in watchlist' : 'Add to watchlist';
+    case 'watched': 
+      return isActive ? 'Already watched' : 'Mark as watched';
+    case 'favorite':
+      return isActive ? 'Already favorite' : 'Mark as favorite';
+    default:
+      throw new Error($`Control type: ${buttonType} not supported`);
+  }
+}
+
+const getControlButton = (buttonType, isActive) => {
+  return `<button class="film-card__controls-item ${getButtonTypeClass(buttonType)} 
+    ${isActive ? 'film-card__controls-item--active' : ''}" type="button">
+    ${getButtonName(buttonType, isActive)}</button>`
+}
+
 export const getFilmCardTemlate = (film) => {
-  const { id, title, rating, year, runtime, genres, poster, description, comments } = film;
-  return `<article class="film-card">
+  const { id, title, rating, year, runtime, genres, poster, description, comments,
+    isInWatchlist, isAlreadyWatched, isFavorite } = film;
+  return `<article class="film-card"  data-id="${id}">
     <a class="film-card__link">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
@@ -11,14 +45,14 @@ export const getFilmCardTemlate = (film) => {
         <span class="film-card__duration">${formatMinutesToTime(runtime)}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
-      <img src="${poster}" alt="" class="film-card__poster" data-id="${id}">
+      <img src="${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
-      <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-      <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
-      <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+      ${getControlButton(Constants.CONTROL_BTN_TYPE.watchlist, isInWatchlist)}
+      ${getControlButton(Constants.CONTROL_BTN_TYPE.watched, isAlreadyWatched)}
+      ${getControlButton(Constants.CONTROL_BTN_TYPE.favorite, isFavorite)}
     </div>
   </article>`;
 };

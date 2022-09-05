@@ -8,11 +8,24 @@ export const Constants = {
   FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
   FILM_LIST_EMPTY_TITLE: 'There are no movies in our database',
   BODY_SELECTOR: 'body',
+  TO_FAVORITE_CARD_BTN_CLASS: 'film-card__controls-item--favorite',
+  TO_WATCH_LIST_CARD_BTN_CLASS: 'film-card__controls-item--add-to-watchlist',
+  MARK_WATCHED_CARD_BTN_CLASS: 'film-card__controls-item--mark-as-watched',
+  TO_FAVORITE_POPUP_BTN_CLASS: 'film-details__control-button--favorite',
+  TO_WATCH_LIST_POPUP_BTN_CLASS: 'film-details__control-button--watchlist',
+  MARK_WATCHED_POPUP_BTN_CLASS: 'film-details__control-button--watched',
   HIDE_OVERFLOW_CLASS: 'hide-overflow',
+  IMG_TAG: "IMG",
+  BUTTON_TAG: "BUTTON",
   CLICK_EVENT_TYPE: 'click',
   KEYDOWN_EVENT_TYPE: 'keydown',
   ESCAPE_KEY: 'Escape',
   TOP_RATED_FILMS_COUNT: 2,
   MOST_COMMENTED_FILMS_COUNT: 2,
-  FILMS_BATCH_SIZE: 5
+  FILMS_BATCH_SIZE: 5,
+  CONTROL_BTN_TYPE: {
+    watchlist: 'watchlist',
+    favorite: 'favorite',
+    watched: 'watched'
+  }
 };

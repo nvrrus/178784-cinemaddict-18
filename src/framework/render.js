@@ -26,7 +26,7 @@ const createElement = (template) => {
  * @param {HTMLElement} container Элемент в котором будет отрисован компонент
  * @param {string} place Позиция компонента относительно контейнера. По умолчанию - `beforeend`
  */
-const render = (component, container, place = RenderPosition.BEFOREEND) => {
+const render = (component, container, place = RenderPosition.BEFOREEND) => {  
   if (!(component instanceof AbstractView)) {
     throw new Error('Can render only components');
   }
