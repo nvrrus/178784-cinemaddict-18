@@ -37,8 +37,8 @@ export default class FilmPopupView extends AbstractView {
     this._callback.click(evt);
   };
 
-  setControlButtonClickHandlers(onControlButtonClick) {
-    this._callback.controlButtonClick = onControlButtonClick;
+  setControlButtonClickHandlers(callback) {
+    this._callback.controlButtonClick = callback;
     this.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
   }
 
@@ -50,17 +50,17 @@ export default class FilmPopupView extends AbstractView {
     }
 
     if (evt.target.classList.contains(Constants.TO_FAVORITE_POPUP_BTN_CLASS)) {
-      this._callback.onControlButtonClick(Constants.CONTROL_BTN_TYPE.favorite, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.favorite, this.#film.id);
       return;
     }
 
     if (evt.target.classList.contains(Constants.TO_WATCH_LIST_POPUP_BTN_CLASS)) {
-      this._callback.addToWatchList(Constants.CONTROL_BTN_TYPE.watchlist, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watchlist, this.#film.id);
       return;
     }
 
     if (evt.target.classList.contains(Constants.MARK_WATCHED_POPUP_BTN_CLASS)) {
-      this._callback.markAsWatched(Constants.CONTROL_BTN_TYPE.watched, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watched, this.#film.id);
     }
   };
 }
