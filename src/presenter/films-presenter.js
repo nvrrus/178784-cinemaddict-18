@@ -22,6 +22,12 @@ export default class FilmsPresenter {
   /** @type {FilmListView} */
   #allFilmListView;
 
+  /** @type {FilmListView} */
+  #topRatedFilmListView;
+
+  /** @type {FilmListView} */
+  #mostCommentedFilmListView;
+
   /** @type {Batcher} */
   #batcher;
 
@@ -33,8 +39,6 @@ export default class FilmsPresenter {
 
   /** @type {FilmPopupPresenter} */
   #filmPopupPresenter;
-
-  #filmViewByFilmIds = new Map();
 
   constructor(filtersPresenter, filmPopupPresenter, filmsModel, filmsContainer) {
     this.#filtersPresenter = filtersPresenter;
@@ -64,7 +68,6 @@ export default class FilmsPresenter {
 
   #renderEmptyFilmList() {
     this.#allFilmListView = new FilmListView(Constants.FILM_LIST_EMPTY_TITLE);
-    render(this.#allFilmListView, this.#filmsContainer);
   }
 
   #renderMainFilms() {
@@ -74,27 +77,25 @@ export default class FilmsPresenter {
       this.#showMoreButtonView = new ShowMoreButtonView();
       render(this.#showMoreButtonView, this.#allFilmListView.element);
       this.#showMoreButtonView.setClickHandler(this.#onShowMoreClick);
-    } else {
-      this.#hideShowMoreButton();
-    }
+    } 
   }
 
   #renderTopRated() {
-    const topRatedFilmListView = new FilmListView('Top rated');
+    this.#topRatedFilmListView = new FilmListView('Top rated');
     const topRatedFilms = this.#allFilms
       .slice()
       .sort(compareFilmsByRatingDesc)
       .slice(0, Constants.TOP_RATED_FILMS_COUNT);
-    this.#renderFilmList(topRatedFilmListView, topRatedFilms);
+    this.#renderFilmList(this.#topRatedFilmListView, topRatedFilms);
   }
 
   #renderMostCommented() {
-    const mostCommentedFilmListView = new FilmListView('Most commented');
+    this.#mostCommentedFilmListView = new FilmListView('Most commented');
     const mostCommentedFilms = this.#allFilms
       .slice()
       .sort(compareFilmsByCommentsCountDesc)
       .slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
-    this.#renderFilmList(mostCommentedFilmListView, mostCommentedFilms);
+    this.#renderFilmList(this.#mostCommentedFilmListView, mostCommentedFilms);
   }
 
   /** 
@@ -112,16 +113,18 @@ export default class FilmsPresenter {
    * @param {Array} films 
    * */
   #renderFilmCards(filmListView, films) {
-    const filmCardsConainer = filmListView.getFilmCardsContainer();
+    
+    const filmCardsConainer = filmListView.getFilmCardListContainer();
     for (const film of films) {
-      this.#renderFilmCard(film, filmCardsConainer);
+      console.log('#renderFilmCard', film, filmCardsConainer.classList);
+      filmListView.filmViewByFilmIds.set(film.id, this.#renderFilmCard(film, filmCardsConainer));
     }
   }
 
   #renderFilmCard(film, filmsContainer) {
     const filmView = new FilmCardView(film);
     render(filmView, filmsContainer);
-    this.#filmViewByFilmIds.set(film.id, filmView);
+    return filmView;
   }
 
   #onShowMoreClick = () => {
@@ -157,16 +160,41 @@ export default class FilmsPresenter {
     }
 
     this.#filtersPresenter.init(this.#allFilms);
+    
     this.#updateFilmCard(filmId);
   };
 
   #updateFilmCard(filmId) {
     const film = this.#filmsModel.getById(filmId);
+    this.#tryUpdateFilmCard(this.#allFilmListView, film);
+    this.#tryUpdateFilmCard(this.#topRatedFilmListView, film);
+    this.#tryUpdateFilmCard(this.#mostCommentedFilmListView, film);
+    this.#updatePopup(film);
+  }
+
+  /**
+   * 
+   * @param {FilmListView} listView 
+   * @param {Object} film
+   */
+  #tryUpdateFilmCard(listView, film) {
+    if (!listView.filmViewByFilmIds.has(film.id)) {
+      return;
+    }
+
     const newFilmView = new FilmCardView(film);
-    const oldFilmView = this.#filmViewByFilmIds.get(filmId);
+    const oldFilmView = listView.filmViewByFilmIds.get(film.id);
+
     replace(newFilmView, oldFilmView);
     oldFilmView.removeElement();
-    this.#filmViewByFilmIds.set(filmId, newFilmView);
+    listView.filmViewByFilmIds.set(film.id, newFilmView);
+  }
+
+  /**
+   * 
+   * @param {Object} film 
+   */
+  #updatePopup(film) {
     this.#filmPopupPresenter.updateFilm(film);
     this.#filmPopupPresenter.setClickHandlers(this.#onControlButtonClick);
   }

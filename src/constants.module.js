@@ -27,5 +27,6 @@ export const Constants = {
     watchlist: 'watchlist',
     favorite: 'favorite',
     watched: 'watched'
-  }
+  },
+  FILM_ID_DATA_ATTRIBUTE: 'id'
 };

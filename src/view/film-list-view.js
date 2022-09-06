@@ -3,26 +3,31 @@ import AbstractView from '../framework/view/abstract-view';
 import { getFilmListTemplate } from '../template/film-list-template';
 
 export default class FilmListView extends AbstractView {
+  static #objectIndex = 0;
+  #listId;
   #title;
+  filmViewByFilmIds = new Map();
 
   constructor(title) {
     super();
     this.#title = title;
+    this.#listId = ++FilmListView.#objectIndex;
   }
 
   get template() {
-    return getFilmListTemplate(this.#title);
+    return getFilmListTemplate(this.#title, this.#listId);
   }
 
-  getFilmCardsContainer() {
-    return this.element.querySelector(Constants.FILM_CARDS_CONTAINER_SELECTOR);
+  getFilmCardListContainer() {
+    const cardListSelector = `${Constants.FILM_CARDS_CONTAINER_SELECTOR}--${this.#listId}`;
+    return this.element.querySelector(cardListSelector);
   }
 
-  setClickHandlers(posterClick, controlButtonClick) {
+  setClickHandlers = (posterClick, controlButtonClick) => {
     this._callback.posterClick = posterClick;
     this._callback.controlButtonClick = controlButtonClick;
     
-    this.element.querySelector(Constants.FILM_CARDS_CONTAINER_SELECTOR)
+    this.getFilmCardListContainer()
       .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
   }
 
@@ -60,7 +65,7 @@ export default class FilmListView extends AbstractView {
 
   #getFilmId = (targetElement) => {
     while (targetElement) {
-      if ('id' in targetElement.dataset) {
+      if (Constants.FILM_ID_DATA_ATTRIBUTE in targetElement.dataset) {
         return targetElement.dataset.id;
       }
       
