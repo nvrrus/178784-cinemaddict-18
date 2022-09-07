@@ -1,5 +1,5 @@
 import { Constants } from '../constants.module';
-import { remove, render } from '../framework/render';
+import { remove, render, replace } from '../framework/render';
 import { isEscapeKey } from '../utils/common';
 import FilmPopupView from '../view/film-popup-view';
 
@@ -18,21 +18,23 @@ export default class FilmPopupPresenter {
   }
 
   init = (film) => {
-    this.#renderPopup(film);
+    const filmComments = this.#commentsModel.get(film.id);
+    if (!this.#filmPopupView) {
+      this.#filmPopupView = new FilmPopupView(film, filmComments);
+      render(this.#filmPopupView, this.#footerElement);      
+    } else {
+      const newfilmPopupView = new FilmPopupView(film, filmComments);
+      replace(newfilmPopupView, this.#filmPopupView);
+      this.#filmPopupView = newfilmPopupView;
+    }
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
+    this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
     document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
   };
 
   #onClickPopupCloseBtn = () => {
     this.#removePopup();
   };
-
-  #renderPopup(film) {
-    const filmComments = this.#commentsModel.get(film.id);
-    this.#filmPopupView = new FilmPopupView(film, filmComments);
-    render(this.#filmPopupView, this.#footerElement);
-    this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
-  }
 
   #onPopupEscapeKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
@@ -52,16 +54,9 @@ export default class FilmPopupPresenter {
     document.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickPopupCloseBtn);
   }
 
-  setClickHandlers(onControlButtonClick) {
+  setControlButtonClickHandler(onControlButtonClick) {
     if (this.#filmPopupView) {
-      this.#filmPopupView.setControlButtonClickHandlers(onControlButtonClick);
-    }
-  }
-
-  updateFilm(film) {
-    if (this.#filmPopupView) {
-      remove(this.#filmPopupView);
-      this.#renderPopup(film);
+      this.#filmPopupView.setControlButtonClickHandler(onControlButtonClick);
     }
   }
 }

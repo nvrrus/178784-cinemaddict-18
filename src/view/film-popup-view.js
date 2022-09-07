@@ -37,7 +37,7 @@ export default class FilmPopupView extends AbstractView {
     this._callback.click(evt);
   };
 
-  setControlButtonClickHandlers(callback) {
+  setControlButtonClickHandler(callback) {
     this._callback.controlButtonClick = callback;
     this.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
   }

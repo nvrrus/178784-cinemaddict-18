@@ -116,7 +116,6 @@ export default class FilmsPresenter {
     
     const filmCardsConainer = filmListView.getFilmCardListContainer();
     for (const film of films) {
-      console.log('#renderFilmCard', film, filmCardsConainer.classList);
       filmListView.filmViewByFilmIds.set(film.id, this.#renderFilmCard(film, filmCardsConainer));
     }
   }
@@ -143,7 +142,7 @@ export default class FilmsPresenter {
   #onPosterClick = (filmId) => {
     const film = this.#filmsModel.getById(filmId);
     this.#filmPopupPresenter.init(film);
-    this.#filmPopupPresenter.setClickHandlers(this.#onControlButtonClick);
+    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
   };
 
   #onControlButtonClick = (controlType, filmId) => {
@@ -195,7 +194,7 @@ export default class FilmsPresenter {
    * @param {Object} film 
    */
   #updatePopup(film) {
-    this.#filmPopupPresenter.updateFilm(film);
-    this.#filmPopupPresenter.setClickHandlers(this.#onControlButtonClick);
+    this.#filmPopupPresenter.init(film);
+    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
   }
 }
