@@ -19,18 +19,27 @@ export default class FilmPopupPresenter {
 
   init = (film) => {
     const filmComments = this.#commentsModel.get(film.id);
+
     if (!this.#filmPopupView) {
       this.#filmPopupView = new FilmPopupView(film, filmComments);
-      render(this.#filmPopupView, this.#footerElement);      
+      render(this.#filmPopupView, this.#footerElement);
     } else {
       const newfilmPopupView = new FilmPopupView(film, filmComments);
       replace(newfilmPopupView, this.#filmPopupView);
       this.#filmPopupView = newfilmPopupView;
     }
+
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
     this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
     document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
   };
+
+  isOpened() {
+    if (this.#filmPopupView) {
+      return true;
+    }
+    return false;
+  }
 
   #onClickPopupCloseBtn = () => {
     this.#removePopup();
@@ -46,7 +55,7 @@ export default class FilmPopupPresenter {
     if (!this.#filmPopupView) {
       return;
     }
-    
+
     remove(this.#filmPopupView);
     this.#filmPopupView = null;
     this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);

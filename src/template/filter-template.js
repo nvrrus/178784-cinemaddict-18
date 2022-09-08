@@ -1,17 +1,17 @@
-/** 
+/**
  * @param {Array} films
  */
-const getWatchListCount = (films) => films.filter(film => film.isInWatchlist).length;
+const getWatchListCount = (films) => films.filter((film) => film.isInWatchlist).length;
 
-/** 
+/**
  * @param {Array} films
  */
- const getFavoritesCount = (films) => films.filter(film => film.isFavorite).length;
+const getFavoritesCount = (films) => films.filter((film) => film.isFavorite).length;
 
-/** 
+/**
  * @param {Array} films
  */
- const getAlreadyWachedCount = (films) => films.filter(film => film.isAlreadyWatched).length;
+const getAlreadyWachedCount = (films) => films.filter((film) => film.isAlreadyWatched).length;
 
 export const getFiltersTemplate = (allFilms) => `
 <nav class="main-navigation">

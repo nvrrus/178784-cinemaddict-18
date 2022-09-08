@@ -2,44 +2,43 @@ import { Constants } from '../constants.module';
 import { formatStringToDate, formatMinutesToTime } from '../utils/film';
 
 const getButtonTypeClass = (buttonType) => {
-  switch(buttonType) {
-    case 'watchlist':
+  switch (buttonType) {
+    case Constants.CONTROL_BTN_TYPE.watchlist:
       return 'film-details__control-button--watchlist';
-    case 'watched': 
+    case Constants.CONTROL_BTN_TYPE.watched:
       return 'film-details__control-button--watched';
-    case 'favorite':
+    case Constants.CONTROL_BTN_TYPE.favorite:
       return 'film-details__control-button--favorite';
     default:
-      throw new Error($`Control type: ${buttonType} not supported`);
+      throw new Error(`Control type: ${buttonType} not supported`);
   }
-}
+};
 
 const getButtonName = (buttonType, isActive) => {
-  switch(buttonType) {
+  switch (buttonType) {
     case 'watchlist':
       return isActive ? 'Already watchlist' : 'Add to watchlist';
-    case 'watched': 
+    case 'watched':
       return isActive ? 'Already watched' : 'Mark as watched';
     case 'favorite':
       return isActive ? 'Already favorite' : 'Mark as favorite';
     default:
-      throw new Error($`Control type: ${buttonType} not supported`);
+      throw new Error(`Control type: ${buttonType} not supported`);
   }
-}
+};
 
 const getControlButton = (buttonType, isActive) => {
-  const res =  `<button type="button" class="film-details__control-button 
+  const res = `<button type="button" class="film-details__control-button
     ${getButtonTypeClass(buttonType)}
-    ${isActive ? 'film-details__control-button--active' : ''}" 
-    id="${buttonType}" name="${buttonType}">${getButtonName(buttonType, isActive)}</button>`
+    ${isActive ? 'film-details__control-button--active' : ''}"
+    id="${buttonType}" name="${buttonType}">${getButtonName(buttonType, isActive)}</button>`;
   return res;
-}
+};
 
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
-export const getFilterPopupTemplate = (film, commentsTemplate) =>
-{
+export const getFilterPopupTemplate = (film, commentsTemplate) => {
   const { poster, title, alternativeTitle, rating, director, writers, actors, release, runtime,
     age, genres, description, comments, isInWatchlist, isAlreadyWatched, isFavorite } = film;
   return `

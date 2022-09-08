@@ -5,7 +5,6 @@ import FilmsModel from './model/films.js';
 import FilmPopupPresenter from './presenter/film-popup-presenter.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
-import FiltersView from './view/fliters-view.js';
 import ProfileView from './view/profile-view.js';
 import SortView from './view/sort-view.js';
 

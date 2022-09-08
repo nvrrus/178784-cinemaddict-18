@@ -1,6 +1,7 @@
 import { Constants } from '../constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getFilmListTemplate } from '../template/film-list-template';
+import { getFilmId } from '../utils/film';
 
 export default class FilmListView extends AbstractView {
   static #objectIndex = 0;
@@ -26,15 +27,15 @@ export default class FilmListView extends AbstractView {
   setClickHandlers = (posterClick, controlButtonClick) => {
     this._callback.posterClick = posterClick;
     this._callback.controlButtonClick = controlButtonClick;
-    
+
     this.getFilmCardListContainer()
       .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
-  }
+  };
 
   #onClickHandler = (evt) => {
     evt.preventDefault();
-    
-    const filmId = this.#getFilmId(evt.target);
+
+    const filmId = getFilmId(evt.target);
     if (!filmId) {
       return;
     }
@@ -42,8 +43,8 @@ export default class FilmListView extends AbstractView {
     if (evt.target.tagName === Constants.IMG_TAG) {
       this._callback.posterClick(filmId);
       return;
-    } 
-    
+    }
+
     if (evt.target.tagName !== Constants.BUTTON_TAG) {
       return;
     }
@@ -62,14 +63,4 @@ export default class FilmListView extends AbstractView {
       this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watched, filmId);
     }
   };
-
-  #getFilmId = (targetElement) => {
-    while (targetElement) {
-      if (Constants.FILM_ID_DATA_ATTRIBUTE in targetElement.dataset) {
-        return targetElement.dataset.id;
-      }
-      
-      targetElement = targetElement.parentElement;
-    }
-  }
 }

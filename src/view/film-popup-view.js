@@ -9,7 +9,7 @@ export default class FilmPopupView extends AbstractView {
 
   /** @type {Array} */
   #filmComments;
-    
+
   constructor(film, filmComments) {
     super();
     this.#film = film;
@@ -17,11 +17,11 @@ export default class FilmPopupView extends AbstractView {
   }
 
   get template() {
-  const commentsTemplate = this.#filmComments
-    .slice()
-    .sort(compareCommentsByDate)
-    .map((comment) => new FilmCommentView(comment).template)
-    .join('');
+    const commentsTemplate = this.#filmComments
+      .slice()
+      .sort(compareCommentsByDate)
+      .map((comment) => new FilmCommentView(comment).template)
+      .join('');
 
     return getFilterPopupTemplate(this.#film, commentsTemplate);
   }

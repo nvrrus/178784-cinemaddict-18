@@ -7,8 +7,8 @@ import { compareFilmsByCommentsCountDesc, compareFilmsByRatingDesc } from '../ut
 import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
+// eslint-disable-next-line no-unused-vars
 import FilmPopupPresenter from './film-popup-presenter';
-import FiltersPresenter from './filters-presenter';
 
 export default class FilmsPresenter {
   #filmsContainer;
@@ -16,7 +16,7 @@ export default class FilmsPresenter {
   /** @type {FilmsModel} */
   #filmsModel;
 
-  /** @type {Array.<Object>} */
+  /** @type {Array} */
   #allFilms;
 
   /** @type {FilmListView} */
@@ -77,7 +77,7 @@ export default class FilmsPresenter {
       this.#showMoreButtonView = new ShowMoreButtonView();
       render(this.#showMoreButtonView, this.#allFilmListView.element);
       this.#showMoreButtonView.setClickHandler(this.#onShowMoreClick);
-    } 
+    }
   }
 
   #renderTopRated() {
@@ -98,9 +98,9 @@ export default class FilmsPresenter {
     this.#renderFilmList(this.#mostCommentedFilmListView, mostCommentedFilms);
   }
 
-  /** 
+  /**
    * @param {FilmListView} filmListView
-   * @param {Array} films 
+   * @param {Array} films
    * */
   #renderFilmList(filmListView, films) {
     render(filmListView, this.#filmsContainer);
@@ -108,12 +108,12 @@ export default class FilmsPresenter {
     this.#renderFilmCards(filmListView, films);
   }
 
-  /** 
-   * @param {FilmListView} filmListView 
-   * @param {Array} films 
+  /**
+   * @param {FilmListView} filmListView
+   * @param {Array} films
    * */
   #renderFilmCards(filmListView, films) {
-    
+
     const filmCardsConainer = filmListView.getFilmCardListContainer();
     for (const film of films) {
       filmListView.filmViewByFilmIds.set(film.id, this.#renderFilmCard(film, filmCardsConainer));
@@ -132,7 +132,7 @@ export default class FilmsPresenter {
     if (!this.#batcher.isAny()) {
       this.#hideShowMoreButton();
     }
-  }
+  };
 
   #hideShowMoreButton() {
     remove(this.#showMoreButtonView);
@@ -141,6 +141,9 @@ export default class FilmsPresenter {
 
   #onPosterClick = (filmId) => {
     const film = this.#filmsModel.getById(filmId);
+    if (this.#filmPopupPresenter.isOpened()) {
+      return;
+    }
     this.#filmPopupPresenter.init(film);
     this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
   };
@@ -159,7 +162,7 @@ export default class FilmsPresenter {
     }
 
     this.#filtersPresenter.init(this.#allFilms);
-    
+
     this.#updateFilmCard(filmId);
   };
 
@@ -172,8 +175,8 @@ export default class FilmsPresenter {
   }
 
   /**
-   * 
-   * @param {FilmListView} listView 
+   *
+   * @param {FilmListView} listView
    * @param {Object} film
    */
   #tryUpdateFilmCard(listView, film) {
@@ -189,10 +192,6 @@ export default class FilmsPresenter {
     listView.filmViewByFilmIds.set(film.id, newFilmView);
   }
 
-  /**
-   * 
-   * @param {Object} film 
-   */
   #updatePopup(film) {
     this.#filmPopupPresenter.init(film);
     this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);

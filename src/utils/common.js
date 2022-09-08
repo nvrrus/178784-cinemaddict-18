@@ -18,7 +18,7 @@ const getRandomElement = (source) => source[getRandomInteger(0, source.length - 
 const getRandomArray = (sourceArray) => {
   const count = getRandomInteger(1, sourceArray.length);
   const resultSet = new Set();
-  for(let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     resultSet.add(sourceArray[getRandomInteger(0, sourceArray.length - 1)]);
   }
   return Array.from(resultSet);

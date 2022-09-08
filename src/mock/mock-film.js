@@ -21,7 +21,7 @@ const getWatchingDate = (alreadyWatched) => {
   const month = getRandomInteger(1, 12);
   const day = getRandomInteger(1, 28);
   return dayjs(new Date(year, month, day)).toISOString();
-}
+};
 
 const getCountry = () => getRandomElement(MockConstants.COUNTRIES);
 
@@ -29,8 +29,7 @@ const isInWatchList = () => Boolean(getRandomInteger(0, 1));
 const isAlreadyWatched = () => Boolean(getRandomInteger(0, 1));
 const isFavorite = () => Boolean(getRandomInteger(0, 1));
 
-export const getFilm = () =>
-{
+export const getFilm = () => {
   const filmId = nanoid();
   const alreadyWatched = isAlreadyWatched();
   return {
