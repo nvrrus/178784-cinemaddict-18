@@ -163,6 +163,7 @@ export default class FilmsPresenter {
 
     this.#filtersPresenter.init(this.#allFilms);
 
+
     this.#updateFilmCard(filmId);
   };
 
@@ -171,7 +172,7 @@ export default class FilmsPresenter {
     this.#tryUpdateFilmCard(this.#allFilmListView, film);
     this.#tryUpdateFilmCard(this.#topRatedFilmListView, film);
     this.#tryUpdateFilmCard(this.#mostCommentedFilmListView, film);
-    this.#updatePopup(film);
+    this.#tryUpdatePopup(film);
   }
 
   /**
@@ -192,8 +193,10 @@ export default class FilmsPresenter {
     listView.filmViewByFilmIds.set(film.id, newFilmView);
   }
 
-  #updatePopup(film) {
-    this.#filmPopupPresenter.init(film);
-    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
+  #tryUpdatePopup(film) {
+    if (this.#filmPopupPresenter.isOpened()) {
+      this.#filmPopupPresenter.init(film);
+      this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
+    }
   }
 }

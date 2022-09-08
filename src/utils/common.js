@@ -26,4 +26,17 @@ const getRandomArray = (sourceArray) => {
 
 const isEscapeKey = (evt) => evt.key === Constants.ESCAPE_KEY;
 
-export { getRandomInteger, getRandomFloat, getRandomElement, getRandomArray, isEscapeKey };
+const updateItem = (items, itemId, updateFunc) => {
+  const index = items.findIndex((item) => item.id === itemId);
+  if (index === -1) {
+    return items;
+  }
+
+  const updatedItem = {...items[index]};
+  updateFunc(updatedItem);
+
+  items[index] = updatedItem;
+};
+
+export { getRandomInteger, getRandomFloat, getRandomElement,
+  getRandomArray, isEscapeKey, updateItem };

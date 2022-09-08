@@ -1,5 +1,6 @@
 import { MockConstants } from '../mock/mock-constants';
 import { getFilm } from '../mock/mock-film';
+import { updateItem } from '../utils/common';
 
 export default class FilmsModel {
   #films;
@@ -11,19 +12,18 @@ export default class FilmsModel {
   get = () => this.#films;
   getById = (id) => this.#films.find((film) => film.id === id);
 
-  addToWatchList = (id) => {
-    const film = this.getById(id);
-    film.isInWatchlist = !film.isInWatchlist;
+  addToWatchList = (filmId) => {
+    updateItem(this.#films, filmId, (film) => { film.isInWatchlist = !film.isInWatchlist; } );
   };
 
-  addToFavorite = (id) => {
-    const film = this.getById(id);
-    film.isFavorite = !film.isFavorite;
+  addToFavorite = (filmId) => {
+    updateItem(this.#films, filmId, (film) => { film.isFavorite = !film.isFavorite; } );
   };
 
-  markAsWatched = (id) => {
-    const film = this.getById(id);
-    film.isAlreadyWatched = !film.isAlreadyWatched;
-    this.watchingDate = film.isAlreadyWatched ? new Date().toISOString() : null;
+  markAsWatched = (filmId) => {
+    updateItem(this.#films, filmId, (film) => {
+      film.isAlreadyWatched = !film.isAlreadyWatched;
+      film.watchingDate = film.isAlreadyWatched ? new Date().toISOString() : null;
+    });
   };
 }
