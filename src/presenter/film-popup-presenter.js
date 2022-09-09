@@ -1,12 +1,12 @@
 import { Constants } from '../constants.module';
-import { remove, render } from '../framework/render';
+import { remove, render, replace } from '../framework/render';
 import { isEscapeKey } from '../utils/common';
-import { compareCommentsByDate } from '../utils/film';
-import FilmCommentView from '../view/comment-view';
 import FilmPopupView from '../view/film-popup-view';
 
 export default class FilmPopupPresenter {
   #commentsModel;
+
+  /** @type {FilmPopupView} */
   #filmPopupView;
   #footerElement;
   #bodyElement;
@@ -18,35 +18,54 @@ export default class FilmPopupPresenter {
   }
 
   init = (film) => {
-    this.#filmPopupView = new FilmPopupView(film);
-    const commentsListContainer = this.#filmPopupView.element.querySelector(Constants.COMMENTS_CONTAINER_SELECTOR);
-    const filmComments = this.#commentsModel.get(film);
+    const filmComments = this.#commentsModel.get(film.id);
 
-    render(this.#filmPopupView, this.#footerElement);
+    if (!this.#filmPopupView) {
+      this.#filmPopupView = new FilmPopupView(film, filmComments);
+      render(this.#filmPopupView, this.#footerElement);
+    } else {
+      const newfilmPopupView = new FilmPopupView(film, filmComments);
+      replace(newfilmPopupView, this.#filmPopupView);
+      this.#filmPopupView = newfilmPopupView;
+    }
+
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
-
-    filmComments
-      .sort(compareCommentsByDate)
-      .forEach((comment) => render(new FilmCommentView(comment), commentsListContainer));
-
     this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
     document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
   };
 
+  isOpened() {
+    if (this.#filmPopupView) {
+      return true;
+    }
+    return false;
+  }
+
   #onClickPopupCloseBtn = () => {
     this.#removePopup();
   };
-
-  #removePopup() {
-    remove(this.#filmPopupView);
-    this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);
-    document.removeEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
-    document.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickPopupCloseBtn);
-  }
 
   #onPopupEscapeKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       this.#removePopup();
     }
   };
+
+  #removePopup() {
+    if (!this.#filmPopupView) {
+      return;
+    }
+
+    remove(this.#filmPopupView);
+    this.#filmPopupView = null;
+    this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);
+    document.removeEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
+    document.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickPopupCloseBtn);
+  }
+
+  setControlButtonClickHandler(onControlButtonClick) {
+    if (this.#filmPopupView) {
+      this.#filmPopupView.setControlButtonClickHandler(onControlButtonClick);
+    }
+  }
 }

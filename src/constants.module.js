@@ -4,16 +4,31 @@ export const Constants = {
   FOOTER_SELECTOR: '.footer',
   FILMS_SELECTOR: '.films',
   FILM_CARDS_CONTAINER_SELECTOR: '.films-list__container',
-  COMMENTS_CONTAINER_SELECTOR: '.film-details__comments-list',
   FILM_POSTER_SELECTOR: '.film-card__poster',
   FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
   FILM_LIST_EMPTY_TITLE: 'There are no movies in our database',
   BODY_SELECTOR: 'body',
+  TO_FAVORITE_CARD_BTN_CLASS: 'film-card__controls-item--favorite',
+  TO_WATCH_LIST_CARD_BTN_CLASS: 'film-card__controls-item--add-to-watchlist',
+  MARK_WATCHED_CARD_BTN_CLASS: 'film-card__controls-item--mark-as-watched',
+  TO_FAVORITE_POPUP_BTN_CLASS: 'film-details__control-button--favorite',
+  TO_WATCH_LIST_POPUP_BTN_CLASS: 'film-details__control-button--watchlist',
+  MARK_WATCHED_POPUP_BTN_CLASS: 'film-details__control-button--watched',
   HIDE_OVERFLOW_CLASS: 'hide-overflow',
+  IMG_TAG: 'IMG',
+  BUTTON_TAG: 'BUTTON',
   CLICK_EVENT_TYPE: 'click',
   KEYDOWN_EVENT_TYPE: 'keydown',
   ESCAPE_KEY: 'Escape',
+  TOP_RATED_FILM_LIST_TITLE: 'Top rated',
   TOP_RATED_FILMS_COUNT: 2,
+  MOST_COMMENTED_FILM_LIST_TITLE: 'Most commented',
   MOST_COMMENTED_FILMS_COUNT: 2,
-  FILMS_BATCH_SIZE: 5
+  FILMS_BATCH_SIZE: 5,
+  CONTROL_BTN_TYPE: {
+    watchlist: 'watchlist',
+    favorite: 'favorite',
+    watched: 'watched'
+  },
+  FILM_ID_DATA_ATTRIBUTE: 'id'
 };

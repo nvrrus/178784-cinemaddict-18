@@ -1,7 +1,7 @@
 export const MockConstants = {
-  TITLES:  ['Santa Claus Conquers the Martians', 'Popeye the Sailor Meets Sindbad the Sailor',
+  TITLES: ['Santa Claus Conquers the Martians', 'Popeye the Sailor Meets Sindbad the Sailor',
     'The Man with the Golden Arm', 'The Great Flamarion'],
-  ALTERNATIVE_TITLES:  ['Phasellus eros mauris', 'condimentum sed nibh vitae', 'sodales efficitur ipsum', 'Sed blandit', 'eros vel aliquam faucibus'],
+  ALTERNATIVE_TITLES: ['Phasellus eros mauris', 'condimentum sed nibh vitae', 'sodales efficitur ipsum', 'Sed blandit', 'eros vel aliquam faucibus'],
   GENRES: ['Musical', 'Horror', 'Comedy', 'Drama', 'Thriller', 'Film-Noir', 'Mystery'],
   POSTERS: ['the-great-flamarion.jpg', 'santa-claus-conquers-the-martians.jpg', 'made-for-each-other.png',
     'the-dance-of-life.jpg'],

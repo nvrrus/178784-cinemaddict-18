@@ -1,12 +1,46 @@
+import { Constants } from '../constants.module';
 import { formatStringToDate, formatMinutesToTime } from '../utils/film';
+
+const getButtonTypeClass = (buttonType) => {
+  switch (buttonType) {
+    case Constants.CONTROL_BTN_TYPE.watchlist:
+      return 'film-details__control-button--watchlist';
+    case Constants.CONTROL_BTN_TYPE.watched:
+      return 'film-details__control-button--watched';
+    case Constants.CONTROL_BTN_TYPE.favorite:
+      return 'film-details__control-button--favorite';
+    default:
+      throw new Error(`Control type: ${buttonType} not supported`);
+  }
+};
+
+const getButtonName = (buttonType, isActive) => {
+  switch (buttonType) {
+    case 'watchlist':
+      return isActive ? 'Already watchlist' : 'Add to watchlist';
+    case 'watched':
+      return isActive ? 'Already watched' : 'Mark as watched';
+    case 'favorite':
+      return isActive ? 'Already favorite' : 'Mark as favorite';
+    default:
+      throw new Error(`Control type: ${buttonType} not supported`);
+  }
+};
+
+const getControlButton = (buttonType, isActive) => {
+  const res = `<button type="button" class="film-details__control-button
+    ${getButtonTypeClass(buttonType)}
+    ${isActive ? 'film-details__control-button--active' : ''}"
+    id="${buttonType}" name="${buttonType}">${getButtonName(buttonType, isActive)}</button>`;
+  return res;
+};
 
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
-export const getFilterPopupTemplate = (film) =>
-{
+export const getFilterPopupTemplate = (film, commentsTemplate) => {
   const { poster, title, alternativeTitle, rating, director, writers, actors, release, runtime,
-    age, genres, description, comments } = film;
+    age, genres, description, comments, isInWatchlist, isAlreadyWatched, isFavorite } = film;
   return `
   <section class="film-details">
     <div class="film-details__inner">
@@ -73,9 +107,9 @@ export const getFilterPopupTemplate = (film) =>
         </div>
 
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+          ${getControlButton(Constants.CONTROL_BTN_TYPE.watchlist, isInWatchlist)}
+          ${getControlButton(Constants.CONTROL_BTN_TYPE.watched, isAlreadyWatched)}
+          ${getControlButton(Constants.CONTROL_BTN_TYPE.favorite, isFavorite)}
         </section>
       </div>
 
@@ -84,7 +118,7 @@ export const getFilterPopupTemplate = (film) =>
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-
+            ${commentsTemplate}
           </ul>
 
           <form class="film-details__new-comment" action="" method="get">
