@@ -7,7 +7,6 @@ export default class FilmListView extends AbstractView {
   static #objectIndex = 0;
   #listId;
   #title;
-  filmViewByFilmIds = new Map();
 
   constructor(title) {
     super();

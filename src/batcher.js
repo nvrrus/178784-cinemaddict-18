@@ -14,7 +14,7 @@ export default class Batcher {
       throw new Error('Items is not array');
     }
 
-    this.#items = items;
+    this.#items = items.slice();
     this.#batchSize = batchSize;
     this.#batchesCount = Math.ceil(items.length / batchSize);
   }

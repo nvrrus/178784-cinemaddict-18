@@ -20,7 +20,9 @@ export const Constants = {
   CLICK_EVENT_TYPE: 'click',
   KEYDOWN_EVENT_TYPE: 'keydown',
   ESCAPE_KEY: 'Escape',
+  TOP_RATED_FILM_LIST_TITLE: 'Top rated',
   TOP_RATED_FILMS_COUNT: 2,
+  MOST_COMMENTED_FILM_LIST_TITLE: 'Most commented',
   MOST_COMMENTED_FILMS_COUNT: 2,
   FILMS_BATCH_SIZE: 5,
   CONTROL_BTN_TYPE: {
