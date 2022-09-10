@@ -39,6 +39,9 @@ export default class AbstractFilmListPresenter {
    * @param {HTMLElement} filmsContainer
    */
   constructor(filmsModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
+    if (new.target === AbstractFilmListPresenter) {
+      throw new Error('Cannot instantiate AbstractFilmListPresenter, only concrete one');
+    }
     this._filmsModel = filmsModel;
     this.#filtersPresenter = filtersPresenter;
     this.#filmPopupPresenter = filmPopupPresenter;
@@ -119,10 +122,6 @@ export default class AbstractFilmListPresenter {
     this.#tryUpdatePopup(film);
   }
 
-  /**
-   *
-   * @param {Object} film
-   */
   #tryUpdateFilmCard(film) {
     if (!this.#filmViewByFilmIds.has(film.id)) {
       return;

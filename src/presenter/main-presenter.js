@@ -62,7 +62,7 @@ export default class MainPresenter {
     render(new SortView(), this.#mainContainer, RenderPosition.AFTERBEGIN);
     this.#filtersPresenter.init(this.#filmsModel.get());
     this.#filmListAllPresenter.init();
-    this.#filmListTopRatedPresenter.init(Constants.TOP_RATED_FILMS_COUNT);
+    this.#filmListTopRatedPresenter.init(Constants.TOP_RATED_FILM_LIST_TITLE);
     this.#filmListMostCommentedPresenter.init(Constants.MOST_COMMENTED_FILM_LIST_TITLE);
   };
 }

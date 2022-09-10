@@ -4,24 +4,24 @@ import { formatStringToDate, formatMinutesToTime } from '../utils/film';
 const getButtonTypeClass = (buttonType) => {
   switch (buttonType) {
     case Constants.CONTROL_BTN_TYPE.watchlist:
-      return 'film-details__control-button--watchlist';
+      return Constants.TO_WATCH_LIST_POPUP_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.watched:
-      return 'film-details__control-button--watched';
+      return Constants.MARK_WATCHED_POPUP_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.favorite:
-      return 'film-details__control-button--favorite';
+      return Constants.TO_FAVORITE_POPUP_BTN_CLASS;
     default:
       throw new Error(`Control type: ${buttonType} not supported`);
   }
 };
 
 const getButtonName = (buttonType, isActive) => {
-  switch (buttonType) {
-    case 'watchlist':
-      return isActive ? 'Already watchlist' : 'Add to watchlist';
-    case 'watched':
-      return isActive ? 'Already watched' : 'Mark as watched';
-    case 'favorite':
-      return isActive ? 'Already favorite' : 'Mark as favorite';
+  switch(buttonType) {
+    case Constants.CONTROL_BTN_TYPE.watchlist:
+      return isActive ? Constants.ALREADY_IN_WATCH_LIST_BTN_NAME : Constants.ADD_TO_WATCH_LIST_BTN_NAME;
+    case Constants.CONTROL_BTN_TYPE.watched:
+      return isActive ? Constants.ALREADY_WATCHED_BTN_NABE : Constants.MARK_AS_WATCHED_BTN_NAME;
+    case Constants.CONTROL_BTN_TYPE.favorite:
+      return isActive ? Constants.ALREADY_FAVORITE_BTN_NABE : Constants.MARK_AS_FAVORITE_BTN_NAME;
     default:
       throw new Error(`Control type: ${buttonType} not supported`);
   }
