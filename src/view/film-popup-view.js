@@ -1,48 +1,82 @@
 import { Constants } from '../constants.module';
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { getFilterPopupTemplate } from '../template/film-popup-template';
-import { compareCommentsByDate } from '../utils/film';
-import FilmCommentView from './comment-view';
 
-export default class FilmPopupView extends AbstractView {
-  #film;
-
-  /** @type {Array} */
-  #filmComments;
+export default class FilmPopupView extends AbstractStatefulView {
+  #bodyElement = document.querySelector(Constants.BODY_SELECTOR);
 
   constructor(film, filmComments) {
     super();
-    this.#film = film;
-    this.#filmComments = filmComments;
+    this._state = this.#getState(film, filmComments);
+
+    this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
+
+    this.#setInnerHandlers();
   }
 
   get template() {
-    const commentsTemplate = this.#filmComments
-      .slice()
-      .sort(compareCommentsByDate)
-      .map((comment) => new FilmCommentView(comment).template)
-      .join('');
+    return getFilterPopupTemplate(this._state);
+  }
 
-    return getFilterPopupTemplate(this.#film, commentsTemplate);
+  removeElement() {
+    super.removeElement();
+    this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);
+  }
+
+  #setInnerHandlers() {
+    this.element.querySelector(Constants.POPUP_EMOJI_CONTAINER_SELECTOR)
+      .querySelectorAll(`input[type=radio][name=${Constants.POPUP_EMOJI_RADIO_NAME}]`)
+      .forEach((radio) => {
+        radio.addEventListener(Constants.CHANGE_EVENT_TYPE, this.#onEmojiClickHandler);
+      });
+
+    this.element.addEventListener(Constants.SCROLL_EVENT_TYPE, this.#onScrollHandler);
+  }
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setControlButtonClickHandler(this._callback.controlButtonClick);
+    this.element.scrollTop = this._state.scrollTop;
+    this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
+  };
+
+  onControlButtonClick = (controlType) => {
+    switch (controlType) {
+      case Constants.CONTROL_BTN_TYPE.watchlist:
+        this.updateElement({isInWatchlist: !this._state.isInWatchlist});
+        break;
+      case Constants.CONTROL_BTN_TYPE.favorite:
+        this.updateElement({isFavorite: !this._state.isFavorite});
+        break;
+      case Constants.CONTROL_BTN_TYPE.watched:
+        this.updateElement({isAlreadyWatched: !this._state.isAlreadyWatched});
+        break;
+    }
+  };
+
+  #getState(film, filmComments) {
+    return {...film, filmComments: filmComments};
   }
 
   setCloseClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.closeClick = callback;
     this.element.querySelector(Constants.FILM_POPUP_CLOSE_BTN_SELECTOR)
       .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onCloseClickHandler);
   }
 
   #onCloseClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.click(evt);
+    this._callback.closeClick(evt);
   };
 
   setControlButtonClickHandler(callback) {
     this._callback.controlButtonClick = callback;
-    this.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
+    this.element.querySelector(Constants.POPUP_CONTROLS_CONTAINER_SELECTOR)
+      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onControlButtonClickHandler);
   }
 
-  #onClickHandler = (evt) => {
+  #onControlButtonClickHandler = (evt) => {
     evt.preventDefault();
 
     if (evt.target.tagName !== Constants.BUTTON_TAG) {
@@ -50,17 +84,29 @@ export default class FilmPopupView extends AbstractView {
     }
 
     if (evt.target.classList.contains(Constants.TO_FAVORITE_POPUP_BTN_CLASS)) {
-      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.favorite, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.favorite, this._state.id);
       return;
     }
 
     if (evt.target.classList.contains(Constants.TO_WATCH_LIST_POPUP_BTN_CLASS)) {
-      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watchlist, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watchlist, this._state.id);
       return;
     }
 
     if (evt.target.classList.contains(Constants.MARK_WATCHED_POPUP_BTN_CLASS)) {
-      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watched, this.#film.id);
+      this._callback.controlButtonClick(Constants.CONTROL_BTN_TYPE.watched, this._state.id);
     }
+  };
+
+  #onEmojiClickHandler = (evt) => {
+    evt.preventDefault();
+
+    const emoji = evt.target.value;
+    this.updateElement({commentEmoji: emoji});
+  };
+
+  #onScrollHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({scrollTop: evt.target.scrollTop});
   };
 }

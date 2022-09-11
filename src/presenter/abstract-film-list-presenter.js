@@ -99,6 +99,7 @@ export default class AbstractFilmListPresenter {
   };
 
   #onControlButtonClick = (controlType, filmId) => {
+    this.#filmPopupPresenter.onControlButtonClick(controlType);
     switch (controlType) {
       case Constants.CONTROL_BTN_TYPE.watchlist:
         this._filmsModel.addToWatchList(filmId);
@@ -119,7 +120,6 @@ export default class AbstractFilmListPresenter {
   #updateFilmCard(filmId) {
     const film = this._filmsModel.getById(filmId);
     this.#tryUpdateFilmCard(film);
-    this.#tryUpdatePopup(film);
   }
 
   #tryUpdateFilmCard(film) {
@@ -133,12 +133,5 @@ export default class AbstractFilmListPresenter {
     replace(newFilmView, oldFilmView);
     oldFilmView.removeElement();
     this.#filmViewByFilmIds.set(film.id, newFilmView);
-  }
-
-  #tryUpdatePopup(film) {
-    if (this.#filmPopupPresenter.isOpened()) {
-      this.#filmPopupPresenter.init(film);
-      this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
-    }
   }
 }

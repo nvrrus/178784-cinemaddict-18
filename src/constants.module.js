@@ -8,6 +8,9 @@ export const Constants = {
   FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
   FILM_LIST_EMPTY_TITLE: 'There are no movies in our database',
   BODY_SELECTOR: 'body',
+  POPUP_CONTROLS_CONTAINER_SELECTOR: '.film-details__controls',
+  POPUP_EMOJI_CONTAINER_SELECTOR: '.film-details__emoji-list',
+  POPUP_EMOJI_RADIO_NAME: 'comment-emoji',
   TO_FAVORITE_CARD_BTN_CLASS: 'film-card__controls-item--favorite',
   TO_WATCH_LIST_CARD_BTN_CLASS: 'film-card__controls-item--add-to-watchlist',
   MARK_WATCHED_CARD_BTN_CLASS: 'film-card__controls-item--mark-as-watched',
@@ -24,6 +27,8 @@ export const Constants = {
   IMG_TAG: 'IMG',
   BUTTON_TAG: 'BUTTON',
   CLICK_EVENT_TYPE: 'click',
+  CHANGE_EVENT_TYPE: 'change',
+  SCROLL_EVENT_TYPE: 'scroll',
   KEYDOWN_EVENT_TYPE: 'keydown',
   ESCAPE_KEY: 'Escape',
   TOP_RATED_FILM_LIST_TITLE: 'Top rated',
@@ -35,6 +40,12 @@ export const Constants = {
     watchlist: 'watchlist',
     favorite: 'favorite',
     watched: 'watched'
+  },
+  EMOJI_TYPE: {
+    smile: 'smile',
+    sleeping: 'sleeping',
+    puke: 'puke',
+    angry: 'angry'
   },
   FILM_ID_DATA_ATTRIBUTE: 'id'
 };
