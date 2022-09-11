@@ -64,7 +64,7 @@ export const getFilterPopupTemplate = (data) => {
     writers, actors, release, runtime,
     age, genres, description, comments,
     isInWatchlist, isAlreadyWatched, isFavorite, filmComments,
-    commentEmoji } = data;
+    commentEmoji, newComment } = data;
   return `
   <section class="film-details">
     <div class="film-details__inner">
@@ -151,7 +151,8 @@ export const getFilterPopupTemplate = (data) => {
             </div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              <textarea class="film-details__comment-input"
+              placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ''}</textarea>
             </label>
 
             <div class="film-details__emoji-list">

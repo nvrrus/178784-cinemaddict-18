@@ -5,9 +5,13 @@ import { getFilterPopupTemplate } from '../template/film-popup-template';
 export default class FilmPopupView extends AbstractStatefulView {
   #bodyElement = document.querySelector(Constants.BODY_SELECTOR);
 
+  static #parseFilmToState(film, filmComments) {
+    return {...film, filmComments: filmComments};
+  }
+
   constructor(film, filmComments) {
     super();
-    this._state = this.#getState(film, filmComments);
+    this._state = FilmPopupView.#parseFilmToState(film, filmComments);
 
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
 
@@ -31,6 +35,9 @@ export default class FilmPopupView extends AbstractStatefulView {
       });
 
     this.element.addEventListener(Constants.SCROLL_EVENT_TYPE, this.#onScrollHandler);
+    this.element
+      .querySelector(Constants.COMMENT_INPUT_SELECTOR)
+      .addEventListener(Constants.INPUT_EVENT_TYPE, this.#onCommentInputHandler);
   }
 
   _restoreHandlers = () => {
@@ -41,23 +48,9 @@ export default class FilmPopupView extends AbstractStatefulView {
     this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
   };
 
-  onControlButtonClick = (controlType) => {
-    switch (controlType) {
-      case Constants.CONTROL_BTN_TYPE.watchlist:
-        this.updateElement({isInWatchlist: !this._state.isInWatchlist});
-        break;
-      case Constants.CONTROL_BTN_TYPE.favorite:
-        this.updateElement({isFavorite: !this._state.isFavorite});
-        break;
-      case Constants.CONTROL_BTN_TYPE.watched:
-        this.updateElement({isAlreadyWatched: !this._state.isAlreadyWatched});
-        break;
-    }
+  updateState = (updateObject) => {
+    this.updateElement(updateObject);
   };
-
-  #getState(film, filmComments) {
-    return {...film, filmComments: filmComments};
-  }
 
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
@@ -102,11 +95,22 @@ export default class FilmPopupView extends AbstractStatefulView {
     evt.preventDefault();
 
     const emoji = evt.target.value;
-    this.updateElement({commentEmoji: emoji});
+    this.updateElement({
+      commentEmoji: emoji
+    });
   };
 
   #onScrollHandler = (evt) => {
     evt.preventDefault();
-    this._setState({scrollTop: evt.target.scrollTop});
+    this._setState({
+      scrollTop: evt.target.scrollTop
+    });
+  };
+
+  #onCommentInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      newComment: evt.target.value
+    });
   };
 }

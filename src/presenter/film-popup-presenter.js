@@ -16,19 +16,19 @@ export default class FilmPopupPresenter {
   }
 
   init = (film) => {
-    const filmComments = this.#commentsModel.get(film.id);
-
-    if (!this.#filmPopupView) {
-      this.#filmPopupView = new FilmPopupView(film, filmComments);
-      render(this.#filmPopupView, this.#footerElement);
+    if (this.isOpened()) {
+      return;
     }
 
+    const filmComments = this.#commentsModel.get(film.id);
+    this.#filmPopupView = new FilmPopupView(film, filmComments);
+    render(this.#filmPopupView, this.#footerElement);
     this.#filmPopupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
     document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onPopupEscapeKeyDown);
   };
 
-  onControlButtonClick(controlType) {
-    this.#filmPopupView?.onControlButtonClick(controlType);
+  updatePopupState(updateObject) {
+    this.#filmPopupView?.updateState(updateObject);
   }
 
   isOpened() {

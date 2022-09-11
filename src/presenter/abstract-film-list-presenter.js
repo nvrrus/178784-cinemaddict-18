@@ -27,11 +27,6 @@ export default class AbstractFilmListPresenter {
   #filmViewByFilmIds = new Map();
 
   /**
-   * @type {HTMLElement}
-   */
-  #filmCardsConainer;
-
-  /**
    *
    * @param {FilmsModel} filmsModel
    * @param {FiltersPresenter} filtersPresenter
@@ -69,7 +64,6 @@ export default class AbstractFilmListPresenter {
 
   _renderNotEmptyFilmList(films, listTitle) {
     this._filmListView = new FilmListView(listTitle);
-    this.#filmCardsConainer = this._filmListView.getFilmCardListContainer();
     render(this._filmListView, this.#filmsContainer);
     this._filmListView.setClickHandlers(this.#onPosterClick, this.#onControlButtonClick);
     this._renderFilmCards(films);
@@ -85,7 +79,7 @@ export default class AbstractFilmListPresenter {
 
   #renderFilmCard(film) {
     const filmView = new FilmCardView(film);
-    render(filmView, this.#filmCardsConainer);
+    render(filmView, this._filmListView.cardListContainer);
     return filmView;
   }
 
@@ -99,34 +93,18 @@ export default class AbstractFilmListPresenter {
   };
 
   #onControlButtonClick = (controlType, filmId) => {
-    this.#filmPopupPresenter.onControlButtonClick(controlType);
-    switch (controlType) {
-      case Constants.CONTROL_BTN_TYPE.watchlist:
-        this._filmsModel.addToWatchList(filmId);
-        break;
-      case Constants.CONTROL_BTN_TYPE.favorite:
-        this._filmsModel.addToFavorite(filmId);
-        break;
-      case Constants.CONTROL_BTN_TYPE.watched:
-        this._filmsModel.markAsWatched(filmId);
-        break;
-    }
-
+    const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
+    this.#filmPopupPresenter.updatePopupState(updateObject);
+    this._filmsModel.update(filmId, updateObject);
     this.#filtersPresenter.init(this._filmsModel.get());
-
-    this.#updateFilmCard(filmId);
+    this.#tryUpdateFilmCard(filmId);
   };
 
-  #updateFilmCard(filmId) {
-    const film = this._filmsModel.getById(filmId);
-    this.#tryUpdateFilmCard(film);
-  }
-
-  #tryUpdateFilmCard(film) {
-    if (!this.#filmViewByFilmIds.has(film.id)) {
+  #tryUpdateFilmCard(filmId) {
+    if (!this.#filmViewByFilmIds.has(filmId)) {
       return;
     }
-
+    const film = this._filmsModel.getById(filmId);
     const newFilmView = new FilmCardView(film);
     const oldFilmView = this.#filmViewByFilmIds.get(film.id);
 
