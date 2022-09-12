@@ -1,27 +1,28 @@
 import { Constants } from '../constants.module';
-import { formatStringToDate, formatMinutesToTime } from '../utils/film';
+import { formatStringToDate, formatMinutesToTime, compareCommentsByDate } from '../utils/film';
+import FilmCommentView from '../view/comment-view';
 
 const getButtonTypeClass = (buttonType) => {
   switch (buttonType) {
     case Constants.CONTROL_BTN_TYPE.watchlist:
-      return 'film-details__control-button--watchlist';
+      return Constants.TO_WATCH_LIST_POPUP_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.watched:
-      return 'film-details__control-button--watched';
+      return Constants.MARK_WATCHED_POPUP_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.favorite:
-      return 'film-details__control-button--favorite';
+      return Constants.TO_FAVORITE_POPUP_BTN_CLASS;
     default:
       throw new Error(`Control type: ${buttonType} not supported`);
   }
 };
 
 const getButtonName = (buttonType, isActive) => {
-  switch (buttonType) {
-    case 'watchlist':
-      return isActive ? 'Already watchlist' : 'Add to watchlist';
-    case 'watched':
-      return isActive ? 'Already watched' : 'Mark as watched';
-    case 'favorite':
-      return isActive ? 'Already favorite' : 'Mark as favorite';
+  switch(buttonType) {
+    case Constants.CONTROL_BTN_TYPE.watchlist:
+      return isActive ? Constants.ALREADY_IN_WATCH_LIST_BTN_NAME : Constants.ADD_TO_WATCH_LIST_BTN_NAME;
+    case Constants.CONTROL_BTN_TYPE.watched:
+      return isActive ? Constants.ALREADY_WATCHED_BTN_NABE : Constants.MARK_AS_WATCHED_BTN_NAME;
+    case Constants.CONTROL_BTN_TYPE.favorite:
+      return isActive ? Constants.ALREADY_FAVORITE_BTN_NABE : Constants.MARK_AS_FAVORITE_BTN_NAME;
     default:
       throw new Error(`Control type: ${buttonType} not supported`);
   }
@@ -38,9 +39,32 @@ const getControlButton = (buttonType, isActive) => {
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
-export const getFilterPopupTemplate = (film, commentsTemplate) => {
-  const { poster, title, alternativeTitle, rating, director, writers, actors, release, runtime,
-    age, genres, description, comments, isInWatchlist, isAlreadyWatched, isFavorite } = film;
+const getCommentsTemplate = (comments) => comments
+  .slice()
+  .sort(compareCommentsByDate)
+  .map((comment) => new FilmCommentView(comment).template)
+  .join('');
+
+const getCommentEmojiTemplate = (emoji) => {
+  if (!emoji) {
+    return '';
+  }
+  return `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}"></img>`;
+};
+
+const getRadioEmoji = (emojiType, checkedEmojiType) =>
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emojiType}" value="${emojiType}"
+    ${emojiType === checkedEmojiType ? 'checked' : ''}>
+  <label class="film-details__emoji-label" for="emoji-${emojiType}">
+    <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="emoji" >
+  </label>`;
+
+export const getFilterPopupTemplate = (data) => {
+  const { poster, title, alternativeTitle, rating, director,
+    writers, actors, release, runtime,
+    age, genres, description, comments,
+    isInWatchlist, isAlreadyWatched, isFavorite, filmComments,
+    commentEmoji, newComment } = data;
   return `
   <section class="film-details">
     <div class="film-details__inner">
@@ -118,36 +142,24 @@ export const getFilterPopupTemplate = (film, commentsTemplate) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-            ${commentsTemplate}
+            ${getCommentsTemplate(filmComments)}
           </ul>
 
           <form class="film-details__new-comment" action="" method="get">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">
+              ${getCommentEmojiTemplate(commentEmoji)}
+            </div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              <textarea class="film-details__comment-input"
+              placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ''}</textarea>
             </label>
 
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
-                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-              </label>
+              ${getRadioEmoji(Constants.EMOJI_TYPE.smile, commentEmoji)}
+              ${getRadioEmoji(Constants.EMOJI_TYPE.sleeping, commentEmoji)}
+              ${getRadioEmoji(Constants.EMOJI_TYPE.puke, commentEmoji)}
+              ${getRadioEmoji(Constants.EMOJI_TYPE.angry, commentEmoji)}
             </div>
           </form>
         </section>

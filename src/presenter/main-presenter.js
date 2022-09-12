@@ -44,14 +44,13 @@ export default class MainPresenter {
     this.#mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
     this.#headerContainer = document.querySelector(Constants.HEADER_SELECTOR);
 
-    const bodyElement = document.querySelector(Constants.BODY_SELECTOR);
     const footerElement = document.querySelector(Constants.FOOTER_SELECTOR);
     const filmsContainer = this.#mainContainer.querySelector(Constants.FILMS_SELECTOR);
 
     this.#filmsModel = filmsModel;
     this.#filtersPresenter = new FiltersPresenter(this.#mainContainer);
 
-    const filmPopupPresenter = new FilmPopupPresenter(commentsModel, footerElement, bodyElement);
+    const filmPopupPresenter = new FilmPopupPresenter(commentsModel, footerElement);
     this.#filmListAllPresenter = new FilmListAllPresenter(filmsModel, this.#filtersPresenter, filmPopupPresenter, filmsContainer);
     this.#filmListTopRatedPresenter = new FilmListTopRatedPresenter(filmsModel, this.#filtersPresenter, filmPopupPresenter, filmsContainer);
     this.#filmListMostCommentedPresenter = new FilmListMostCommentedPresenter(filmsModel, this.#filtersPresenter, filmPopupPresenter, filmsContainer);
@@ -62,7 +61,7 @@ export default class MainPresenter {
     render(new SortView(), this.#mainContainer, RenderPosition.AFTERBEGIN);
     this.#filtersPresenter.init(this.#filmsModel.get());
     this.#filmListAllPresenter.init();
-    this.#filmListTopRatedPresenter.init(Constants.TOP_RATED_FILMS_COUNT);
+    this.#filmListTopRatedPresenter.init(Constants.TOP_RATED_FILM_LIST_TITLE);
     this.#filmListMostCommentedPresenter.init(Constants.MOST_COMMENTED_FILM_LIST_TITLE);
   };
 }

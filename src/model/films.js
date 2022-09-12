@@ -1,3 +1,4 @@
+import { Constants } from '../constants.module';
 import { MockConstants } from '../mock/mock-constants';
 import { getFilm } from '../mock/mock-film';
 import { updateItem } from '../utils/common';
@@ -12,18 +13,24 @@ export default class FilmsModel {
   get = () => this.#films;
   getById = (id) => this.#films.find((film) => film.id === id);
 
-  addToWatchList = (filmId) => {
-    updateItem(this.#films, filmId, (film) => { film.isInWatchlist = !film.isInWatchlist; } );
+  getToggleControlUpdateObject = (controlType, filmId) => {
+    const film = this.getById(filmId);
+    switch (controlType) {
+      case Constants.CONTROL_BTN_TYPE.watchlist:
+        return { isInWatchlist: !film.isInWatchlist };
+      case Constants.CONTROL_BTN_TYPE.favorite:
+        return { isFavorite: !film.isFavorite };
+      case Constants.CONTROL_BTN_TYPE.watched:
+        return {
+          isAlreadyWatched: !film.isAlreadyWatched,
+          watchingDate: film.isAlreadyWatched ? null : new Date().toISOString()
+        };
+      default:
+        throw new Error(`Control type (${controlType}) not supperted`);
+    }
   };
 
-  addToFavorite = (filmId) => {
-    updateItem(this.#films, filmId, (film) => { film.isFavorite = !film.isFavorite; } );
-  };
-
-  markAsWatched = (filmId) => {
-    updateItem(this.#films, filmId, (film) => {
-      film.isAlreadyWatched = !film.isAlreadyWatched;
-      film.watchingDate = film.isAlreadyWatched ? new Date().toISOString() : null;
-    });
-  };
+  update(id, update) {
+    updateItem(this.#films, id, update);
+  }
 }

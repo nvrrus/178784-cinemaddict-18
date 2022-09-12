@@ -4,32 +4,18 @@ import { formatMinutesToTime } from '../utils/film';
 const getButtonTypeClass = (buttonType) => {
   switch(buttonType) {
     case Constants.CONTROL_BTN_TYPE.watchlist:
-      return 'film-card__controls-item--add-to-watchlist';
+      return Constants.TO_WATCH_LIST_CARD_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.watched:
-      return 'film-card__controls-item--mark-as-watched';
+      return Constants.MARK_WATCHED_CARD_BTN_CLASS;
     case Constants.CONTROL_BTN_TYPE.favorite:
-      return 'film-card__controls-item--favorite';
-    default:
-      throw new Error(`Control type: ${buttonType} not supported`);
-  }
-};
-
-const getButtonName = (buttonType, isActive) => {
-  switch(buttonType) {
-    case 'watchlist':
-      return isActive ? 'Already in watchlist' : 'Add to watchlist';
-    case 'watched':
-      return isActive ? 'Already watched' : 'Mark as watched';
-    case 'favorite':
-      return isActive ? 'Already favorite' : 'Mark as favorite';
+      return Constants.TO_FAVORITE_CARD_BTN_CLASS;
     default:
       throw new Error(`Control type: ${buttonType} not supported`);
   }
 };
 
 const getControlButton = (buttonType, isActive) => `<button class="film-card__controls-item ${getButtonTypeClass(buttonType)}
-    ${isActive ? 'film-card__controls-item--active' : ''}" type="button">
-    ${getButtonName(buttonType, isActive)}</button>`;
+    ${isActive ? 'film-card__controls-item--active' : ''}" type="button"></button>`;
 
 export const getFilmCardTemlate = (film) => {
   const { id, title, rating, year, runtime, genres, poster, description, comments,

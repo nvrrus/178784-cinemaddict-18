@@ -7,6 +7,7 @@ export default class FilmListView extends AbstractView {
   static #objectIndex = 0;
   #listId;
   #title;
+  #cardListContainer;
 
   constructor(title) {
     super();
@@ -18,17 +19,20 @@ export default class FilmListView extends AbstractView {
     return getFilmListTemplate(this.#title, this.#listId);
   }
 
-  getFilmCardListContainer() {
+  get cardListContainer() {
+    if (this.#cardListContainer) {
+      return this.#cardListContainer;
+    }
     const cardListSelector = `${Constants.FILM_CARDS_CONTAINER_SELECTOR}--${this.#listId}`;
-    return this.element.querySelector(cardListSelector);
+    this.#cardListContainer = this.element.querySelector(cardListSelector);
+    return this.#cardListContainer;
   }
 
   setClickHandlers = (posterClick, controlButtonClick) => {
     this._callback.posterClick = posterClick;
     this._callback.controlButtonClick = controlButtonClick;
 
-    this.getFilmCardListContainer()
-      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
+    this.cardListContainer.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
   };
 
   #onClickHandler = (evt) => {

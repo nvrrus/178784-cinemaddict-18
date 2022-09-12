@@ -26,15 +26,18 @@ const getRandomArray = (sourceArray) => {
 
 const isEscapeKey = (evt) => evt.key === Constants.ESCAPE_KEY;
 
-const updateItem = (items, itemId, updateFunc) => {
+/** Обновляет элемент в массиве по идентификатору, при этом создается копия
+ * @param {Array} items Массив элементов, в котором нужно обновить элемент
+ * @param {string} itemId Идентификатор обновляемого элемента
+ * @param {Object} update Объект с обновленной частью состояния
+ */
+const updateItem = (items, itemId, update) => {
   const index = items.findIndex((item) => item.id === itemId);
   if (index === -1) {
-    return items;
+    return;
   }
 
-  const updatedItem = {...items[index]};
-  updateFunc(updatedItem);
-
+  const updatedItem = {...items[index], ...update};
   items[index] = updatedItem;
 };
 
