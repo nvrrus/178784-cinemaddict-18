@@ -15,17 +15,15 @@ export default class FilmsModel {
 
   getToggleControlUpdateObject = (controlType, filmId) => {
     const film = this.getById(filmId);
-    let isAlreadyWatched;
     switch (controlType) {
       case Constants.CONTROL_BTN_TYPE.watchlist:
         return { isInWatchlist: !film.isInWatchlist };
       case Constants.CONTROL_BTN_TYPE.favorite:
         return { isFavorite: !film.isFavorite };
       case Constants.CONTROL_BTN_TYPE.watched:
-        isAlreadyWatched = !film.isAlreadyWatched;
         return {
-          isAlreadyWatched: isAlreadyWatched,
-          watchingDate: isAlreadyWatched ? new Date().toISOString() : null
+          isAlreadyWatched: !film.isAlreadyWatched,
+          watchingDate: film.isAlreadyWatched ? null : new Date().toISOString()
         };
       default:
         throw new Error(`Control type (${controlType}) not supperted`);
