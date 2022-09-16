@@ -5,9 +5,9 @@ const getTitleTemplate = (title) => {
   return '';
 };
 
-export const getFilmListTemplate = (title, listId) => `
-  <section class="films-list ${title ? 'films-list--extra' : ''}">
-    ${getTitleTemplate(title)} 
+export const getFilmListTemplate = (title, isExtra, listId) => `
+  <section class="films-list ${isExtra ? 'films-list--extra' : ''}">
+    ${getTitleTemplate(title)}
 
     <div class="films-list__container films-list__container--${listId}">
 

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Constants } from '../constants.module';
+import { Constants } from '../constants/constants.module';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);

@@ -1,4 +1,4 @@
-import BatchIsOver from './errors/batch-is-over';
+import BatchIsOver from '../errors/batch-is-over';
 
 export default class Batcher {
   #items;

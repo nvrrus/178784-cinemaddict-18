@@ -1,4 +1,4 @@
-import { Constants } from '../constants.module';
+import { Constants } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 
 export default class ShowMoreButtonView extends AbstractView {

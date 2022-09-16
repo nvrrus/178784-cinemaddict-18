@@ -1,4 +1,4 @@
-import { Constants } from '../constants.module';
+import { Constants } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getFilmCardTemlate } from '../template/film-card-temlate';
 

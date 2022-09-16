@@ -1,19 +1,27 @@
-import { Constants } from '../constants.module';
-import { render, replace } from '../framework/render';
+import { FilterType } from '../constants/constants.module';
+import { render, RenderPosition, replace } from '../framework/render';
 // eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
+// eslint-disable-next-line no-unused-vars
+import FiltersModel from '../model/filter';
 import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
 // eslint-disable-next-line no-unused-vars
-import FilmPopupPresenter from './film-popup-presenter';
+import PopupPresenter from './popup-presenter';
 // eslint-disable-next-line no-unused-vars
 import FiltersPresenter from './filters-presenter';
 
 export default class AbstractFilmListPresenter {
   #filmsContainer;
 
+  _isExtra = false;
+  _renderPlace = RenderPosition.BEFOREEND;
+
   /** @type {FilmsModel} */
   _filmsModel;
+
+  /** @type {FiltersModel} */
+  _filtersModel;
 
   /** @type {FilmListView} */
   _filmListView;
@@ -21,7 +29,7 @@ export default class AbstractFilmListPresenter {
   /** @type {FiltersPresenter} */
   #filtersPresenter;
 
-  /** @type {FilmPopupPresenter} */
+  /** @type {PopupPresenter} */
   #filmPopupPresenter;
 
   #filmViewByFilmIds = new Map();
@@ -29,48 +37,70 @@ export default class AbstractFilmListPresenter {
   /**
    *
    * @param {FilmsModel} filmsModel
+   * @param {FiltersModel} filtersModel
    * @param {FiltersPresenter} filtersPresenter
-   * @param {FilmPopupPresenter} filmPopupPresenter
+   * @param {PopupPresenter} filmPopupPresenter
    * @param {HTMLElement} filmsContainer
    */
-  constructor(filmsModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
+  constructor(filmsModel, filtersModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
     if (new.target === AbstractFilmListPresenter) {
       throw new Error('Cannot instantiate AbstractFilmListPresenter, only concrete one');
     }
     this._filmsModel = filmsModel;
+    this._filtersModel = filtersModel;
     this.#filtersPresenter = filtersPresenter;
     this.#filmPopupPresenter = filmPopupPresenter;
     this.#filmsContainer = filmsContainer;
+
+    this._filmsModel.addObserver(this.#onFilmUpdate);
   }
 
-  /**
-   *
-   * @param {string} listTitle
-   */
-  init = (listTitle = null) => {
+  init = () => {
+    if (this._filmListView) {
+      this.#destroy();
+    }
+
     const films = this._getFilms();
     if (films?.length > 0) {
-      this._renderNotEmptyFilmList(films, listTitle);
+      this._renderNotEmptyFilmList(films);
     }
     else {
-      this.#renderEmptyFilmList();
+      this._renderEmptyFilmList();
     }
   };
+
+  #onFilmUpdate = (updateType, filmId) => {
+    if (this._filtersModel.getFilterType() === FilterType.ALL) {
+      this.#tryUpdateFilmCard(filmId);
+    }
+    else {
+      this.init();
+    }
+  };
+
+  _getListTitle() {
+    return null;
+  }
+
+  _getEmptyListTitle() {
+    return null;
+  }
 
   /** @returns {Array} */
   _getFilms() {
     throw new Error('Method must be implemented');
   }
 
-  _renderNotEmptyFilmList(films, listTitle) {
-    this._filmListView = new FilmListView(listTitle);
-    render(this._filmListView, this.#filmsContainer);
+  _renderNotEmptyFilmList(films) {
+    this._filmListView = new FilmListView(this._getListTitle(), this._isExtra);
+    render(this._filmListView, this.#filmsContainer, this._renderPlace);
     this._filmListView.setClickHandlers(this.#onPosterClick, this.#onControlButtonClick);
     this._renderFilmCards(films);
   }
 
-  #renderEmptyFilmList() {
-    this._filmListView = new FilmListView(Constants.FILM_LIST_EMPTY_TITLE);
+  _renderEmptyFilmList() {
+    this._filmListView = new FilmListView(this._getEmptyListTitle(), this._isExtra);
+    render(this._filmListView, this.#filmsContainer, this._renderPlace);
   }
 
   _renderFilmCards(films) {
@@ -94,10 +124,7 @@ export default class AbstractFilmListPresenter {
 
   #onControlButtonClick = (controlType, filmId) => {
     const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
-    this.#filmPopupPresenter.updatePopupState(updateObject);
     this._filmsModel.update(filmId, updateObject);
-    this.#filtersPresenter.init(this._filmsModel.get());
-    this.#tryUpdateFilmCard(filmId);
   };
 
   #tryUpdateFilmCard(filmId) {
@@ -111,5 +138,12 @@ export default class AbstractFilmListPresenter {
     replace(newFilmView, oldFilmView);
     oldFilmView.removeElement();
     this.#filmViewByFilmIds.set(film.id, newFilmView);
+  }
+
+  #destroy() {
+    this._filmListView.element.remove();
+    this._filmListView.removeElement();
+    this._filmListView = null;
+    this.#filmViewByFilmIds.clear();
   }
 }
