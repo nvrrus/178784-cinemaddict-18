@@ -21,6 +21,7 @@ export default class SortsView extends AbstractView {
   }
 
   #onSortTypeChanged = (evt) => {
+    evt.preventDefault();
     if (evt.target.tagName !== Constants.LINK_TAG) {
       return;
     }
