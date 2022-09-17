@@ -9,5 +9,5 @@ const commentsModel = new CommentsModel();
 const filtersModel = new FiltersModel();
 const sortsModel = new SortsModel();
 
-const filmsPresenter = new MainPresenter(filmsModel, commentsModel, filtersModel, sortsModel);
-filmsPresenter.init();
+const mainPresenter = new MainPresenter(filmsModel, commentsModel, filtersModel, sortsModel);
+mainPresenter.init();

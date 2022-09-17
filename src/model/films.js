@@ -1,7 +1,6 @@
 import { ControlType, FilterType, SortType, UpdateType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import FilterNotSupported from '../errors/filter-not-supported';
-import SortNotSupported from '../errors/sort-not-supported';
 import Observable from '../framework/observable';
 import { MockConstants } from '../mock/mock-constants';
 import { getFilm } from '../mock/mock-film';
@@ -19,16 +18,12 @@ export default class FilmsModel extends Observable {
   getFilms = (filterType, sortType = SortType.DEFAULT) => {
     let films = this.#films.slice();
     switch (sortType) {
-      case SortType.DEFAULT:
-        break;
       case SortType.DATE:
         films = films.sort(compareFilmsByReleaseDateDesc);
         break;
       case SortType.RATING:
         films = films.sort(compareFilmsByRatingDesc);
         break;
-      default:
-        throw new SortNotSupported(sortType);
     }
 
     switch (filterType) {

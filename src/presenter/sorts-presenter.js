@@ -1,7 +1,5 @@
 import { render, RenderPosition, replace } from '../framework/render';
-// eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
-// eslint-disable-next-line no-unused-vars
 import SortsModel from '../model/sorts';
 import SortsView from '../view/sorts-view';
 
@@ -15,15 +13,12 @@ export default class SortPresenter {
   /** @type {SortsView} */
   #sortsView;
 
-  #sortsContainer;
-
-  constructor(sortsContainer, sortsModel, filmsModel) {
-    this.#sortsContainer = sortsContainer;
+  constructor(sortsModel, filmsModel) {
     this.#sortsModel = sortsModel;
     this.#filmsModel = filmsModel;
   }
 
-  init() {
+  init(beforeContainer) {
     if (this.#filmsModel.isEmpty()) {
       return;
     }
@@ -34,7 +29,7 @@ export default class SortPresenter {
       replace(newSortsView, this.#sortsView);
     }
     else {
-      render(newSortsView, this.#sortsContainer, RenderPosition.AFTERBEGIN);
+      render(newSortsView, beforeContainer, RenderPosition.AFTEREND);
     }
 
     this.#sortsView = newSortsView;

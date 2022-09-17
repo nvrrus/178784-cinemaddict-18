@@ -1,6 +1,7 @@
 export const Constants = {
   HEADER_SELECTOR: '.header',
   MAIN_SELECTOR: '.main',
+  FILTERS_CONTAINER_SELECTOR: '.main-navigation',
   FOOTER_SELECTOR: '.footer',
   FILMS_SELECTOR: '.films',
   FILM_CARDS_CONTAINER_SELECTOR: '.films-list__container',

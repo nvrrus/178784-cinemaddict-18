@@ -7,3 +7,8 @@ env:
   browser: true
 
 extends: 'htmlacademy/vanilla'
+
+rules:
+    jsdoc/no-undefined-types: 1
+
+plugins: ['jsdoc']

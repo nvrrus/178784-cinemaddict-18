@@ -1,8 +1,8 @@
 import { KeysPressType } from '../constants/constants.module';
 import { remove, render } from '../framework/render';
-// eslint-disable-next-line no-unused-vars
+
 import CommentsModel from '../model/comments';
-// eslint-disable-next-line no-unused-vars
+
 import FilmsModel from '../model/films';
 import KeysPressObserver from '../utils/keys-press-observer';
 import PopupView from '../view/popup-view';

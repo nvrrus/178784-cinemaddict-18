@@ -19,7 +19,6 @@ const getActiveClassOrEmpty = (filterType, currentFilter) =>
   filterType === currentFilter ? 'main-navigation__item--active' : '';
 
 export const getFiltersTemplate = (allFilms, filterType) => `
-
 <nav class="main-navigation">
   <a href="#all" class="main-navigation__item ${getActiveClassOrEmpty(filterType, FilterType.ALL)}" data-type="all">All movies</a>
   <a href="#watchlist" class="main-navigation__item ${getActiveClassOrEmpty(filterType, FilterType.WATHCLIST)}" data-type="watchlist">Watchlist <span class="main-navigation__item-count">${getWatchListCount(allFilms)}</span></a>

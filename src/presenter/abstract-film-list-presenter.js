@@ -1,17 +1,11 @@
 import { FilterType } from '../constants/constants.module';
 import { remove, render, RenderPosition, replace } from '../framework/render';
-// eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
-// eslint-disable-next-line no-unused-vars
 import FiltersModel from '../model/filter';
 import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
-// eslint-disable-next-line no-unused-vars
 import PopupPresenter from './popup-presenter';
-// eslint-disable-next-line no-unused-vars
 import FiltersPresenter from './filters-presenter';
-// eslint-disable-next-line no-unused-vars
-import SortsModel from '../model/sorts';
 
 export default class AbstractFilmListPresenter {
   #filmsContainer;

@@ -4,6 +4,7 @@ import { remove, render, RenderPosition } from '../framework/render';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import AbstractFilmListPresenter from './abstract-film-list-presenter';
 import FilterNotSupported from '../errors/filter-not-supported';
+import SortsModel from '../model/sorts';
 
 export default class FilmListAllPresenter extends AbstractFilmListPresenter {
   _renderPlace = RenderPosition.AFTERBEGIN;

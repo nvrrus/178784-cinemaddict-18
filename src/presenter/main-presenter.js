@@ -1,10 +1,7 @@
 import { Constants } from '../constants/constants.module';
 import { render } from '../framework/render';
-// eslint-disable-next-line no-unused-vars
 import CommentsModel from '../model/comments';
-// eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
-// eslint-disable-next-line no-unused-vars
 import FiltersModel from '../model/filter';
 import ProfileView from '../view/profile-view';
 import FilmListAllPresenter from './film-list-all-presenter';
@@ -51,7 +48,7 @@ export default class MainPresenter {
     const filmsContainer = this.#mainContainer.querySelector(Constants.FILMS_SELECTOR);
 
     this.#filtersPresenter = new FiltersPresenter(this.#mainContainer, filmsModel, filtersModel);
-    this.#sortsPresenter = new SortsPresenter(this.#mainContainer, sortsModel, filmsModel);
+    this.#sortsPresenter = new SortsPresenter(sortsModel, filmsModel);
 
     const filmPopupPresenter = new PopupPresenter(filmsModel, commentsModel, footerElement);
     this.#filmListAllPresenter = new FilmListAllPresenter(filmsModel, filtersModel, sortsModel, this.#filtersPresenter, filmPopupPresenter, filmsContainer);
@@ -62,7 +59,8 @@ export default class MainPresenter {
   init = () => {
     render(new ProfileView(), this.#headerContainer);
     this.#filtersPresenter.init();
-    this.#sortsPresenter.init();
+    const filtersContainer = this.#mainContainer.querySelector(Constants.FILTERS_CONTAINER_SELECTOR);
+    this.#sortsPresenter.init(filtersContainer);
     this.#filmListAllPresenter.init();
     this.#filmListTopRatedPresenter.init();
     this.#filmListMostCommentedPresenter.init();

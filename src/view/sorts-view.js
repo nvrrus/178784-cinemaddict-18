@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { Constants, SortType } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getSortTemplate } from '../template/sorts-temlate';
