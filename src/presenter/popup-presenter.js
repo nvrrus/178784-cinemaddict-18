@@ -48,6 +48,13 @@ export default class PopupPresenter {
     KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
   };
 
+  isOpened() {
+    if (this.#popupView) {
+      return true;
+    }
+    return false;
+  }
+
   #onClickPopupCloseBtn = () => {
     this.#removePopup();
   };
