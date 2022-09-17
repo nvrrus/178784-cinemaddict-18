@@ -1,3 +1,4 @@
+import he from 'he';
 import { formatStringToDateAndTime, getEmojiUrl } from '../utils/film';
 
 export const getCommentTemplate = (commentObj) => {
@@ -7,7 +8,7 @@ export const getCommentTemplate = (commentObj) => {
     <img src="${getEmojiUrl(emotion)}" width="55" height="55" alt="emoji-smile">
   </span>
   <div>
-    <p class="film-details__comment-text">${comment}</p>
+    <p class="film-details__comment-text">${he.encode(comment)}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${formatStringToDateAndTime(date)}</span>

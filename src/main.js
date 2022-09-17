@@ -1,11 +1,13 @@
 import CommentsModel from './model/comments.js';
 import FilmsModel from './model/films.js';
 import FiltersModel from './model/filter.js';
+import SortsModel from './model/sorts.js';
 import MainPresenter from './presenter/main-presenter.js';
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 const filtersModel = new FiltersModel();
+const sortsModel = new SortsModel();
 
-const filmsPresenter = new MainPresenter(filmsModel, commentsModel, filtersModel);
+const filmsPresenter = new MainPresenter(filmsModel, commentsModel, filtersModel, sortsModel);
 filmsPresenter.init();

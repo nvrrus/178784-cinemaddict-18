@@ -6,7 +6,7 @@ export default class FilmListMostCommentedPresenter extends AbstractFilmListPres
   _isExtra = true;
 
   _getFilms() {
-    return this._filmsModel.getAllFilms(FilterType.ALL)
+    return this._filmsModel.getFilms(FilterType.ALL)
       .sort(compareFilmsByCommentsCountDesc)
       .slice(0, Constants.MOST_COMMENTED_FILMS_COUNT);
   }

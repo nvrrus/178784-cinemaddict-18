@@ -6,7 +6,7 @@ export default class FilmListTopRatedPresenter extends AbstractFilmListPresenter
   _isExtra = true;
 
   _getFilms() {
-    return this._filmsModel.getAllFilms(FilterType.ALL)
+    return this._filmsModel.getFilms(FilterType.ALL)
       .sort(compareFilmsByRatingDesc)
       .filter((film) => film.rating > 0)
       .slice(0, Constants.TOP_RATED_FILMS_COUNT);

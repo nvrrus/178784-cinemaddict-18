@@ -14,14 +14,20 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
   /** @type {ShowMoreButtonView} */
   #showMoreButtonView;
 
-  constructor(filmsModel, filtersModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
+  /** @type {SortsModel} */
+  #sortsModel;
+
+  constructor(filmsModel, filtersModel, sortsModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
     super(filmsModel, filtersModel, filtersPresenter, filmPopupPresenter, filmsContainer);
-    this._filtersModel.addObserver(this._onFilterUpdate);
+    this._filtersModel.addObserver(this.#onFiltersModelUpdate);
+    this.#sortsModel = sortsModel;
+    this.#sortsModel.addObserver(this.#onSortsModelUpdate);
   }
 
   _getFilms() {
     const filterType = this._filtersModel.getFilterType();
-    this.#batcher = new Batcher(this._filmsModel.getFilms(filterType), Constants.FILMS_BATCH_SIZE);
+    const sortType = this.#sortsModel.getSortType();
+    this.#batcher = new Batcher(this._filmsModel.getFilms(filterType, sortType), Constants.FILMS_BATCH_SIZE);
     return this.#batcher.isAny() ? this.#batcher.nextBatch() : [];
   }
 
@@ -59,10 +65,6 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
     super._renderEmptyFilmList(RenderPosition.AFTERBEGIN);
   }
 
-  _onFilterUpdate = () => {
-    this.init();
-  };
-
   #onShowMoreClick = () => {
     const batch = this.#batcher.nextBatch();
     this._renderFilmCards(batch);
@@ -75,4 +77,12 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
     remove(this.#showMoreButtonView);
     this.#showMoreButtonView.element.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onShowMoreClick);
   }
+
+  #onFiltersModelUpdate = () => {
+    this.init();
+  };
+
+  #onSortsModelUpdate = () => {
+    this.init();
+  };
 }

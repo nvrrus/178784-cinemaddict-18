@@ -44,7 +44,7 @@ export default class PopupPresenter {
     this.#popupView.setDeleteCommentClick(this.#onDeleteComment);
     this.#popupView.setAddNewCommentHandler(this.#onAddNewComment);
 
-    this.#filmsModel.addObserver(this.#onFilmUpdate);
+    this.#filmsModel.addObserver(this.#onFilmsModelUpdate);
     KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
   };
 
@@ -83,7 +83,7 @@ export default class PopupPresenter {
     remove(this.#popupView);
     this.#popupView = null;
 
-    this.#filmsModel.removeObserver(this.#onFilmUpdate);
+    this.#filmsModel.removeObserver(this.#onFilmsModelUpdate);
     KeysPressObserver.getInstance().removeObserver(this.#onKeyPressed);
   };
 
@@ -98,7 +98,7 @@ export default class PopupPresenter {
     }
   }
 
-  #onFilmUpdate = (updateType, updatedFilmId) => {
+  #onFilmsModelUpdate = (updateType, updatedFilmId) => {
     if (updatedFilmId !== this.#film.id || !this.#popupView) {
       return;
     }

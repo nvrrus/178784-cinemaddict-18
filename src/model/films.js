@@ -1,10 +1,12 @@
-import { ControlType, FilterType, UpdateType } from '../constants/constants.module';
+import { ControlType, FilterType, SortType, UpdateType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import FilterNotSupported from '../errors/filter-not-supported';
+import SortNotSupported from '../errors/sort-not-supported';
 import Observable from '../framework/observable';
 import { MockConstants } from '../mock/mock-constants';
 import { getFilm } from '../mock/mock-film';
 import { updateItem } from '../utils/common';
+import { compareFilmsByRatingDesc, compareFilmsByReleaseDateDesc } from '../utils/film';
 
 export default class FilmsModel extends Observable {
   #films;
@@ -14,16 +16,30 @@ export default class FilmsModel extends Observable {
     this.#films = Array.from({ length: MockConstants.FILMS_COUNT }, getFilm);
   }
 
-  getFilms = (filterType) => {
+  getFilms = (filterType, sortType = SortType.DEFAULT) => {
+    let result = this.#films.slice();
+    switch (sortType) {
+      case SortType.DEFAULT:
+        break;
+      case SortType.DATE:
+        result = result.sort(compareFilmsByReleaseDateDesc);
+        break;
+      case SortType.RATING:
+        result = result.sort(compareFilmsByRatingDesc);
+        break;
+      default:
+        throw new SortNotSupported(sortType);
+    }
+
     switch (filterType) {
       case FilterType.ALL:
-        return this.#films.slice();
+        return result;
       case FilterType.FAVORITE:
-        return this.#films.filter((film) => film.isFavorite);
+        return result.filter((film) => film.isFavorite);
       case FilterType.HISTORY:
-        return this.#films.filter((film) => film.isAlreadyWatched);
+        return result.filter((film) => film.isAlreadyWatched);
       case FilterType.WATHCLIST:
-        return this.#films.filter((film) => film.isInWatchlist);
+        return result.filter((film) => film.isInWatchlist);
       default:
         throw new FilterNotSupported(filterType);
     }
@@ -47,6 +63,10 @@ export default class FilmsModel extends Observable {
         throw new ControlTypeNotSupported(controlType);
     }
   };
+
+  any() {
+    return this.#films?.length > 0;
+  }
 
   update(id, update) {
     updateItem(this.#films, id, update);

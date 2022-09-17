@@ -75,6 +75,7 @@ export const UpdateType = {
   FILM_UPDATE: 1,
   COMMENT_DELETE: 2,
   FILTER_UPDATE: 3,
+  SORT_UPDATE: 4
 };
 
 export const KeyType = {
@@ -86,4 +87,10 @@ export const KeyType = {
 export const KeysPressType = {
   ESCAPE: 'Escape',
   CONTROL_ENTER: 'Control_Enter'
+};
+
+export const SortType = {
+  DEFAULT: 'Default',
+  DATE: 'Date',
+  RATING: 'Rating'
 };

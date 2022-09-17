@@ -1,5 +1,5 @@
-import { FilterType, UpdateType } from '../constants/constants.module';
-import { render, RenderPosition } from '../framework/render';
+import { FilterType } from '../constants/constants.module';
+import { remove, render, RenderPosition } from '../framework/render';
 // eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
 // eslint-disable-next-line no-unused-vars
@@ -22,8 +22,7 @@ export default class FiltersPresenter {
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
 
-    this.#filterModel.addObserver(this.#onFilterChangeHandler);
-    this.#filmsModel.addObserver(this.#onFilmUpdateHandler);
+    this.#filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
   init = () => {
@@ -33,26 +32,21 @@ export default class FiltersPresenter {
     const allFilms = this.#filmsModel.getFilms(FilterType.ALL);
     const filterType = this.#filterModel.getFilterType();
     this.#filtersView = new FiltersView(allFilms, filterType);
-    this.#filtersView.setFilterChangedHandler(this.#onFilterChanged);
+    this.#filtersView.setFilterChangedHandler(this.#onFilterChange);
     render(this.#filtersView, this.#mainContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #onFilterChanged = (filterType) => {
-    this.#filterModel.setFilter(filterType);
-    this.#filterModel._notify(UpdateType.MAJOR, filterType);
-  };
-
-  #onFilterChangeHandler = () => {
+  #onFilterChange = (filterType) => {
+    this.#filterModel.setFilterType(filterType);
     this.init();
   };
 
-  #onFilmUpdateHandler = () => {
+  #onFilmsModelUpdate = () => {
     this.init();
   };
 
   #destroy() {
-    this.#filtersView.element.remove();
-    this.#filtersView.removeElement();
+    remove(this.#filtersView);
     this.#filtersView = null;
   }
 }

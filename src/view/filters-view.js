@@ -1,6 +1,6 @@
 import { Constants } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
-import { getFiltersTemplate } from '../template/filter-template';
+import { getFiltersTemplate } from '../template/filters-template';
 
 export default class FiltersView extends AbstractView {
   #allFilms;

@@ -1,5 +1,5 @@
 import { FilterType } from '../constants/constants.module';
-import { render, RenderPosition, replace } from '../framework/render';
+import { remove, render, RenderPosition, replace } from '../framework/render';
 // eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
 // eslint-disable-next-line no-unused-vars
@@ -10,6 +10,8 @@ import FilmListView from '../view/film-list-view';
 import PopupPresenter from './popup-presenter';
 // eslint-disable-next-line no-unused-vars
 import FiltersPresenter from './filters-presenter';
+// eslint-disable-next-line no-unused-vars
+import SortsModel from '../model/sorts';
 
 export default class AbstractFilmListPresenter {
   #filmsContainer;
@@ -52,7 +54,7 @@ export default class AbstractFilmListPresenter {
     this.#filmPopupPresenter = filmPopupPresenter;
     this.#filmsContainer = filmsContainer;
 
-    this._filmsModel.addObserver(this.#onFilmUpdate);
+    this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
   init = () => {
@@ -69,7 +71,7 @@ export default class AbstractFilmListPresenter {
     }
   };
 
-  #onFilmUpdate = (updateType, filmId) => {
+  #onFilmsModelUpdate = (updateType, filmId) => {
     if (this._filtersModel.getFilterType() === FilterType.ALL) {
       this.#tryUpdateFilmCard(filmId);
     }
@@ -141,8 +143,7 @@ export default class AbstractFilmListPresenter {
   }
 
   #destroy() {
-    this._filmListView.element.remove();
-    this._filmListView.removeElement();
+    remove(this._filmListView);
     this._filmListView = null;
     this.#filmViewByFilmIds.clear();
   }
