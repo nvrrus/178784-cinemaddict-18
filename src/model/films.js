@@ -17,15 +17,15 @@ export default class FilmsModel extends Observable {
   }
 
   getFilms = (filterType, sortType = SortType.DEFAULT) => {
-    let result = this.#films.slice();
+    let films = this.#films.slice();
     switch (sortType) {
       case SortType.DEFAULT:
         break;
       case SortType.DATE:
-        result = result.sort(compareFilmsByReleaseDateDesc);
+        films = films.sort(compareFilmsByReleaseDateDesc);
         break;
       case SortType.RATING:
-        result = result.sort(compareFilmsByRatingDesc);
+        films = films.sort(compareFilmsByRatingDesc);
         break;
       default:
         throw new SortNotSupported(sortType);
@@ -33,13 +33,13 @@ export default class FilmsModel extends Observable {
 
     switch (filterType) {
       case FilterType.ALL:
-        return result;
+        return films;
       case FilterType.FAVORITE:
-        return result.filter((film) => film.isFavorite);
+        return films.filter((film) => film.isFavorite);
       case FilterType.HISTORY:
-        return result.filter((film) => film.isAlreadyWatched);
+        return films.filter((film) => film.isAlreadyWatched);
       case FilterType.WATHCLIST:
-        return result.filter((film) => film.isInWatchlist);
+        return films.filter((film) => film.isInWatchlist);
       default:
         throw new FilterNotSupported(filterType);
     }
@@ -64,8 +64,8 @@ export default class FilmsModel extends Observable {
     }
   };
 
-  any() {
-    return this.#films?.length > 0;
+  isEmpty() {
+    return !this.#films || this.#films.length === 0;
   }
 
   update(id, update) {

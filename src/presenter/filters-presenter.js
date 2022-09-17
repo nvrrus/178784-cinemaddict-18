@@ -1,5 +1,5 @@
 import { FilterType } from '../constants/constants.module';
-import { remove, render, RenderPosition } from '../framework/render';
+import { render, RenderPosition, replace } from '../framework/render';
 // eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
 // eslint-disable-next-line no-unused-vars
@@ -26,14 +26,19 @@ export default class FiltersPresenter {
   }
 
   init = () => {
-    if (this.#filtersView) {
-      this.#destroy();
-    }
     const allFilms = this.#filmsModel.getFilms(FilterType.ALL);
     const filterType = this.#filterModel.getFilterType();
-    this.#filtersView = new FiltersView(allFilms, filterType);
+
+    const newFiltersView = new FiltersView(allFilms, filterType);
+    if (this.#filtersView) {
+      replace(newFiltersView, this.#filtersView);
+    }
+    else {
+      render(newFiltersView, this.#mainContainer, RenderPosition.AFTERBEGIN);
+    }
+    this.#filtersView = newFiltersView;
     this.#filtersView.setFilterChangedHandler(this.#onFilterChange);
-    render(this.#filtersView, this.#mainContainer, RenderPosition.AFTERBEGIN);
+
   };
 
   #onFilterChange = (filterType) => {
@@ -44,9 +49,4 @@ export default class FiltersPresenter {
   #onFilmsModelUpdate = () => {
     this.init();
   };
-
-  #destroy() {
-    remove(this.#filtersView);
-    this.#filtersView = null;
-  }
 }

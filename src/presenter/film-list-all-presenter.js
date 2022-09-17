@@ -31,10 +31,6 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
     return this.#batcher.isAny() ? this.#batcher.nextBatch() : [];
   }
 
-  _getListTitle() {
-    return null;
-  }
-
   _getEmptyListTitle() {
     const filterType = this._filtersModel.getFilterType();
     switch(filterType) {

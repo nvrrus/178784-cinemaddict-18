@@ -32,7 +32,7 @@ export default class PopupPresenter {
   }
 
   init = (film) => {
-    if (this.isOpened()) {
+    if (this.#popupView) {
       return;
     }
     this.#film = film;
@@ -47,13 +47,6 @@ export default class PopupPresenter {
     this.#filmsModel.addObserver(this.#onFilmsModelUpdate);
     KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
   };
-
-  isOpened() {
-    if (this.#popupView) {
-      return true;
-    }
-    return false;
-  }
 
   #onClickPopupCloseBtn = () => {
     this.#removePopup();

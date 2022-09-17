@@ -1,4 +1,4 @@
-import { remove, render, RenderPosition } from '../framework/render';
+import { render, RenderPosition, replace } from '../framework/render';
 // eslint-disable-next-line no-unused-vars
 import FilmsModel from '../model/films';
 // eslint-disable-next-line no-unused-vars
@@ -24,22 +24,21 @@ export default class SortPresenter {
   }
 
   init() {
-    if (this.#sortsView) {
-      this.#destroy();
-    }
-
-    if (!this.#filmsModel.any()) {
+    if (this.#filmsModel.isEmpty()) {
       return;
     }
 
-    this.#sortsView = new SortsView(this.#sortsModel.getSortType());
-    render(this.#sortsView, this.#sortsContainer, RenderPosition.AFTERBEGIN);
-    this.#sortsView.setSortChangeHandler(this.#onSortChanged);
-  }
+    const newSortsView = new SortsView(this.#sortsModel.getSortType());
 
-  #destroy() {
-    remove(this.#sortsView);
-    this.#sortsView = null;
+    if (this.#sortsView) {
+      replace(newSortsView, this.#sortsView);
+    }
+    else {
+      render(newSortsView, this.#sortsContainer, RenderPosition.AFTERBEGIN);
+    }
+
+    this.#sortsView = newSortsView;
+    this.#sortsView.setSortChangeHandler(this.#onSortChanged);
   }
 
   #onSortChanged = (sortType) => {
