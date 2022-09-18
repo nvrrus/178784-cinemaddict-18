@@ -1,16 +1,17 @@
-import { Constants } from '../constants.module';
+import { Constants, ControlType } from '../constants/constants.module';
+import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import { formatMinutesToTime } from '../utils/film';
 
-const getButtonTypeClass = (buttonType) => {
-  switch(buttonType) {
-    case Constants.CONTROL_BTN_TYPE.watchlist:
+const getButtonTypeClass = (controlType) => {
+  switch(controlType) {
+    case ControlType.WATHCLIST:
       return Constants.TO_WATCH_LIST_CARD_BTN_CLASS;
-    case Constants.CONTROL_BTN_TYPE.watched:
+    case ControlType.WATCHED:
       return Constants.MARK_WATCHED_CARD_BTN_CLASS;
-    case Constants.CONTROL_BTN_TYPE.favorite:
+    case ControlType.FAVORITE:
       return Constants.TO_FAVORITE_CARD_BTN_CLASS;
     default:
-      throw new Error(`Control type: ${buttonType} not supported`);
+      throw new ControlTypeNotSupported(controlType);
   }
 };
 
@@ -34,9 +35,9 @@ export const getFilmCardTemlate = (film) => {
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
-      ${getControlButton(Constants.CONTROL_BTN_TYPE.watchlist, isInWatchlist)}
-      ${getControlButton(Constants.CONTROL_BTN_TYPE.watched, isAlreadyWatched)}
-      ${getControlButton(Constants.CONTROL_BTN_TYPE.favorite, isFavorite)}
+      ${getControlButton(ControlType.WATHCLIST, isInWatchlist)}
+      ${getControlButton(ControlType.WATCHED, isAlreadyWatched)}
+      ${getControlButton(ControlType.FAVORITE, isFavorite)}
     </div>
   </article>`;
 };

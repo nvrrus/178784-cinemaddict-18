@@ -1,24 +1,50 @@
-import { render, RenderPosition } from '../framework/render';
-import FiltersView from '../view/fliters-view';
+import { FilterType } from '../constants/constants.module';
+import { render, RenderPosition, replace } from '../framework/render';
+import FilmsModel from '../model/films';
+import FiltersModel from '../model/filter';
+import FiltersView from '../view/filters-view';
 
 export default class FiltersPresenter {
   /** @type {FiltersView} */
   #filtersView;
-  #mainContainer;
-  constructor(mainContainer) {
-    this.#mainContainer = mainContainer;
+  #filtersContainer;
+
+  /** @type {FilmsModel} */
+  #filmsModel;
+
+  /** @type {FiltersModel} */
+  #filterModel;
+
+  constructor(filtersContainer, filmsModel, filterModel) {
+    this.#filtersContainer = filtersContainer;
+    this.#filmsModel = filmsModel;
+    this.#filterModel = filterModel;
+
+    this.#filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
-  init(allFilms) {
+  init = () => {
+    const allFilms = this.#filmsModel.getFilms(FilterType.ALL);
+    const filterType = this.#filterModel.getFilterType();
+
+    const newFiltersView = new FiltersView(allFilms, filterType);
     if (this.#filtersView) {
-      this.#destroy();
+      replace(newFiltersView, this.#filtersView);
     }
-    this.#filtersView = new FiltersView(allFilms);
-    render(this.#filtersView, this.#mainContainer, RenderPosition.AFTERBEGIN);
-  }
+    else {
+      render(newFiltersView, this.#filtersContainer, RenderPosition.AFTERBEGIN);
+    }
+    this.#filtersView = newFiltersView;
+    this.#filtersView.setFilterChangedHandler(this.#onFilterChange);
 
-  #destroy() {
-    this.#filtersView.element.remove();
-    this.#filtersView.removeElement();
-  }
+  };
+
+  #onFilterChange = (filterType) => {
+    this.#filterModel.setFilterType(filterType);
+    this.init();
+  };
+
+  #onFilmsModelUpdate = () => {
+    this.init();
+  };
 }

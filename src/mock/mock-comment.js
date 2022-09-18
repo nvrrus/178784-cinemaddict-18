@@ -26,3 +26,19 @@ export const createFilmComments = (filmId) => {
 
 /** @type {Array.<Object>} */
 export const getFilmComments = (filmId) => commentsByFilmIds.get(filmId);
+
+export const deleteComment = (filmId, commentId) => {
+  const filmComments = commentsByFilmIds.get(filmId);
+  const index = filmComments.findIndex((comment) => comment.id === commentId);
+  if (index > -1) {
+    filmComments.splice(index, 1);
+  }
+};
+
+export const addComment = (filmId, newComment) => {
+  const filmComments = commentsByFilmIds.get(filmId);
+  newComment.id = nanoid();
+  newComment.author = getRandomElement(MockConstants.AUTHORS);
+  newComment.date = getNewCommentDate();
+  filmComments.push({...newComment});
+};

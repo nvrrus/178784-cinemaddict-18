@@ -1,30 +1,31 @@
-import { Constants } from '../constants.module';
+import { Constants, ControlType, EmojiType } from '../constants/constants.module';
+import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import { formatStringToDate, formatMinutesToTime, compareCommentsByDate } from '../utils/film';
-import FilmCommentView from '../view/comment-view';
+import PopupCommentView from '../view/popup-comment-view';
 
-const getButtonTypeClass = (buttonType) => {
-  switch (buttonType) {
-    case Constants.CONTROL_BTN_TYPE.watchlist:
+const getButtonTypeClass = (controlType) => {
+  switch (controlType) {
+    case ControlType.WATHCLIST:
       return Constants.TO_WATCH_LIST_POPUP_BTN_CLASS;
-    case Constants.CONTROL_BTN_TYPE.watched:
+    case ControlType.WATCHED:
       return Constants.MARK_WATCHED_POPUP_BTN_CLASS;
-    case Constants.CONTROL_BTN_TYPE.favorite:
+    case ControlType.FAVORITE:
       return Constants.TO_FAVORITE_POPUP_BTN_CLASS;
     default:
-      throw new Error(`Control type: ${buttonType} not supported`);
+      throw new ControlTypeNotSupported(controlType);
   }
 };
 
 const getButtonName = (buttonType, isActive) => {
   switch(buttonType) {
-    case Constants.CONTROL_BTN_TYPE.watchlist:
+    case ControlType.WATHCLIST:
       return isActive ? Constants.ALREADY_IN_WATCH_LIST_BTN_NAME : Constants.ADD_TO_WATCH_LIST_BTN_NAME;
-    case Constants.CONTROL_BTN_TYPE.watched:
+    case ControlType.WATCHED:
       return isActive ? Constants.ALREADY_WATCHED_BTN_NABE : Constants.MARK_AS_WATCHED_BTN_NAME;
-    case Constants.CONTROL_BTN_TYPE.favorite:
+    case ControlType.FAVORITE:
       return isActive ? Constants.ALREADY_FAVORITE_BTN_NABE : Constants.MARK_AS_FAVORITE_BTN_NAME;
     default:
-      throw new Error(`Control type: ${buttonType} not supported`);
+      throw new ControlTypeNotSupported(buttonType);
   }
 };
 
@@ -42,8 +43,9 @@ const getGenresTemplate = (genres) =>
 const getCommentsTemplate = (comments) => comments
   .slice()
   .sort(compareCommentsByDate)
-  .map((comment) => new FilmCommentView(comment).template)
+  .map((comment) => new PopupCommentView(comment).template)
   .join('');
+
 
 const getCommentEmojiTemplate = (emoji) => {
   if (!emoji) {
@@ -59,11 +61,12 @@ const getRadioEmoji = (emojiType, checkedEmojiType) =>
     <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="emoji" >
   </label>`;
 
-export const getFilterPopupTemplate = (data) => {
+
+export const getPopupTemplate = (data) => {
   const { poster, title, alternativeTitle, rating, director,
     writers, actors, release, runtime,
-    age, genres, description, comments,
-    isInWatchlist, isAlreadyWatched, isFavorite, filmComments,
+    age, genres, description, isInWatchlist,
+    isAlreadyWatched, isFavorite, filmComments,
     commentEmoji, newComment } = data;
   return `
   <section class="film-details">
@@ -131,20 +134,19 @@ export const getFilterPopupTemplate = (data) => {
         </div>
 
         <section class="film-details__controls">
-          ${getControlButton(Constants.CONTROL_BTN_TYPE.watchlist, isInWatchlist)}
-          ${getControlButton(Constants.CONTROL_BTN_TYPE.watched, isAlreadyWatched)}
-          ${getControlButton(Constants.CONTROL_BTN_TYPE.favorite, isFavorite)}
+          ${getControlButton(ControlType.WATHCLIST, isInWatchlist)}
+          ${getControlButton(ControlType.WATCHED, isAlreadyWatched)}
+          ${getControlButton(ControlType.FAVORITE, isFavorite)}
         </section>
       </div>
 
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${filmComments.length ?? 0}</span></h3>
 
           <ul class="film-details__comments-list">
             ${getCommentsTemplate(filmComments)}
           </ul>
-
           <form class="film-details__new-comment" action="" method="get">
             <div class="film-details__add-emoji-label">
               ${getCommentEmojiTemplate(commentEmoji)}
@@ -156,10 +158,10 @@ export const getFilterPopupTemplate = (data) => {
             </label>
 
             <div class="film-details__emoji-list">
-              ${getRadioEmoji(Constants.EMOJI_TYPE.smile, commentEmoji)}
-              ${getRadioEmoji(Constants.EMOJI_TYPE.sleeping, commentEmoji)}
-              ${getRadioEmoji(Constants.EMOJI_TYPE.puke, commentEmoji)}
-              ${getRadioEmoji(Constants.EMOJI_TYPE.angry, commentEmoji)}
+              ${getRadioEmoji(EmojiType.SMILE, commentEmoji)}
+              ${getRadioEmoji(EmojiType.SLEEPING, commentEmoji)}
+              ${getRadioEmoji(EmojiType.PUKE, commentEmoji)}
+              ${getRadioEmoji(EmojiType.ANGRY, commentEmoji)}
             </div>
           </form>
         </section>
