@@ -1,22 +1,31 @@
+import FilmsApiService from '../api/films-api-service';
 import { ControlType, FilterType, SortType, UpdateType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import FilterNotSupported from '../errors/filter-not-supported';
 import Observable from '../framework/observable';
-import { MockConstants } from '../mock/mock-constants';
-import { getFilm } from '../mock/mock-film';
+import CaseHelper from '../utils/case-helper';
 import { updateItem } from '../utils/common';
 import { compareFilmsByRatingDesc, compareFilmsByReleaseDateDesc } from '../utils/film';
 
 export default class FilmsModel extends Observable {
-  #films;
+  /** @type {FilmsApiService} */
+  #filmsApiService;
+
+  /** @type {Array} */
+  #allFilms;
 
   constructor() {
     super();
-    this.#films = Array.from({ length: MockConstants.FILMS_COUNT }, getFilm);
+    this.#filmsApiService = new FilmsApiService();
   }
 
-  getFilms = (filterType, sortType = SortType.DEFAULT) => {
-    let films = this.#films.slice();
+  async initAsync() {
+    const allFilms = await this.#filmsApiService.getAllAsync();
+    this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
+  }
+
+  getFilms(filterType, sortType = SortType.DEFAULT) {
+    let films = this.#allFilms.slice();
     switch (sortType) {
       case SortType.DATE:
         films = films.sort(compareFilmsByReleaseDateDesc);
@@ -38,9 +47,9 @@ export default class FilmsModel extends Observable {
       default:
         throw new FilterNotSupported(filterType);
     }
-  };
+  }
 
-  getById = (id) => this.#films.find((film) => film.id === id);
+  getById = (id) => this.#allFilms.find((film) => film.id === id);
 
   getToggleControlUpdateObject = (controlType, filmId) => {
     const film = this.getById(filmId);
@@ -60,11 +69,24 @@ export default class FilmsModel extends Observable {
   };
 
   isEmpty() {
-    return !this.#films || this.#films.length === 0;
+    return !this.#allFilms || this.#allFilms.length === 0;
   }
 
   update(id, update) {
-    updateItem(this.#films, id, update);
+    updateItem(this.#allFilms, id, update);
     this._notify(UpdateType.FILM_UPDATE, id);
+  }
+
+  #adaptToClient(film) {
+    let adaptedFilm = CaseHelper.objectToCamel(film);
+    adaptedFilm = {
+      ...adaptedFilm,
+      ...adaptedFilm.filmInfo,
+      ...adaptedFilm.userDetails
+    };
+
+    delete adaptedFilm.film_info;
+    delete adaptedFilm.user_details;
+    return adaptedFilm;
   }
 }

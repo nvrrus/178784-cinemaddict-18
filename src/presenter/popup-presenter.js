@@ -31,20 +31,20 @@ export default class PopupPresenter {
     this.#footerElement = footerElement;
   }
 
-  init = (film) => {
+  initAsync = async (film) => {
     if (this.#popupView) {
       return;
     }
     this.#film = film;
-    const comments = this.#commentsModel.get(film.id);
+    const comments = await this.#commentsModel.getAsync(film.id);
 
     this.#popupView = new PopupView(film, comments);
     render(this.#popupView, this.#footerElement);
     this.#popupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
-    this.#popupView.setDeleteCommentClick(this.#onDeleteComment);
-    this.#popupView.setAddNewCommentHandler(this.#onAddNewComment);
+    this.#popupView.setDeleteCommentClick(this.#onDeleteCommentAsync);
+    this.#popupView.setAddNewCommentHandler(this.#onAddNewCommentAsync);
 
-    this.#filmsModel.addObserver(this.#onFilmsModelUpdate);
+    this.#filmsModel.addObserver(this.#onFilmsModelUpdateAsync);
     KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
   };
 
@@ -59,14 +59,14 @@ export default class PopupPresenter {
     this.#removePopup();
   };
 
-  #onDeleteComment = (commentId) => {
+  #onDeleteCommentAsync = async (commentId) => {
     this.#commentsModel.delete(this.#film.id, commentId);
-    this.#onUpdateFilmComments();
+    await this.#onUpdateFilmCommentsAsync();
   };
 
-  #onAddNewComment = (newComment) => {
+  #onAddNewCommentAsync = async (newComment) => {
     this.#commentsModel.add(this.#film.id, newComment);
-    this.#onUpdateFilmComments();
+    await this.#onUpdateFilmCommentsAsync();
   };
 
   #onKeyPressed = (keyPressType) => {
@@ -83,12 +83,12 @@ export default class PopupPresenter {
     remove(this.#popupView);
     this.#popupView = null;
 
-    this.#filmsModel.removeObserver(this.#onFilmsModelUpdate);
+    this.#filmsModel.removeObserver(this.#onFilmsModelUpdateAsync);
     KeysPressObserver.getInstance().removeObserver(this.#onKeyPressed);
   };
 
-  #onUpdateFilmComments() {
-    const comments = this.#commentsModel.get(this.#film.id);
+  async #onUpdateFilmCommentsAsync() {
+    const comments = await this.#commentsModel.getAsync(this.#film.id);
     this.#filmsModel.update(this.#film.id, { comments: comments.map((c) => c.id) });
   }
 
@@ -98,12 +98,12 @@ export default class PopupPresenter {
     }
   }
 
-  #onFilmsModelUpdate = (updateType, updatedFilmId) => {
+  #onFilmsModelUpdateAsync = async (updateType, updatedFilmId) => {
     if (updatedFilmId !== this.#film.id || !this.#popupView) {
       return;
     }
     const film = this.#filmsModel.getById(this.#film.id);
-    const comments = this.#commentsModel.get(film.id);
+    const comments = await this.#commentsModel.getAsync(film.id);
     const newState = PopupView.parseFilmDataToState(film, comments);
     this.#popupView.updateElement(newState);
   };

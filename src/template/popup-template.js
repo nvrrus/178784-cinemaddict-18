@@ -63,9 +63,9 @@ const getRadioEmoji = (emojiType, checkedEmojiType) =>
 
 
 export const getPopupTemplate = (data) => {
-  const { poster, title, alternativeTitle, rating, director,
+  const { poster, title, alternativeTitle, totalRating, director,
     writers, actors, release, runtime,
-    age, genres, description, isInWatchlist,
+    ageRating, genre, description, isInWatchlist,
     isAlreadyWatched, isFavorite, filmComments,
     commentEmoji, newComment } = data;
   return `
@@ -79,7 +79,7 @@ export const getPopupTemplate = (data) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${poster}" alt="">
 
-            <p class="film-details__age">${age}+</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
 
           <div class="film-details__info">
@@ -90,7 +90,7 @@ export const getPopupTemplate = (data) => {
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${rating}</p>
+                <p class="film-details__total-rating">${totalRating}</p>
               </div>
             </div>
 
@@ -117,12 +117,12 @@ export const getPopupTemplate = (data) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${release.country}</td>
+                <td class="film-details__cell">${release.releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  ${getGenresTemplate(genres)}
+                  ${getGenresTemplate(genre)}
                 </td>
               </tr>
             </table>

@@ -10,7 +10,9 @@ const getEmojiUrl = (emotion) => `./images/emoji/${emotion}.png`;
 
 const formatStringToDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 const formatStringToDate = (date) => dayjs(date).format('DD MMMM YYYY');
-const formatMinutesToTime = (minutes) => dayjs(minutes, 'minutes').format('HH[h] mm[m]');
+const formatStringToYear = (date) => dayjs(date).format('YYYY');
+
+const formatMinutesToTime = (minutes) => dayjs.duration(minutes, 'minute').format('HH[h] mm[m]');
 const getDateSeconds = (date) => dayjs(date).unix();
 
 const compareCommentsByDate = (comment1, comment2) => getDateSeconds(comment1.date) - getDateSeconds(comment2.date);
@@ -29,7 +31,8 @@ const getFilmId = (targetElement) => {
 };
 
 export {
-  getEmojiUrl, formatStringToDateAndTime, formatStringToDate, formatMinutesToTime, getDateSeconds,
+  getEmojiUrl, formatStringToDateAndTime, formatStringToDate, formatStringToYear,
+  formatMinutesToTime, getDateSeconds,
   compareCommentsByDate, compareFilmsByRatingDesc, compareFilmsByCommentsCountDesc,
   compareFilmsByReleaseDateDesc, getFilmId
 };

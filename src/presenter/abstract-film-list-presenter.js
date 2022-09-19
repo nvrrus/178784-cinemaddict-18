@@ -90,7 +90,7 @@ export default class AbstractFilmListPresenter {
   _renderNotEmptyFilmList(films) {
     this._filmListView = new FilmListView(this._getListTitle(), this._isExtra);
     render(this._filmListView, this.#filmsContainer, this._renderPlace);
-    this._filmListView.setClickHandlers(this.#onPosterClick, this.#onControlButtonClick);
+    this._filmListView.setClickHandlers(this.#onPosterClickAsync, this.#onControlButtonClick);
     this._renderFilmCards(films);
   }
 
@@ -109,12 +109,12 @@ export default class AbstractFilmListPresenter {
     return filmView;
   }
 
-  #onPosterClick = (filmId) => {
+  #onPosterClickAsync = async (filmId) => {
     const film = this._filmsModel.getById(filmId);
     if (this.#filmPopupPresenter.isOpened()) {
       return;
     }
-    this.#filmPopupPresenter.init(film);
+    await this.#filmPopupPresenter.initAsync(film);
     this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
   };
 

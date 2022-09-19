@@ -49,7 +49,7 @@ export const Constants = {
   MOST_COMMENTED_FILM_LIST_TITLE: 'Most commented',
   MOST_COMMENTED_FILMS_COUNT: 2,
   FILMS_BATCH_SIZE: 5,
-  FILM_ID_DATA_ATTRIBUTE: 'id'
+  FILM_ID_DATA_ATTRIBUTE: 'id',
 };
 
 export const ControlType = {
@@ -94,4 +94,12 @@ export const SortType = {
   DEFAULT: 'Default',
   DATE: 'Date',
   RATING: 'Rating'
+};
+
+export const HttpMethods = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATHC: 'PATCH',
+  DELETE: 'DELETE',
 };
