@@ -8,8 +8,17 @@ export default class FilmsApiService extends ApiService {
     super(ApiSettings.ENDPOINT, ApiSettings.AUTHORIZATION);
   }
 
-  async getAllAsync() {
+  getAll() {
     return this._load({url: ApiSettings.FILMS_URL, method: HttpMethods.GET})
       .then(ApiService.parseResponse);
+  }
+
+  update(id, update) {
+    return this._load({
+      url: `${ApiSettings.FILMS_URL}/${id}`,
+      method: HttpMethods.PUT,
+      body: JSON.stringify(update),
+      headers: new Headers({'Content-Type': 'application/json'})
+    }).then(ApiService.parseResponse);
   }
 }

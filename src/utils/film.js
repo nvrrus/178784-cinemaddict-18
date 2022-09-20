@@ -16,7 +16,7 @@ const formatMinutesToTime = (minutes) => dayjs.duration(minutes, 'minute').forma
 const getDateSeconds = (date) => dayjs(date).unix();
 
 const compareCommentsByDate = (comment1, comment2) => getDateSeconds(comment1.date) - getDateSeconds(comment2.date);
-const compareFilmsByRatingDesc = (film1, film2) => film2.rating - film1.rating;
+const compareFilmsByRatingDesc = (film1, film2) => film2.totalRating - film1.totalRating;
 const compareFilmsByReleaseDateDesc = (film1, film2) => film2.release.date - film1.release.date;
 
 const compareFilmsByCommentsCountDesc = (film1, film2) => film2.comments.length - film1.comments.length;

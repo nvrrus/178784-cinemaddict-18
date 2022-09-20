@@ -90,7 +90,7 @@ export default class AbstractFilmListPresenter {
   _renderNotEmptyFilmList(films) {
     this._filmListView = new FilmListView(this._getListTitle(), this._isExtra);
     render(this._filmListView, this.#filmsContainer, this._renderPlace);
-    this._filmListView.setClickHandlers(this.#onPosterClickAsync, this.#onControlButtonClick);
+    this._filmListView.setClickHandlers(this.#onPosterClickAsync, this.#onControlButtonClickAsync);
     this._renderFilmCards(films);
   }
 
@@ -115,12 +115,12 @@ export default class AbstractFilmListPresenter {
       return;
     }
     await this.#filmPopupPresenter.initAsync(film);
-    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
+    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClickAsync);
   };
 
-  #onControlButtonClick = (controlType, filmId) => {
+  #onControlButtonClickAsync = async (controlType, filmId) => {
     const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
-    this._filmsModel.update(filmId, updateObject);
+    await this._filmsModel.updateAsync(filmId, updateObject);
   };
 
   #tryUpdateFilmCard(filmId) {

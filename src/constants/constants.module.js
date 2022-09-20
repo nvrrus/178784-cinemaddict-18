@@ -75,8 +75,9 @@ export const FilterType = {
 export const UpdateType = {
   FILM_UPDATE: 1,
   COMMENT_DELETE: 2,
-  FILTER_UPDATE: 3,
-  SORT_UPDATE: 4
+  COMMENT_ADD: 3,
+  FILTER_UPDATE: 4,
+  SORT_UPDATE: 5
 };
 
 export const KeyType = {

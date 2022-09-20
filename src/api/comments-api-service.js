@@ -7,8 +7,24 @@ export default class CommentsApiService extends ApiService {
     super(ApiSettings.ENDPOINT, ApiSettings.AUTHORIZATION);
   }
 
-  getCommentsAsync(filmId) {
+  getByFilmId(filmId) {
     return this._load({url: `${ApiSettings.COMMENTS_URL}/${filmId}`, method: HttpMethods.GET} )
       .then(ApiService.parseResponse);
+  }
+
+  add(filmId, comment) {
+    return this._load({
+      url: `${ApiSettings.COMMENTS_URL}/${filmId}`,
+      method: HttpMethods.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': 'application/json'})
+    }).then(ApiService.parseResponse);
+  }
+
+  delete(commentId) {
+    return this._load({
+      url: `${ApiSettings.COMMENTS_URL}/${commentId}`,
+      method: HttpMethods.DELETE
+    });
   }
 }

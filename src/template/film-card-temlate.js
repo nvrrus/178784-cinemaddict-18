@@ -20,7 +20,7 @@ const getControlButton = (buttonType, isActive) => `<button class="film-card__co
 
 export const getFilmCardTemlate = (film) => {
   const { id, title, totalRating, release, runtime, genre, poster, description, comments,
-    isInWatchlist, isAlreadyWatched, isFavorite } = film;
+    watchlist, alreadyWatched, favorite } = film;
   return `<article class="film-card"  data-id="${id}">
     <a class="film-card__link">
       <h3 class="film-card__title">${title}</h3>
@@ -35,9 +35,9 @@ export const getFilmCardTemlate = (film) => {
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
-      ${getControlButton(ControlType.WATHCLIST, isInWatchlist)}
-      ${getControlButton(ControlType.WATCHED, isAlreadyWatched)}
-      ${getControlButton(ControlType.FAVORITE, isFavorite)}
+      ${getControlButton(ControlType.WATHCLIST, watchlist)}
+      ${getControlButton(ControlType.WATCHED, alreadyWatched)}
+      ${getControlButton(ControlType.FAVORITE, favorite)}
     </div>
   </article>`;
 };

@@ -3,17 +3,17 @@ import { FilterType } from '../constants/constants.module';
 /**
  * @param {Array} films
  */
-const getWatchListCount = (films) => films.filter((film) => film.isInWatchlist).length;
+const getWatchListCount = (films) => films.filter((film) => film.watchlist).length;
 
 /**
  * @param {Array} films
  */
-const getFavoritesCount = (films) => films.filter((film) => film.isFavorite).length;
+const getFavoritesCount = (films) => films.filter((film) => film.favorite).length;
 
 /**
  * @param {Array} films
  */
-const getAlreadyWachedCount = (films) => films.filter((film) => film.isAlreadyWatched).length;
+const getAlreadyWachedCount = (films) => films.filter((film) => film.alreadyWatched).length;
 
 const getActiveClassOrEmpty = (filterType, currentFilter) =>
   filterType === currentFilter ? 'main-navigation__item--active' : '';

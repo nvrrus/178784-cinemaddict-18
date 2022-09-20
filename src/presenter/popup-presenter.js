@@ -60,13 +60,13 @@ export default class PopupPresenter {
   };
 
   #onDeleteCommentAsync = async (commentId) => {
-    this.#commentsModel.delete(this.#film.id, commentId);
-    await this.#onUpdateFilmCommentsAsync();
+    await this.#commentsModel.deleteAsync(this.#film.id, commentId);
+    this.#filmsModel.onDeleteComment(this.#film.id, commentId);
   };
 
   #onAddNewCommentAsync = async (newComment) => {
-    this.#commentsModel.add(this.#film.id, newComment);
-    await this.#onUpdateFilmCommentsAsync();
+    const newCommentIds = await this.#commentsModel.addAsync(this.#film.id, newComment);
+    this.#filmsModel.onAddComment(this.#film.id, newCommentIds);
   };
 
   #onKeyPressed = (keyPressType) => {
@@ -86,11 +86,6 @@ export default class PopupPresenter {
     this.#filmsModel.removeObserver(this.#onFilmsModelUpdateAsync);
     KeysPressObserver.getInstance().removeObserver(this.#onKeyPressed);
   };
-
-  async #onUpdateFilmCommentsAsync() {
-    const comments = await this.#commentsModel.getAsync(this.#film.id);
-    this.#filmsModel.update(this.#film.id, { comments: comments.map((c) => c.id) });
-  }
 
   setControlButtonClickHandler(onControlButtonClick) {
     if (this.#popupView) {

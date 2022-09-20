@@ -65,8 +65,8 @@ const getRadioEmoji = (emojiType, checkedEmojiType) =>
 export const getPopupTemplate = (data) => {
   const { poster, title, alternativeTitle, totalRating, director,
     writers, actors, release, runtime,
-    ageRating, genre, description, isInWatchlist,
-    isAlreadyWatched, isFavorite, filmComments,
+    ageRating, genre, description, watchlist,
+    alreadyWatched, favorite, filmComments,
     commentEmoji, newComment } = data;
   return `
   <section class="film-details">
@@ -134,9 +134,9 @@ export const getPopupTemplate = (data) => {
         </div>
 
         <section class="film-details__controls">
-          ${getControlButton(ControlType.WATHCLIST, isInWatchlist)}
-          ${getControlButton(ControlType.WATCHED, isAlreadyWatched)}
-          ${getControlButton(ControlType.FAVORITE, isFavorite)}
+          ${getControlButton(ControlType.WATHCLIST, watchlist)}
+          ${getControlButton(ControlType.WATCHED, alreadyWatched)}
+          ${getControlButton(ControlType.FAVORITE, favorite)}
         </section>
       </div>
 
