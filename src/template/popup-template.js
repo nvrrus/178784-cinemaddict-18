@@ -17,7 +17,7 @@ const getButtonTypeClass = (controlType) => {
 };
 
 const getButtonName = (buttonType, isActive) => {
-  switch(buttonType) {
+  switch (buttonType) {
     case ControlType.WATHCLIST:
       return isActive ? Constants.ALREADY_IN_WATCH_LIST_BTN_NAME : Constants.ADD_TO_WATCH_LIST_BTN_NAME;
     case ControlType.WATCHED:
@@ -29,21 +29,23 @@ const getButtonName = (buttonType, isActive) => {
   }
 };
 
-const getControlButton = (buttonType, isActive) => {
+const getControlButton = (buttonType, isActive, isDisabled) => {
   const res = `<button type="button" class="film-details__control-button
     ${getButtonTypeClass(buttonType)}
     ${isActive ? 'film-details__control-button--active' : ''}"
-    id="${buttonType}" name="${buttonType}">${getButtonName(buttonType, isActive)}</button>`;
+    id="${buttonType}"
+    name="${buttonType}"
+    ${isDisabled ? 'disabled' : ''}>${getButtonName(buttonType, isActive)}</button>`;
   return res;
 };
 
 const getGenresTemplate = (genres) =>
   genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
 
-const getCommentsTemplate = (comments) => comments
+const getCommentsTemplate = (comments, isDeletingCommentId) => comments
   .slice()
   .sort(compareCommentsByDate)
-  .map((comment) => new PopupCommentView(comment).template)
+  .map((comment) => new PopupCommentView(comment, comment.id === isDeletingCommentId).template)
   .join('');
 
 
@@ -54,20 +56,12 @@ const getCommentEmojiTemplate = (emoji) => {
   return `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}"></img>`;
 };
 
-const getRadioEmoji = (emojiType, checkedEmojiType) =>
-  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emojiType}" value="${emojiType}"
-    ${emojiType === checkedEmojiType ? 'checked' : ''}>
-  <label class="film-details__emoji-label" for="emoji-${emojiType}">
-    <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="emoji" >
-  </label>`;
-
-
 export const getPopupTemplate = (data) => {
   const { poster, title, alternativeTitle, totalRating, director,
     writers, actors, release, runtime,
     ageRating, genre, description, watchlist,
     alreadyWatched, favorite, filmComments,
-    commentEmoji, newComment } = data;
+    commentEmoji, newComment, isDisabled, isAdding, isDeletingCommentId } = data;
   return `
   <section class="film-details">
     <div class="film-details__inner">
@@ -134,9 +128,9 @@ export const getPopupTemplate = (data) => {
         </div>
 
         <section class="film-details__controls">
-          ${getControlButton(ControlType.WATHCLIST, watchlist)}
-          ${getControlButton(ControlType.WATCHED, alreadyWatched)}
-          ${getControlButton(ControlType.FAVORITE, favorite)}
+          ${getControlButton(ControlType.WATHCLIST, watchlist, isDisabled)}
+          ${getControlButton(ControlType.WATCHED, alreadyWatched, isDisabled)}
+          ${getControlButton(ControlType.FAVORITE, favorite, isDisabled)}
         </section>
       </div>
 
@@ -145,7 +139,7 @@ export const getPopupTemplate = (data) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${filmComments.length ?? 0}</span></h3>
 
           <ul class="film-details__comments-list">
-            ${getCommentsTemplate(filmComments)}
+            ${getCommentsTemplate(filmComments, isDeletingCommentId)}
           </ul>
           <form class="film-details__new-comment" action="" method="get">
             <div class="film-details__add-emoji-label">
@@ -153,15 +147,15 @@ export const getPopupTemplate = (data) => {
             </div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input"
+              <textarea class="film-details__comment-input" ${isAdding ? 'disabled' : ''}
               placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ''}</textarea>
             </label>
 
             <div class="film-details__emoji-list">
-              ${getRadioEmoji(EmojiType.SMILE, commentEmoji)}
-              ${getRadioEmoji(EmojiType.SLEEPING, commentEmoji)}
-              ${getRadioEmoji(EmojiType.PUKE, commentEmoji)}
-              ${getRadioEmoji(EmojiType.ANGRY, commentEmoji)}
+              ${getRadioEmoji(EmojiType.SMILE)}
+              ${getRadioEmoji(EmojiType.SLEEPING)}
+              ${getRadioEmoji(EmojiType.PUKE)}
+              ${getRadioEmoji(EmojiType.ANGRY)}
             </div>
           </form>
         </section>
@@ -169,4 +163,13 @@ export const getPopupTemplate = (data) => {
     </div>
   </section>
   `;
+
+  function getRadioEmoji(emojiType) {
+    return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji"
+      type="radio" id="emoji-${emojiType}" value="${emojiType}"  ${isAdding ? 'disabled' : ''}
+      ${emojiType === commentEmoji ? 'checked' : ''}>
+      <label class="film-details__emoji-label" for="emoji-${emojiType}">
+        <img src="./images/emoji/${emojiType}.png" width="30" height="30" alt="emoji" >
+      </label>`;
+  }
 };

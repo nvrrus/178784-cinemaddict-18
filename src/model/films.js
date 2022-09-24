@@ -20,8 +20,20 @@ export default class FilmsModel extends Observable {
   }
 
   async initAsync() {
-    const allFilms = await this.#filmsApiService.getAll();
+    const allFilms = await this.#filmsApiService.getAllAsync();
     this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
+  }
+
+  async updateAsync(id, updateObject) {
+    let update = getUpdateItem(this.#allFilms, id, updateObject);
+    update = this.#adaptToApi(update);
+
+    let updatedItem = await this.#filmsApiService.updateAsync(id, update);
+
+    updatedItem = this.#adaptToClient({...updatedItem});
+    const index = this.#allFilms.findIndex((film) => film.id === updatedItem.id);
+    this.#allFilms[index] = updatedItem;
+    this._notify(UpdateType.FILM_UPDATE, id);
   }
 
   getFilms(filterType, sortType = SortType.DEFAULT) {
@@ -67,18 +79,6 @@ export default class FilmsModel extends Observable {
 
   isEmpty() {
     return !this.#allFilms || this.#allFilms.length === 0;
-  }
-
-  async updateAsync(id, updateObject) {
-    let update = getUpdateItem(this.#allFilms, id, updateObject);
-    update = this.#adaptToApi(update);
-
-    let updatedItem = await this.#filmsApiService.update(id, update);
-    updatedItem = this.#adaptToClient({...updatedItem});
-
-    const index = this.#allFilms.findIndex((film) => film.id === updatedItem.id);
-    this.#allFilms[index] = updatedItem;
-    this._notify(UpdateType.FILM_UPDATE, id);
   }
 
   #adaptToApi(film) {

@@ -7,12 +7,12 @@ export default class CommentsApiService extends ApiService {
     super(ApiSettings.ENDPOINT, ApiSettings.AUTHORIZATION);
   }
 
-  getByFilmId(filmId) {
+  getByFilmIdAsync(filmId) {
     return this._load({url: `${ApiSettings.COMMENTS_URL}/${filmId}`, method: HttpMethods.GET} )
       .then(ApiService.parseResponse);
   }
 
-  add(filmId, comment) {
+  addAsync(filmId, comment) {
     return this._load({
       url: `${ApiSettings.COMMENTS_URL}/${filmId}`,
       method: HttpMethods.POST,
@@ -21,7 +21,7 @@ export default class CommentsApiService extends ApiService {
     }).then(ApiService.parseResponse);
   }
 
-  delete(commentId) {
+  deleteAsync(commentId) {
     return this._load({
       url: `${ApiSettings.COMMENTS_URL}/${commentId}`,
       method: HttpMethods.DELETE

@@ -68,6 +68,17 @@ body {
   width: 100%;
 }
 
+.error-allert {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  color: tomato;
+  z-index: 2;
+}
+
 .hide-overflow {
   overflow: hidden;
 }
@@ -360,6 +371,10 @@ button {
   background-image: url('../images/icons/icon-favorite-active.svg')
 }
 
+.film-card__controls-item:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 .film-card .film-card__poster {
   bottom: calc(100% - 340px);
@@ -642,6 +657,10 @@ button {
 .film-details__control-button--active.film-details__control-button--favorite::before {
   background-image: url("../images/icons/icon-favorite-active.svg");
 }
+.film-details__control-button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .film-details__comment {
   display: flex;
   margin-bottom: 24px;
@@ -689,6 +708,10 @@ button {
 }
 .film-details__emoji-item:checked + .film-details__emoji-label {
   opacity: 1;
+}
+.film-details__emoji-item:disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .film-details__comments-wrap {
   width: 630px;
@@ -755,6 +778,10 @@ button {
 .film-details__comment-delete:hover {
   opacity: 0.7;
 }
+.film-details__comment-delete:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .film-details__comment-input {
   width: 100%;
   height: 50px;
@@ -771,6 +798,10 @@ button {
 }
 .film-details__comment-input::placeholder {
   color: #212126;
+}
+.film-details__comment-input:disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .film-details__comment-label {
   width: 100%;

@@ -1,11 +1,13 @@
-import { KeysPressType } from '../constants/constants.module';
+import { KeysPressType, UiBlockerTimeLimit } from '../constants/constants.module';
 import { remove, render } from '../framework/render';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 import CommentsModel from '../model/comments';
 
 import FilmsModel from '../model/films';
 import KeysPressObserver from '../utils/keys-press-observer';
 import PopupView from '../view/popup-view';
+import ErrorAlertPresenter from './error-alert-presenter';
 
 export default class PopupPresenter {
   #film;
@@ -18,6 +20,8 @@ export default class PopupPresenter {
 
   /** @type {CommentsModel} */
   #commentsModel;
+
+  #uiBlocker = new UiBlocker(UiBlockerTimeLimit.LOWER_TIME, UiBlockerTimeLimit.UPPER_TIME);
 
   /**
    *
@@ -36,16 +40,18 @@ export default class PopupPresenter {
       return;
     }
     this.#film = film;
-    const comments = await this.#commentsModel.getAsync(film.id);
+    const comments = await this.#getCommentsAsync(film.id);
 
-    this.#popupView = new PopupView(film, comments);
-    render(this.#popupView, this.#footerElement);
-    this.#popupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
-    this.#popupView.setDeleteCommentClick(this.#onDeleteCommentAsync);
-    this.#popupView.setAddNewCommentHandler(this.#onAddNewCommentAsync);
+    if (film && comments) {
+      this.#popupView = new PopupView(film, comments);
+      render(this.#popupView, this.#footerElement);
+      this.#popupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
+      this.#popupView.setDeleteCommentClick(this.#onDeleteCommentAsync);
+      this.#popupView.setAddNewCommentHandler(this.#onAddNewCommentAsync);
 
-    this.#filmsModel.addObserver(this.#onFilmsModelUpdateAsync);
-    KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
+      this.#filmsModel.addObserver(this.#onFilmsModelUpdateAsync);
+      KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
+    }
   };
 
   isOpened() {
@@ -60,13 +66,36 @@ export default class PopupPresenter {
   };
 
   #onDeleteCommentAsync = async (commentId) => {
-    await this.#commentsModel.deleteAsync(this.#film.id, commentId);
-    this.#filmsModel.onDeleteComment(this.#film.id, commentId);
+    try {
+      this.#popupView.updateElement({isDeletingCommentId: commentId});
+      await this.#commentsModel.deleteAsync(this.#film.id, commentId);
+      this.#filmsModel.onDeleteComment(this.#film.id, commentId);
+    }
+    catch {
+      this.#popupView.shake();
+      ErrorAlertPresenter.getInstance().showError('Не удалось удалить комментарий');
+    }
+    finally {
+      this.#popupView.updateElement({isDeletingCommentId: null});
+    }
   };
 
   #onAddNewCommentAsync = async (newComment) => {
-    const newCommentIds = await this.#commentsModel.addAsync(this.#film.id, newComment);
-    this.#filmsModel.onAddComment(this.#film.id, newCommentIds);
+    try {
+      this.#uiBlocker.block();
+      this.#popupView.updateElement({isAdding: true});
+      const newCommentIds = await this.#commentsModel.addAsync(this.#film.id, newComment);
+      this.#filmsModel.onAddComment(this.#film.id, newCommentIds);
+      this.#popupView.updateElement({ newComment: null, commentEmoji: null });
+    }
+    catch {
+      this.#popupView.shake();
+      ErrorAlertPresenter.getInstance().showError('Не удалось добавить комментарий');
+    }
+    finally {
+      this.#popupView.updateElement({isAdding: false});
+      this.#uiBlocker.unblock();
+    }
   };
 
   #onKeyPressed = (keyPressType) => {
@@ -98,8 +127,34 @@ export default class PopupPresenter {
       return;
     }
     const film = this.#filmsModel.getById(this.#film.id);
-    const comments = await this.#commentsModel.getAsync(film.id);
-    const newState = PopupView.parseFilmDataToState(film, comments);
-    this.#popupView.updateElement(newState);
+    const comments = await this.#getCommentsAsync(film.id);
+
+    if (film && comments) {
+      const newState = PopupView.parseFilmDataToState(film, comments);
+      this.#popupView.updateElement(newState);
+    }
   };
+
+  async #getCommentsAsync(filmId) {
+    try {
+      return await this.#commentsModel.getAsync(filmId);
+    }
+    catch {
+      ErrorAlertPresenter.getInstance().showError('Не удалось получить комментарии');
+    }
+    return [];
+  }
+
+  setDisabled(isDisabled) {
+    if (this.#popupView) {
+      this.#popupView.updateElement({isDisabled: isDisabled});
+    }
+  }
+
+  setAboarting() {
+    if (this.#popupView) {
+      this.#popupView.shake();
+      this.setDisabled(false);
+    }
+  }
 }

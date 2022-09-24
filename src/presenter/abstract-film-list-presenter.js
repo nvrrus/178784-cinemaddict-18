@@ -6,6 +6,7 @@ import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
 import PopupPresenter from './popup-presenter';
 import FiltersPresenter from './filters-presenter';
+import ErrorAlertPresenter from './error-alert-presenter';
 
 export default class AbstractFilmListPresenter {
   #filmsContainer;
@@ -67,7 +68,7 @@ export default class AbstractFilmListPresenter {
 
   #onFilmsModelUpdate = (updateType, filmId) => {
     if (this._filtersModel.getFilterType() === FilterType.ALL) {
-      this.#tryUpdateFilmCard(filmId);
+      this.#updateFilmCard(filmId);
     }
     else {
       this.init();
@@ -120,15 +121,31 @@ export default class AbstractFilmListPresenter {
 
   #onControlButtonClickAsync = async (controlType, filmId) => {
     const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
-    await this._filmsModel.updateAsync(filmId, updateObject);
+    this.#updateFilmCard(filmId, true);
+    this.#filmPopupPresenter.setDisabled(true);
+    try {
+      await this._filmsModel.updateAsync(filmId, updateObject);
+      this.#filmPopupPresenter.setDisabled(false);
+    }
+    catch {
+      ErrorAlertPresenter.getInstance().showError('Не удалось обновить фильмы');
+      this.#filmPopupPresenter.setAboarting();
+      this.#setAboarting(filmId);
+    }
   };
 
-  #tryUpdateFilmCard(filmId) {
+  #setAboarting(filmId) {
+    const filmView = this.#filmViewByFilmIds.get(filmId);
+    filmView.shake();
+    this.#updateFilmCard(filmId, false);
+  }
+
+  #updateFilmCard(filmId, isDisabled = false) {
     if (!this.#filmViewByFilmIds.has(filmId)) {
       return;
     }
     const film = this._filmsModel.getById(filmId);
-    const newFilmView = new FilmCardView(film);
+    const newFilmView = new FilmCardView(film, isDisabled);
     const oldFilmView = this.#filmViewByFilmIds.get(film.id);
 
     replace(newFilmView, oldFilmView);

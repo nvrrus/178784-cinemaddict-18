@@ -4,13 +4,16 @@ import { getFilmCardTemlate } from '../template/film-card-temlate';
 
 export default class FilmCardView extends AbstractView {
   #film;
-  constructor(film) {
+  #isDisabled;
+  constructor(film, isDisabled) {
     super();
     this.#film = film;
+    this.#isDisabled = isDisabled;
   }
 
   get template() {
-    return getFilmCardTemlate(this.#film);
+    const res = getFilmCardTemlate(this.#film, this.#isDisabled);
+    return res;
   }
 
   setPosterClickHandler(callback) {

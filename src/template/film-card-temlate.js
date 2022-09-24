@@ -15,10 +15,10 @@ const getButtonTypeClass = (controlType) => {
   }
 };
 
-const getControlButton = (buttonType, isActive) => `<button class="film-card__controls-item ${getButtonTypeClass(buttonType)}
-    ${isActive ? 'film-card__controls-item--active' : ''}" type="button"></button>`;
+const getControlButton = (buttonType, isActive, isDisabled) => `<button class="film-card__controls-item ${getButtonTypeClass(buttonType)}
+    ${isActive ? 'film-card__controls-item--active' : ''}" type="button" ${isDisabled ? 'disabled' : ''}></button>`;
 
-export const getFilmCardTemlate = (film) => {
+export const getFilmCardTemlate = (film, isDisabled) => {
   const { id, title, totalRating, release, runtime, genre, poster, description, comments,
     watchlist, alreadyWatched, favorite } = film;
   return `<article class="film-card"  data-id="${id}">
@@ -35,9 +35,9 @@ export const getFilmCardTemlate = (film) => {
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
-      ${getControlButton(ControlType.WATHCLIST, watchlist)}
-      ${getControlButton(ControlType.WATCHED, alreadyWatched)}
-      ${getControlButton(ControlType.FAVORITE, favorite)}
+      ${getControlButton(ControlType.WATHCLIST, watchlist, isDisabled)}
+      ${getControlButton(ControlType.WATCHED, alreadyWatched, isDisabled)}
+      ${getControlButton(ControlType.FAVORITE, favorite, isDisabled)}
     </div>
   </article>`;
 };

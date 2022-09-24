@@ -148,10 +148,6 @@ export default class PopupView extends AbstractStatefulView {
       const newComment = PopupView.parseNewCommentFromState(this._state);
       if (newComment) {
         this._callback.addNewComment(newComment);
-        this.updateElement({
-          newComment: null,
-          commentEmoji: null
-        });
       }
     }
   };

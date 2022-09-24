@@ -104,3 +104,8 @@ export const HttpMethods = {
   PATHC: 'PATCH',
   DELETE: 'DELETE',
 };
+
+export const UiBlockerTimeLimit = {
+  LOWER_TIME: 350,
+  UPPER_TIME: 1000
+};
