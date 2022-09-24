@@ -1,9 +1,9 @@
 import { Constants, ControlType, KeysPressType } from '../constants/constants.module';
-import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import WrappedAbstractStatefulView from '../framework-wrapper/view/wrapped-abstract-stateful-view';
 import { getPopupTemplate } from '../template/popup-template';
 import KeysPressObserver from '../utils/keys-press-observer';
 
-export default class PopupView extends AbstractStatefulView {
+export default class PopupView extends WrappedAbstractStatefulView {
   static parseFilmDataToState(film, filmComments) {
     return { ...film, filmComments: filmComments };
   }

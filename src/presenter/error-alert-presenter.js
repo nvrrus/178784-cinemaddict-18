@@ -36,7 +36,7 @@ class ErrorAlertPresenter {
     setTimeout(() => {
       remove(this.#view);
       this.#view = null;
-    }, 5000);
+    }, Constants.ERROR_ALERT_TIMEOUT);
   }
 }
 

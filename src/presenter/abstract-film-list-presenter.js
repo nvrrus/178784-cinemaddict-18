@@ -129,16 +129,16 @@ export default class AbstractFilmListPresenter {
     }
     catch {
       ErrorAlertPresenter.getInstance().showError('Не удалось обновить фильмы');
-      this.#filmPopupPresenter.setAboarting();
-      this.#setAboarting(filmId);
+      this.#updateFilmCard(filmId, false);
+      if (this.#filmPopupPresenter.isOpened()) {
+        this.#filmPopupPresenter.setAboarting();
+      }
+      else {
+        this.#filmViewByFilmIds.get(filmId).shake();
+      }
     }
   };
 
-  #setAboarting(filmId) {
-    const filmView = this.#filmViewByFilmIds.get(filmId);
-    filmView.shake();
-    this.#updateFilmCard(filmId, false);
-  }
 
   #updateFilmCard(filmId, isDisabled = false) {
     if (!this.#filmViewByFilmIds.has(filmId)) {

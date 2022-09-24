@@ -70,13 +70,12 @@ export default class PopupPresenter {
       this.#popupView.updateElement({isDeletingCommentId: commentId});
       await this.#commentsModel.deleteAsync(this.#film.id, commentId);
       this.#filmsModel.onDeleteComment(this.#film.id, commentId);
+      this.#popupView.updateElement({isDeletingCommentId: null});
     }
     catch {
-      this.#popupView.shake();
-      ErrorAlertPresenter.getInstance().showError('Не удалось удалить комментарий');
-    }
-    finally {
       this.#popupView.updateElement({isDeletingCommentId: null});
+      ErrorAlertPresenter.getInstance().showError('Не удалось удалить комментарий');
+      this.#popupView.shake();
     }
   };
 
@@ -86,15 +85,14 @@ export default class PopupPresenter {
       this.#popupView.updateElement({isAdding: true});
       const newCommentIds = await this.#commentsModel.addAsync(this.#film.id, newComment);
       this.#filmsModel.onAddComment(this.#film.id, newCommentIds);
-      this.#popupView.updateElement({ newComment: null, commentEmoji: null });
+      this.#popupView.updateElement({ newComment: null, commentEmoji: null, isAdding: false });
+      this.#uiBlocker.unblock();
     }
     catch {
-      this.#popupView.shake();
-      ErrorAlertPresenter.getInstance().showError('Не удалось добавить комментарий');
-    }
-    finally {
-      this.#popupView.updateElement({isAdding: false});
       this.#uiBlocker.unblock();
+      ErrorAlertPresenter.getInstance().showError('Не удалось добавить комментарий');
+      this.#popupView.updateElement({isAdding: false});
+      this.#popupView.shake();
     }
   };
 
@@ -153,8 +151,8 @@ export default class PopupPresenter {
 
   setAboarting() {
     if (this.#popupView) {
-      this.#popupView.shake();
       this.setDisabled(false);
+      this.#popupView.shake();
     }
   }
 }

@@ -76,7 +76,7 @@ body {
   padding: 20px;
   background-color: white;
   color: tomato;
-  z-index: 2;
+  z-index: 11;
 }
 
 .hide-overflow {
