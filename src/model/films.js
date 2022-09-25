@@ -20,7 +20,7 @@ export default class FilmsModel extends Observable {
   }
 
   async initAsync() {
-    const allFilms = await this.#filmsApiService.getAllAsync();
+    const allFilms = await this.#filmsApiService.getAll();
     this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
   }
 
@@ -28,7 +28,7 @@ export default class FilmsModel extends Observable {
     let update = getUpdateItem(this.#allFilms, id, updateObject);
     update = this.#adaptToApi(update);
 
-    let updatedItem = await this.#filmsApiService.updateAsync(id, update);
+    let updatedItem = await this.#filmsApiService.update(id, update);
 
     updatedItem = this.#adaptToClient({...updatedItem});
     const index = this.#allFilms.findIndex((film) => film.id === updatedItem.id);
@@ -116,9 +116,9 @@ export default class FilmsModel extends Observable {
     return adaptedFilm;
   }
 
-  onAddComment(filmId, newCommentId) {
+  onAddComment(filmId, newCommentIds) {
     const film = this.getById(filmId);
-    film.comments.push(newCommentId);
+    film.comments = newCommentIds;
     this._notify(UpdateType.FILM_UPDATE, filmId);
   }
 

@@ -7,7 +7,6 @@ const SHAKE_CLASS_NAME = 'shake-absolute';
 /** @const {number} Время анимации в миллисекундах */
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-
 export default class WrappedAbstractView extends AbstractView {
   constructor() {
     super();
@@ -28,8 +27,3 @@ export default class WrappedAbstractView extends AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
-
-/**
- * Функция, которая будет вызвана методом shake после завершения анимации
- * @callback shakeCallback
- */

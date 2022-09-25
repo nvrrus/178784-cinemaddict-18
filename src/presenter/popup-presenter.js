@@ -68,7 +68,7 @@ export default class PopupPresenter {
   #onDeleteCommentAsync = async (commentId) => {
     try {
       this.#popupView.updateElement({isDeletingCommentId: commentId});
-      await this.#commentsModel.deleteAsync(this.#film.id, commentId);
+      await this.#commentsModel.delete(this.#film.id, commentId);
       this.#filmsModel.onDeleteComment(this.#film.id, commentId);
       this.#popupView.updateElement({isDeletingCommentId: null});
     }
@@ -83,7 +83,7 @@ export default class PopupPresenter {
     try {
       this.#uiBlocker.block();
       this.#popupView.updateElement({isAdding: true});
-      const newCommentIds = await this.#commentsModel.addAsync(this.#film.id, newComment);
+      const newCommentIds = await this.#commentsModel.add(this.#film.id, newComment);
       this.#filmsModel.onAddComment(this.#film.id, newCommentIds);
       this.#popupView.updateElement({ newComment: null, commentEmoji: null, isAdding: false });
       this.#uiBlocker.unblock();
@@ -135,7 +135,7 @@ export default class PopupPresenter {
 
   async #getCommentsAsync(filmId) {
     try {
-      return await this.#commentsModel.getAsync(filmId);
+      return await this.#commentsModel.getComments(filmId);
     }
     catch {
       ErrorAlertPresenter.getInstance().showError('Не удалось получить комментарии');

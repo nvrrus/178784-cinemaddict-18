@@ -67,13 +67,17 @@ export default class AbstractFilmListPresenter {
   };
 
   #onFilmsModelUpdate = (updateType, filmId) => {
+    this._onFilmsModelUpdate(filmId);
+  };
+
+  _onFilmsModelUpdate(filmId) {
     if (this._filtersModel.getFilterType() === FilterType.ALL) {
       this.#updateFilmCard(filmId);
     }
     else {
       this.init();
     }
-  };
+  }
 
   _getListTitle() {
     return null;

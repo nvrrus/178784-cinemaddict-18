@@ -14,4 +14,9 @@ export default class FilmListMostCommentedPresenter extends AbstractFilmListPres
   _getListTitle() {
     return Constants.MOST_COMMENTED_FILM_LIST_TITLE;
   }
+
+  // eslint-disable-next-line no-unused-vars -- argument not used in this implementation, see abstract implement
+  _onFilmsModelUpdate(filmId) {
+    this.init();
+  }
 }
