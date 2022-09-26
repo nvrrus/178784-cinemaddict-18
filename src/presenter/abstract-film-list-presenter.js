@@ -6,6 +6,7 @@ import FilmCardView from '../view/film-card-view';
 import FilmListView from '../view/film-list-view';
 import PopupPresenter from './popup-presenter';
 import FiltersPresenter from './filters-presenter';
+import ErrorAlertPresenter from './error-alert-presenter';
 
 export default class AbstractFilmListPresenter {
   #filmsContainer;
@@ -66,13 +67,17 @@ export default class AbstractFilmListPresenter {
   };
 
   #onFilmsModelUpdate = (updateType, filmId) => {
+    this._onFilmsModelUpdate(filmId);
+  };
+
+  _onFilmsModelUpdate(filmId) {
     if (this._filtersModel.getFilterType() === FilterType.ALL) {
-      this.#tryUpdateFilmCard(filmId);
+      this.#updateFilmCard(filmId);
     }
     else {
       this.init();
     }
-  };
+  }
 
   _getListTitle() {
     return null;
@@ -90,7 +95,7 @@ export default class AbstractFilmListPresenter {
   _renderNotEmptyFilmList(films) {
     this._filmListView = new FilmListView(this._getListTitle(), this._isExtra);
     render(this._filmListView, this.#filmsContainer, this._renderPlace);
-    this._filmListView.setClickHandlers(this.#onPosterClick, this.#onControlButtonClick);
+    this._filmListView.setClickHandlers(this.#onPosterClickAsync, this.#onControlButtonClickAsync);
     this._renderFilmCards(films);
   }
 
@@ -109,26 +114,42 @@ export default class AbstractFilmListPresenter {
     return filmView;
   }
 
-  #onPosterClick = (filmId) => {
+  #onPosterClickAsync = async (filmId) => {
     const film = this._filmsModel.getById(filmId);
     if (this.#filmPopupPresenter.isOpened()) {
       return;
     }
-    this.#filmPopupPresenter.init(film);
-    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClick);
+    await this.#filmPopupPresenter.initAsync(film);
+    this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClickAsync);
   };
 
-  #onControlButtonClick = (controlType, filmId) => {
+  #onControlButtonClickAsync = async (controlType, filmId) => {
     const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
-    this._filmsModel.update(filmId, updateObject);
+    this.#updateFilmCard(filmId, true);
+    this.#filmPopupPresenter.setDisabled(true);
+    try {
+      await this._filmsModel.updateAsync(filmId, updateObject);
+      this.#filmPopupPresenter.setDisabled(false);
+    }
+    catch {
+      ErrorAlertPresenter.getInstance().showError('Не удалось обновить фильмы');
+      this.#updateFilmCard(filmId, false);
+      if (this.#filmPopupPresenter.isOpened()) {
+        this.#filmPopupPresenter.setAboarting();
+      }
+      else {
+        this.#filmViewByFilmIds.get(filmId).shake();
+      }
+    }
   };
 
-  #tryUpdateFilmCard(filmId) {
+
+  #updateFilmCard(filmId, isDisabled = false) {
     if (!this.#filmViewByFilmIds.has(filmId)) {
       return;
     }
     const film = this._filmsModel.getById(filmId);
-    const newFilmView = new FilmCardView(film);
+    const newFilmView = new FilmCardView(film, isDisabled);
     const oldFilmView = this.#filmViewByFilmIds.get(film.id);
 
     replace(newFilmView, oldFilmView);

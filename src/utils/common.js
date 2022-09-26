@@ -26,16 +26,17 @@ const getRandomArray = (sourceArray) => {
  * @param {Array} items Массив элементов, в котором нужно обновить элемент
  * @param {string} itemId Идентификатор обновляемого элемента
  * @param {Object} update Объект с обновленной частью состояния
+ * @return обновленная копия
  */
-const updateItem = (items, itemId, update) => {
+const getUpdateItem = (items, itemId, update) => {
   const index = items.findIndex((item) => item.id === itemId);
   if (index === -1) {
     return;
   }
 
   const updatedItem = {...items[index], ...update};
-  items[index] = updatedItem;
+  return updatedItem;
 };
 
 export { getRandomInteger, getRandomFloat, getRandomElement,
-  getRandomArray, updateItem };
+  getRandomArray, getUpdateItem };

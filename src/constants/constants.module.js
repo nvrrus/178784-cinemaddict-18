@@ -49,7 +49,8 @@ export const Constants = {
   MOST_COMMENTED_FILM_LIST_TITLE: 'Most commented',
   MOST_COMMENTED_FILMS_COUNT: 2,
   FILMS_BATCH_SIZE: 5,
-  FILM_ID_DATA_ATTRIBUTE: 'id'
+  ERROR_ALERT_TIMEOUT: 3000,
+  FILM_ID_DATA_ATTRIBUTE: 'id',
 };
 
 export const ControlType = {
@@ -75,8 +76,9 @@ export const FilterType = {
 export const UpdateType = {
   FILM_UPDATE: 1,
   COMMENT_DELETE: 2,
-  FILTER_UPDATE: 3,
-  SORT_UPDATE: 4
+  COMMENT_ADD: 3,
+  FILTER_UPDATE: 4,
+  SORT_UPDATE: 5
 };
 
 export const KeyType = {
@@ -94,4 +96,17 @@ export const SortType = {
   DEFAULT: 'Default',
   DATE: 'Date',
   RATING: 'Rating'
+};
+
+export const HttpMethods = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATHC: 'PATCH',
+  DELETE: 'DELETE',
+};
+
+export const UiBlockerTimeLimit = {
+  LOWER_TIME: 350,
+  UPPER_TIME: 1000
 };

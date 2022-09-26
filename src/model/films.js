@@ -1,22 +1,43 @@
+import FilmsApiService from '../api/films-api-service';
 import { ControlType, FilterType, SortType, UpdateType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import FilterNotSupported from '../errors/filter-not-supported';
 import Observable from '../framework/observable';
-import { MockConstants } from '../mock/mock-constants';
-import { getFilm } from '../mock/mock-film';
-import { updateItem } from '../utils/common';
+import CaseHelper from '../utils/case-helper';
+import { getUpdateItem } from '../utils/common';
 import { compareFilmsByRatingDesc, compareFilmsByReleaseDateDesc } from '../utils/film';
 
 export default class FilmsModel extends Observable {
-  #films;
+  /** @type {FilmsApiService} */
+  #filmsApiService;
+
+  /** @type {Array} */
+  #allFilms;
 
   constructor() {
     super();
-    this.#films = Array.from({ length: MockConstants.FILMS_COUNT }, getFilm);
+    this.#filmsApiService = new FilmsApiService();
   }
 
-  getFilms = (filterType, sortType = SortType.DEFAULT) => {
-    let films = this.#films.slice();
+  async initAsync() {
+    const allFilms = await this.#filmsApiService.getAll();
+    this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
+  }
+
+  async updateAsync(id, updateObject) {
+    let update = getUpdateItem(this.#allFilms, id, updateObject);
+    update = this.#adaptToApi(update);
+
+    let updatedItem = await this.#filmsApiService.update(id, update);
+
+    updatedItem = this.#adaptToClient({...updatedItem});
+    const index = this.#allFilms.findIndex((film) => film.id === updatedItem.id);
+    this.#allFilms[index] = updatedItem;
+    this._notify(UpdateType.FILM_UPDATE, id);
+  }
+
+  getFilms(filterType, sortType = SortType.DEFAULT) {
+    let films = this.#allFilms.slice();
     switch (sortType) {
       case SortType.DATE:
         films = films.sort(compareFilmsByReleaseDateDesc);
@@ -30,41 +51,83 @@ export default class FilmsModel extends Observable {
       case FilterType.ALL:
         return films;
       case FilterType.FAVORITE:
-        return films.filter((film) => film.isFavorite);
+        return films.filter((film) => film.favorite);
       case FilterType.HISTORY:
-        return films.filter((film) => film.isAlreadyWatched);
+        return films.filter((film) => film.alreadyWatched);
       case FilterType.WATHCLIST:
-        return films.filter((film) => film.isInWatchlist);
+        return films.filter((film) => film.watchlist);
       default:
         throw new FilterNotSupported(filterType);
     }
-  };
+  }
 
-  getById = (id) => this.#films.find((film) => film.id === id);
+  getById = (id) => this.#allFilms.find((film) => film.id === id);
 
   getToggleControlUpdateObject = (controlType, filmId) => {
     const film = this.getById(filmId);
     switch (controlType) {
       case ControlType.WATHCLIST:
-        return { isInWatchlist: !film.isInWatchlist };
+        return { watchlist: !film.watchlist };
       case ControlType.FAVORITE:
-        return { isFavorite: !film.isFavorite };
+        return { favorite: !film.favorite };
       case ControlType.WATCHED:
-        return {
-          isAlreadyWatched: !film.isAlreadyWatched,
-          watchingDate: film.isAlreadyWatched ? null : new Date().toISOString()
-        };
+        return { alreadyWatched: !film.alreadyWatched };
       default:
         throw new ControlTypeNotSupported(controlType);
     }
   };
 
   isEmpty() {
-    return !this.#films || this.#films.length === 0;
+    return !this.#allFilms || this.#allFilms.length === 0;
   }
 
-  update(id, update) {
-    updateItem(this.#films, id, update);
-    this._notify(UpdateType.FILM_UPDATE, id);
+  #adaptToApi(film) {
+    const snakeCase = CaseHelper.objectToSnake(film);
+    const adaptedFilm = {
+      'id': snakeCase.id,
+      'comments': snakeCase.comments,
+      'film_info': {...snakeCase},
+      'user_details': {
+        'watchlist': snakeCase.watchlist,
+        'already_watched': snakeCase.already_watched,
+        'watching_date': snakeCase.watching_date,
+        'favorite': snakeCase.favorite
+      }
+    };
+
+    delete adaptedFilm.film_info.id;
+    delete adaptedFilm.film_info.comments;
+    delete adaptedFilm.film_info.user_details;
+
+    return adaptedFilm;
+  }
+
+  #adaptToClient(film) {
+    let adaptedFilm = CaseHelper.objectToCamel(film);
+    adaptedFilm = {
+      id: film.id,
+      ...adaptedFilm,
+      ...adaptedFilm.filmInfo,
+      ...adaptedFilm.userDetails
+    };
+
+    delete adaptedFilm.filmInfo;
+    delete adaptedFilm.userDetails;
+    return adaptedFilm;
+  }
+
+  onAddComment(filmId, newCommentIds) {
+    const film = this.getById(filmId);
+    film.comments = newCommentIds;
+    this._notify(UpdateType.FILM_UPDATE, filmId);
+  }
+
+  onDeleteComment(filmId, deletedCommentId) {
+    const film = this.getById(filmId);
+    const index = film.comments?.findIndex((commentId) => commentId === deletedCommentId);
+    if (index > -1) {
+      film.comments.splice(index, 1);
+    }
+    this._notify(UpdateType.FILM_UPDATE, filmId);
   }
 }
