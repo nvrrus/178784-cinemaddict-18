@@ -7,7 +7,7 @@ import MainPresenter from './presenter/main-presenter.js';
 
 const filmsModel = new FilmsModel();
 try {
-  await filmsModel.initAsync();
+  await filmsModel.init();
 }
 catch {
   ErrorAlertPresenter.getInstance().showError('Не удалось получить фильмы');

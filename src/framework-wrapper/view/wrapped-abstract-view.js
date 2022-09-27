@@ -15,10 +15,6 @@ export default class WrappedAbstractView extends AbstractView {
     }
   }
 
-  /**
-   * Метод, реализующий эффект "покачивания головой"
-   * @param {shakeCallback} [callback] Функция, которая будет вызвана после завершения анимации
-   */
   shake(callback) {
     this.element.classList.add(SHAKE_CLASS_NAME);
     setTimeout(() => {

@@ -20,10 +20,20 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
 
   constructor(filmsModel, filtersModel, sortsModel, filtersPresenter, filmPopupPresenter, filmsContainer) {
     super(filmsModel, filtersModel, filtersPresenter, filmPopupPresenter, filmsContainer);
-    this._filtersModel.addObserver(this.#onFiltersModelUpdate);
     this.#sortsModel = sortsModel;
     this.#sortsModel.addObserver(this.#onSortsModelUpdate);
+    this._filtersModel.addObserver(this.#onFiltersModelUpdate);
+    this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
+
+  #onFilmsModelUpdate = (updateType, filmId) => {
+    if (this._filtersModel.getFilterType() === FilterType.ALL) {
+      this._updateFilmCard(filmId);
+    }
+    else {
+      this.init();
+    }
+  };
 
   _getFilms() {
     const filterType = this._filtersModel.getFilterType();

@@ -19,12 +19,12 @@ export default class FilmsModel extends Observable {
     this.#filmsApiService = new FilmsApiService();
   }
 
-  async initAsync() {
+  async init() {
     const allFilms = await this.#filmsApiService.getAll();
     this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
   }
 
-  async updateAsync(id, updateObject) {
+  async update(id, updateObject) {
     let update = getUpdateItem(this.#allFilms, id, updateObject);
     update = this.#adaptToApi(update);
 
@@ -119,7 +119,7 @@ export default class FilmsModel extends Observable {
   onAddComment(filmId, newCommentIds) {
     const film = this.getById(filmId);
     film.comments = newCommentIds;
-    this._notify(UpdateType.FILM_UPDATE, filmId);
+    this._notify(UpdateType.COMMENT_ADD, filmId);
   }
 
   onDeleteComment(filmId, deletedCommentId) {
@@ -128,6 +128,6 @@ export default class FilmsModel extends Observable {
     if (index > -1) {
       film.comments.splice(index, 1);
     }
-    this._notify(UpdateType.FILM_UPDATE, filmId);
+    this._notify(UpdateType.COMMENT_DELETE, filmId);
   }
 }
