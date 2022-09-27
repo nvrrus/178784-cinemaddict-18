@@ -7,7 +7,7 @@ import ProfileView from '../view/profile-view';
 import FilmListAllPresenter from './film-list-all-presenter';
 import FilmListMostCommentedPresenter from './film-list-most-commented-presenter';
 import FilmListTopRatedPresenter from './film-list-top-rated-presenter';
-import FilmsLoaderPresenter from './films-loader-presenter';
+import FilmsLoadingPresenter from './films-loading-presenter';
 import FiltersPresenter from './filters-presenter';
 import PopupPresenter from './popup-presenter';
 import SortsPresenter from './sorts-presenter';
@@ -35,7 +35,7 @@ export default class MainPresenter {
   /** @type {FilmListMostCommentedPresenter} */
   #filmListMostCommentedPresenter;
 
-  /** @type {FilmsLoaderPresenter} */
+  /** @type {FilmsLoadingPresenter} */
   #filmsLoaderPresenter;
 
   /**
@@ -53,7 +53,7 @@ export default class MainPresenter {
 
     this.#filtersPresenter = new FiltersPresenter(this.#mainContainer, filmsModel, filtersModel);
     this.#sortsPresenter = new SortsPresenter(sortsModel, filmsModel);
-    this.#filmsLoaderPresenter = new FilmsLoaderPresenter(filmsContainer, filmsModel);
+    this.#filmsLoaderPresenter = new FilmsLoadingPresenter(filmsContainer, filmsModel);
 
     const filmPopupPresenter = new PopupPresenter(filmsModel, commentsModel, footerElement);
     this.#filmListAllPresenter = new FilmListAllPresenter(filmsModel, filtersModel, sortsModel, this.#filtersPresenter, filmPopupPresenter, filmsContainer);

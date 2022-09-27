@@ -3,7 +3,7 @@ import FilmsModel from '../model/films';
 import FilmsLoadingView from '../view/films-loading-view';
 import ErrorAlertPresenter from './error-alert-presenter';
 
-export default class FilmsLoaderPresenter {
+export default class FilmsLoadingPresenter {
   /** @type {FilmsModel} */
   #filmsModel;
 
