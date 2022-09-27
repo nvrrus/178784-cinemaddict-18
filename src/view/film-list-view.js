@@ -25,7 +25,7 @@ export default class FilmListView extends AbstractView {
     if (this.#cardListContainer) {
       return this.#cardListContainer;
     }
-    const cardListSelector = `${Constants.FILM_CARDS_CONTAINER_SELECTOR}--${this.#listId}`;
+    const cardListSelector = `div[${Constants.ID_DATA_ATTRIBUTE}='${this.#listId}']`;
     this.#cardListContainer = this.element.querySelector(cardListSelector);
     return this.#cardListContainer;
   }

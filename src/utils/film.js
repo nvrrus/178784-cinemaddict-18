@@ -22,7 +22,7 @@ const compareFilmsByReleaseDateDesc = (film1, film2) => film2.release.date - fil
 const compareFilmsByCommentsCountDesc = (film1, film2) => film2.comments.length - film1.comments.length;
 const getFilmId = (targetElement) => {
   while (targetElement) {
-    if (Constants.FILM_ID_DATA_ATTRIBUTE in targetElement.dataset) {
+    if (Constants.FILM_ID_DATASET_KEY in targetElement.dataset) {
       return targetElement.dataset.id;
     }
 
