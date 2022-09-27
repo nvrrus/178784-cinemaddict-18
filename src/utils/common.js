@@ -38,5 +38,15 @@ const getUpdateItem = (items, itemId, update) => {
   return updatedItem;
 };
 
+const truncate = (input, maxLength) => {
+  if (!input || maxLength <= 0) {
+    return input;
+  }
+  if (input.length <= maxLength) {
+    return input;
+  }
+  return `${input.slice(0, maxLength)}...`;
+};
+
 export { getRandomInteger, getRandomFloat, getRandomElement,
-  getRandomArray, getUpdateItem };
+  getRandomArray, getUpdateItem, truncate };

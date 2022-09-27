@@ -1,5 +1,6 @@
 import { Constants, ControlType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
+import { truncate } from '../utils/common';
 import { formatMinutesToTime, formatStringToYear } from '../utils/film';
 
 const getButtonTypeClass = (controlType) => {
@@ -31,7 +32,7 @@ export const getFilmCardTemlate = (film, isDisabled) => {
         <span class="film-card__genre">${genre[0]}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${truncate(description, Constants.MAX_FILM_CARD_DESCRIPTION_LENGTH)}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">

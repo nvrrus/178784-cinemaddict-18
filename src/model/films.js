@@ -61,6 +61,21 @@ export default class FilmsModel extends Observable {
     }
   }
 
+  getFilmsCount(filterType) {
+    switch (filterType) {
+      case FilterType.ALL:
+        return this.#allFilms.length;
+      case FilterType.FAVORITE:
+        return this.#allFilms.filter((film) => film.favorite).length;
+      case FilterType.HISTORY:
+        return this.#allFilms.filter((film) => film.alreadyWatched).length;
+      case FilterType.WATHCLIST:
+        return this.#allFilms.filter((film) => film.watchlist).length;
+      default:
+        throw new FilterNotSupported(filterType);
+    }
+  }
+
   getById = (id) => this.#allFilms.find((film) => film.id === id);
 
   getToggleControlUpdateObject = (controlType, filmId) => {
