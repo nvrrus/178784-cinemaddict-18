@@ -1,4 +1,3 @@
-import { FilterType } from '../constants/constants.module';
 import { remove, render, RenderPosition, replace } from '../framework/render';
 import FilmsModel from '../model/films';
 import FiltersModel from '../model/filter';
@@ -48,8 +47,6 @@ export default class AbstractFilmListPresenter {
     this.#filtersPresenter = filtersPresenter;
     this.#filmPopupPresenter = filmPopupPresenter;
     this.#filmsContainer = filmsContainer;
-
-    this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
   init = () => {
@@ -65,19 +62,6 @@ export default class AbstractFilmListPresenter {
       this._renderEmptyFilmList();
     }
   };
-
-  #onFilmsModelUpdate = (updateType, filmId) => {
-    this._onFilmsModelUpdate(filmId);
-  };
-
-  _onFilmsModelUpdate(filmId) {
-    if (this._filtersModel.getFilterType() === FilterType.ALL) {
-      this.#updateFilmCard(filmId);
-    }
-    else {
-      this.init();
-    }
-  }
 
   _getListTitle() {
     return null;
@@ -119,21 +103,21 @@ export default class AbstractFilmListPresenter {
     if (this.#filmPopupPresenter.isOpened()) {
       return;
     }
-    await this.#filmPopupPresenter.initAsync(film);
+    await this.#filmPopupPresenter.init(film);
     this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClickAsync);
   };
 
   #onControlButtonClickAsync = async (controlType, filmId) => {
     const updateObject = this._filmsModel.getToggleControlUpdateObject(controlType, filmId);
-    this.#updateFilmCard(filmId, true);
+    this._updateFilmCard(filmId, true);
     this.#filmPopupPresenter.setDisabled(true);
     try {
-      await this._filmsModel.updateAsync(filmId, updateObject);
+      await this._filmsModel.update(filmId, updateObject);
       this.#filmPopupPresenter.setDisabled(false);
     }
     catch {
       ErrorAlertPresenter.getInstance().showError('Не удалось обновить фильмы');
-      this.#updateFilmCard(filmId, false);
+      this._updateFilmCard(filmId, false);
       if (this.#filmPopupPresenter.isOpened()) {
         this.#filmPopupPresenter.setAboarting();
       }
@@ -144,7 +128,7 @@ export default class AbstractFilmListPresenter {
   };
 
 
-  #updateFilmCard(filmId, isDisabled = false) {
+  _updateFilmCard(filmId, isDisabled = false) {
     if (!this.#filmViewByFilmIds.has(filmId)) {
       return;
     }

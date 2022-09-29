@@ -4,7 +4,6 @@ export const Constants = {
   FILTERS_CONTAINER_SELECTOR: '.main-navigation',
   FOOTER_SELECTOR: '.footer',
   FILMS_SELECTOR: '.films',
-  FILM_CARDS_CONTAINER_SELECTOR: '.films-list__container',
   FILM_POSTER_SELECTOR: '.film-card__poster',
   FILM_POPUP_CLOSE_BTN_SELECTOR: '.film-details__close-btn',
   FILM_LIST_EMPTY_TITLE: 'There are no movies in our database',
@@ -50,7 +49,9 @@ export const Constants = {
   MOST_COMMENTED_FILMS_COUNT: 2,
   FILMS_BATCH_SIZE: 5,
   ERROR_ALERT_TIMEOUT: 3000,
-  FILM_ID_DATA_ATTRIBUTE: 'id',
+  MAX_FILM_CARD_DESCRIPTION_LENGTH: 139,
+  FILM_ID_DATASET_KEY: 'id',
+  ID_DATA_ATTRIBUTE: 'data-id',
 };
 
 export const ControlType = {

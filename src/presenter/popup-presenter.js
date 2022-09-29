@@ -35,12 +35,12 @@ export default class PopupPresenter {
     this.#footerElement = footerElement;
   }
 
-  initAsync = async (film) => {
+  init = async (film) => {
     if (this.#popupView) {
       return;
     }
     this.#film = film;
-    const comments = await this.#getCommentsAsync(film.id);
+    const comments = await this.#getComments(film.id);
 
     if (film && comments) {
       this.#popupView = new PopupView(film, comments);
@@ -125,7 +125,7 @@ export default class PopupPresenter {
       return;
     }
     const film = this.#filmsModel.getById(this.#film.id);
-    const comments = await this.#getCommentsAsync(film.id);
+    const comments = await this.#getComments(film.id);
 
     if (film && comments) {
       const newState = PopupView.parseFilmDataToState(film, comments);
@@ -133,7 +133,7 @@ export default class PopupPresenter {
     }
   };
 
-  async #getCommentsAsync(filmId) {
+  async #getComments(filmId) {
     try {
       return await this.#commentsModel.getComments(filmId);
     }

@@ -19,12 +19,12 @@ export default class FilmsModel extends Observable {
     this.#filmsApiService = new FilmsApiService();
   }
 
-  async initAsync() {
+  async init() {
     const allFilms = await this.#filmsApiService.getAll();
     this.#allFilms = allFilms.map((film) => this.#adaptToClient(film));
   }
 
-  async updateAsync(id, updateObject) {
+  async update(id, updateObject) {
     let update = getUpdateItem(this.#allFilms, id, updateObject);
     update = this.#adaptToApi(update);
 
@@ -56,6 +56,21 @@ export default class FilmsModel extends Observable {
         return films.filter((film) => film.alreadyWatched);
       case FilterType.WATHCLIST:
         return films.filter((film) => film.watchlist);
+      default:
+        throw new FilterNotSupported(filterType);
+    }
+  }
+
+  getFilmsCount(filterType) {
+    switch (filterType) {
+      case FilterType.ALL:
+        return this.#allFilms.length;
+      case FilterType.FAVORITE:
+        return this.#allFilms.filter((film) => film.favorite).length;
+      case FilterType.HISTORY:
+        return this.#allFilms.filter((film) => film.alreadyWatched).length;
+      case FilterType.WATHCLIST:
+        return this.#allFilms.filter((film) => film.watchlist).length;
       default:
         throw new FilterNotSupported(filterType);
     }
@@ -119,7 +134,7 @@ export default class FilmsModel extends Observable {
   onAddComment(filmId, newCommentIds) {
     const film = this.getById(filmId);
     film.comments = newCommentIds;
-    this._notify(UpdateType.FILM_UPDATE, filmId);
+    this._notify(UpdateType.COMMENT_ADD, filmId);
   }
 
   onDeleteComment(filmId, deletedCommentId) {
@@ -128,6 +143,6 @@ export default class FilmsModel extends Observable {
     if (index > -1) {
       film.comments.splice(index, 1);
     }
-    this._notify(UpdateType.FILM_UPDATE, filmId);
+    this._notify(UpdateType.COMMENT_DELETE, filmId);
   }
 }
