@@ -1,4 +1,4 @@
-import { Constants, ControlType } from '../constants/constants.module';
+import { ControlType, CssClasses, Settings } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import { truncate } from '../utils/common';
 import { formatMinutesToTime, formatStringToYear } from '../utils/film';
@@ -6,11 +6,11 @@ import { formatMinutesToTime, formatStringToYear } from '../utils/film';
 const getButtonTypeClass = (controlType) => {
   switch(controlType) {
     case ControlType.WATHCLIST:
-      return Constants.TO_WATCH_LIST_CARD_BTN_CLASS;
+      return CssClasses.TO_WATCH_LIST_CARD_BTN;
     case ControlType.WATCHED:
-      return Constants.MARK_WATCHED_CARD_BTN_CLASS;
+      return CssClasses.MARK_WATCHED_CARD_BTN;
     case ControlType.FAVORITE:
-      return Constants.TO_FAVORITE_CARD_BTN_CLASS;
+      return CssClasses.TO_FAVORITE_CARD_BTN;
     default:
       throw new ControlTypeNotSupported(controlType);
   }
@@ -32,7 +32,7 @@ export const getFilmCardTemlate = (film, isDisabled) => {
         <span class="film-card__genre">${genre[0]}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${truncate(description, Constants.MAX_FILM_CARD_DESCRIPTION_LENGTH)}</p>
+      <p class="film-card__description">${truncate(description, Settings.MAX_FILM_CARD_DESCRIPTION_LENGTH)}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">

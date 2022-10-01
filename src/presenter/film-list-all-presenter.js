@@ -1,5 +1,5 @@
 import Batcher from '../utils/batcher';
-import { Constants, FilterType } from '../constants/constants.module';
+import { Constants, EventTypes, FilterType, Settings } from '../constants/constants.module';
 import { remove, render, RenderPosition } from '../framework/render';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import AbstractFilmListPresenter from './abstract-film-list-presenter';
@@ -38,7 +38,7 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
   _getFilms() {
     const filterType = this._filtersModel.getFilterType();
     const sortType = this.#sortsModel.getSortType();
-    this.#batcher = new Batcher(this._filmsModel.getFilms(filterType, sortType), Constants.FILMS_BATCH_SIZE);
+    this.#batcher = new Batcher(this._filmsModel.getFilms(filterType, sortType), Settings.FILMS_BATCH_SIZE);
     return this.#batcher.isAny() ? this.#batcher.nextBatch() : [];
   }
 
@@ -82,7 +82,7 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
 
   #hideShowMoreButton() {
     remove(this.#showMoreButtonView);
-    this.#showMoreButtonView.element.removeEventListener(Constants.CLICK_EVENT_TYPE, this.#onShowMoreClick);
+    this.#showMoreButtonView.element.removeEventListener(EventTypes.CLICK, this.#onShowMoreClick);
   }
 
   #onFiltersModelUpdate = () => {

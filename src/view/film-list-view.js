@@ -1,4 +1,4 @@
-import { Constants, ControlType } from '../constants/constants.module';
+import { Constants, ControlType, CssClasses, EventTypes, Tags } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getFilmListTemplate } from '../template/film-list-template';
 import { getFilmId } from '../utils/film';
@@ -34,7 +34,7 @@ export default class FilmListView extends AbstractView {
     this._callback.posterClick = posterClick;
     this._callback.controlButtonClick = controlButtonClick;
 
-    this.cardListContainer.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
+    this.cardListContainer.addEventListener(EventTypes.CLICK, this.#onClickHandler);
   };
 
   #onClickHandler = (evt) => {
@@ -45,26 +45,26 @@ export default class FilmListView extends AbstractView {
       return;
     }
 
-    if (evt.target.tagName === Constants.IMG_TAG) {
+    if (evt.target.tagName === Tags.IMG) {
       this._callback.posterClick(filmId);
       return;
     }
 
-    if (evt.target.tagName !== Constants.BUTTON_TAG) {
+    if (evt.target.tagName !== Tags.BUTTON) {
       return;
     }
 
-    if (evt.target.classList.contains(Constants.TO_FAVORITE_CARD_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.TO_FAVORITE_CARD_BTN)) {
       this._callback.controlButtonClick(ControlType.FAVORITE, filmId);
       return;
     }
 
-    if (evt.target.classList.contains(Constants.TO_WATCH_LIST_CARD_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.TO_WATCH_LIST_CARD_BTN)) {
       this._callback.controlButtonClick(ControlType.WATHCLIST, filmId);
       return;
     }
 
-    if (evt.target.classList.contains(Constants.MARK_WATCHED_CARD_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.MARK_WATCHED_CARD_BTN)) {
       this._callback.controlButtonClick(ControlType.WATCHED, filmId);
     }
   };

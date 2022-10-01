@@ -1,4 +1,4 @@
-import { Constants } from '../constants/constants.module';
+import { CssSelectors, EventTypes } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getFiltersTemplate } from '../template/filters-template';
 
@@ -22,12 +22,12 @@ export default class FiltersView extends AbstractView {
 
   setFilterChangedHandler(callback) {
     this._callback.filterChanged = callback;
-    this.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onFilterChangedHandler);
+    this.element.addEventListener(EventTypes.CLICK, this.#onFilterChangedHandler);
   }
 
   #onFilterChangedHandler = (evt) => {
     evt.preventDefault();
-    const link = evt.target.closest(Constants.FILTER_LINK_SELECTOR);
+    const link = evt.target.closest(CssSelectors.FILTER_LINK);
     if (!link) {
       return;
     }

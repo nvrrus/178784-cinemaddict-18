@@ -1,4 +1,4 @@
-import { Constants } from '../constants/constants.module';
+import { CssSelectors, Settings } from '../constants/constants.module';
 import { remove, render } from '../framework/render';
 import ErrorAlertView from '../view/error-alert-view';
 
@@ -16,7 +16,7 @@ class ErrorAlertPresenter {
       return ErrorAlertPresenter.#instance;
     }
     ErrorAlertPresenter.#instance = this;
-    this.#container = document.querySelector(Constants.BODY_SELECTOR);
+    this.#container = document.querySelector(CssSelectors.BODY);
   }
 
   /**
@@ -36,7 +36,7 @@ class ErrorAlertPresenter {
     setTimeout(() => {
       remove(this.#view);
       this.#view = null;
-    }, Constants.ERROR_ALERT_TIMEOUT);
+    }, Settings.ERROR_ALERT_TIMEOUT);
   }
 }
 

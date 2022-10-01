@@ -1,4 +1,4 @@
-import { Constants } from '../constants/constants.module';
+import { CssSelectors, EventTypes } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getFilmCardTemlate } from '../template/film-card-temlate';
 
@@ -18,8 +18,8 @@ export default class FilmCardView extends AbstractView {
 
   setPosterClickHandler(callback) {
     this._callback.click = callback;
-    this.element.querySelector(Constants.FILM_POSTER_SELECTOR)
-      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onClickHandler);
+    this.element.querySelector(CssSelectors.FILM_POSTER)
+      .addEventListener(EventTypes.CLICK, this.#onClickHandler);
   }
 
   #onClickHandler = (evt) => {

@@ -1,4 +1,4 @@
-import { Constants, KeysPressType, KeyType } from '../constants/constants.module';
+import { EventTypes, KeysPressType, KeyType } from '../constants/constants.module';
 import Observable from '../framework/observable';
 
 class KeysPressObserver extends Observable{
@@ -11,8 +11,8 @@ class KeysPressObserver extends Observable{
       return KeysPressObserver.#instance;
     }
     KeysPressObserver.#instance = this;
-    document.addEventListener(Constants.KEYDOWN_EVENT_TYPE, this.#onKeyDownHandler);
-    document.addEventListener(Constants.KEYUP_EVENT_TYPE, this.#onKeyUpHandler);
+    document.addEventListener(EventTypes.KEYDOWN, this.#onKeyDownHandler);
+    document.addEventListener(EventTypes.KEYUP, this.#onKeyUpHandler);
   }
 
   /**

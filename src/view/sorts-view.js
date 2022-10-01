@@ -1,4 +1,4 @@
-import { Constants, SortType } from '../constants/constants.module';
+import { EventTypes, SortType, Tags } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 import { getSortTemplate } from '../template/sorts-temlate';
 
@@ -17,12 +17,12 @@ export default class SortsView extends AbstractView {
 
   setSortChangeHandler(collback) {
     this._callback.sortTypeChange = collback;
-    this.element.addEventListener(Constants.CLICK_EVENT_TYPE, this.#onSortTypeChanged);
+    this.element.addEventListener(EventTypes.CLICK, this.#onSortTypeChanged);
   }
 
   #onSortTypeChanged = (evt) => {
     evt.preventDefault();
-    if (evt.target.tagName !== Constants.LINK_TAG) {
+    if (evt.target.tagName !== Tags.LINK) {
       return;
     }
     const sortType = evt.target.dataset?.id;

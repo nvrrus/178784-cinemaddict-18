@@ -92,10 +92,6 @@ export default class FilmsModel extends Observable {
     }
   };
 
-  isEmpty() {
-    return !this.#allFilms || this.#allFilms.length === 0;
-  }
-
   #adaptToApi(film) {
     const snakeCase = CaseHelper.objectToSnake(film);
     const adaptedFilm = {

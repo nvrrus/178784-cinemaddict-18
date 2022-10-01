@@ -1,4 +1,4 @@
-import { Constants, ControlType, KeysPressType } from '../constants/constants.module';
+import { Constants, ControlType, CssClasses, CssSelectors, EventTypes, KeysPressType, Tags } from '../constants/constants.module';
 import WrappedAbstractStatefulView from '../framework-wrapper/view/wrapped-abstract-stateful-view';
 import { getPopupTemplate } from '../template/popup-template';
 import KeysPressObserver from '../utils/keys-press-observer';
@@ -18,12 +18,12 @@ export default class PopupView extends WrappedAbstractStatefulView {
     };
   }
 
-  #bodyElement = document.querySelector(Constants.BODY_SELECTOR);
+  #bodyElement = document.querySelector(CssSelectors.BODY);
 
   constructor(film, filmComments) {
     super();
     this._setState(PopupView.parseFilmDataToState(film, filmComments));
-    this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
+    this.#bodyElement.classList.add(CssClasses.HIDE_OVERFLOW);
     this.#setInnerHandlers();
     KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
   }
@@ -40,32 +40,32 @@ export default class PopupView extends WrappedAbstractStatefulView {
     this.setAddNewCommentHandler(this._callback.addNewComment);
 
     this.element.scrollTop = this._state.scrollTop;
-    this.#bodyElement.classList.add(Constants.HIDE_OVERFLOW_CLASS);
+    this.#bodyElement.classList.add(CssClasses.HIDE_OVERFLOW);
   };
 
   #setInnerHandlers() {
-    this.element.querySelector(Constants.POPUP_EMOJI_CONTAINER_SELECTOR)
+    this.element.querySelector(CssSelectors.POPUP_EMOJI_CONTAINER)
       .querySelectorAll(`input[type=radio][name=${Constants.POPUP_EMOJI_RADIO_NAME}]`)
       .forEach((radio) => {
-        radio.addEventListener(Constants.CHANGE_EVENT_TYPE, this.#onEmojiClickHandler);
+        radio.addEventListener(EventTypes.CHANGE, this.#onEmojiClickHandler);
       });
 
-    this.element.addEventListener(Constants.SCROLL_EVENT_TYPE, this.#onScrollHandler);
+    this.element.addEventListener(EventTypes.SCROLL, this.#onScrollHandler);
     this.element
-      .querySelector(Constants.COMMENT_INPUT_SELECTOR)
-      .addEventListener(Constants.INPUT_EVENT_TYPE, this.#onCommentInputHandler);
-    this.element.addEventListener(Constants.SCROLL_EVENT_TYPE, this.#onScrollHandler);
+      .querySelector(CssSelectors.COMMENT_INPUT)
+      .addEventListener(EventTypes.INPUT, this.#onCommentInputHandler);
+    this.element.addEventListener(EventTypes.SCROLL, this.#onScrollHandler);
   }
 
   removeElement() {
     super.removeElement();
-    this.#bodyElement.classList.remove(Constants.HIDE_OVERFLOW_CLASS);
+    this.#bodyElement.classList.remove(CssClasses.HIDE_OVERFLOW);
   }
 
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
-    this.element.querySelector(Constants.FILM_POPUP_CLOSE_BTN_SELECTOR)
-      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onCloseClickHandler);
+    this.element.querySelector(CssSelectors.FILM_POPUP_CLOSE_BTN)
+      .addEventListener(EventTypes.CLICK, this.#onCloseClickHandler);
   }
 
   #onCloseClickHandler = (evt) => {
@@ -75,28 +75,28 @@ export default class PopupView extends WrappedAbstractStatefulView {
 
   setControlButtonClickHandler(callback) {
     this._callback.controlButtonClick = callback;
-    this.element.querySelector(Constants.POPUP_CONTROLS_CONTAINER_SELECTOR)
-      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onControlButtonClickHandler);
+    this.element.querySelector(CssSelectors.POPUP_CONTROLS_CONTAINER)
+      .addEventListener(EventTypes.CLICK, this.#onControlButtonClickHandler);
   }
 
   #onControlButtonClickHandler = (evt) => {
     evt.preventDefault();
 
-    if (evt.target.tagName !== Constants.BUTTON_TAG) {
+    if (evt.target.tagName !== Tags.BUTTON) {
       return;
     }
 
-    if (evt.target.classList.contains(Constants.TO_FAVORITE_POPUP_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.TO_FAVORITE_POPUP_BTN)) {
       this._callback.controlButtonClick(ControlType.FAVORITE, this._state.id);
       return;
     }
 
-    if (evt.target.classList.contains(Constants.TO_WATCH_LIST_POPUP_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.TO_WATCH_LIST_POPUP_BTN)) {
       this._callback.controlButtonClick(ControlType.WATHCLIST, this._state.id);
       return;
     }
 
-    if (evt.target.classList.contains(Constants.MARK_WATCHED_POPUP_BTN_CLASS)) {
+    if (evt.target.classList.contains(CssClasses.MARK_WATCHED_POPUP_BTN)) {
       this._callback.controlButtonClick(ControlType.WATCHED, this._state.id);
     }
   };
@@ -104,14 +104,14 @@ export default class PopupView extends WrappedAbstractStatefulView {
   setDeleteCommentClick(callback) {
     this._callback.deleteCommentClick = callback;
     this.element
-      .querySelector(Constants.COMMENTS_LIST_SELECTOR)
-      .addEventListener(Constants.CLICK_EVENT_TYPE, this.#onDeleteCommentClickHandler);
+      .querySelector(CssSelectors.COMMENTS_LIST)
+      .addEventListener(EventTypes.CLICK, this.#onDeleteCommentClickHandler);
   }
 
   #onDeleteCommentClickHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.classList.contains(Constants.DELETE_COMMENT_BTN_CLASS)) {
-      const commentElement = evt.target.closest(Constants.COMMENT_SELECTOR);
+    if (evt.target.classList.contains(CssClasses.DELETE_COMMENT_BTN)) {
+      const commentElement = evt.target.closest(CssSelectors.COMMENT);
       this._callback.deleteCommentClick(commentElement.dataset?.id);
     }
   };

@@ -1,4 +1,4 @@
-import { Constants, ControlType, EmojiType } from '../constants/constants.module';
+import { Constants, ControlType, CssClasses, EmojiType } from '../constants/constants.module';
 import ControlTypeNotSupported from '../errors/control-type-not-supported';
 import { formatStringToDate, formatMinutesToTime, compareCommentsByDate } from '../utils/film';
 import PopupCommentView from '../view/popup-comment-view';
@@ -6,11 +6,11 @@ import PopupCommentView from '../view/popup-comment-view';
 const getButtonTypeClass = (controlType) => {
   switch (controlType) {
     case ControlType.WATHCLIST:
-      return Constants.TO_WATCH_LIST_POPUP_BTN_CLASS;
+      return CssClasses.TO_WATCH_LIST_POPUP_BTN;
     case ControlType.WATCHED:
-      return Constants.MARK_WATCHED_POPUP_BTN_CLASS;
+      return CssClasses.MARK_WATCHED_POPUP_BTN;
     case ControlType.FAVORITE:
-      return Constants.TO_FAVORITE_POPUP_BTN_CLASS;
+      return CssClasses.TO_FAVORITE_POPUP_BTN;
     default:
       throw new ControlTypeNotSupported(controlType);
   }

@@ -1,4 +1,4 @@
-import { Constants, FilterType } from '../constants/constants.module';
+import { CssSelectors, FilterType } from '../constants/constants.module';
 import { render } from '../framework/render';
 import CommentsModel from '../model/comments';
 import FilmsModel from '../model/films';
@@ -55,15 +55,15 @@ export default class MainPresenter {
    */
   constructor(filmsModel, commentsModel, filtersModel, sortsModel) {
     this.#filmsModel = filmsModel;
-    this.#mainContainer = document.querySelector(Constants.MAIN_SELECTOR);
-    this.#headerContainer = document.querySelector(Constants.HEADER_SELECTOR);
+    this.#mainContainer = document.querySelector(CssSelectors.MAIN);
+    this.#headerContainer = document.querySelector(CssSelectors.HEADER);
 
-    this.#footerContainer = document.querySelector(Constants.FOOTER_SELECTOR);
-    const filmsContainer = this.#mainContainer.querySelector(Constants.FILMS_SELECTOR);
+    this.#footerContainer = document.querySelector(CssSelectors.FOOTER);
+    const filmsContainer = this.#mainContainer.querySelector(CssSelectors.FILMS);
 
     this.#profilePresenter = new ProfilePresenter(this.#headerContainer, filmsModel);
     this.#filtersPresenter = new FiltersPresenter(this.#mainContainer, filmsModel, filtersModel);
-    this.#sortsPresenter = new SortsPresenter(sortsModel, filmsModel);
+    this.#sortsPresenter = new SortsPresenter(filmsContainer, sortsModel, filtersModel, filmsModel);
     this.#filmsLoaderPresenter = new FilmsLoadingPresenter(filmsContainer, filmsModel);
 
     const filmPopupPresenter = new PopupPresenter(filmsModel, commentsModel, this.#footerContainer);
@@ -77,8 +77,7 @@ export default class MainPresenter {
 
     this.#profilePresenter.init();
     this.#filtersPresenter.init();
-    const filtersContainer = this.#mainContainer.querySelector(Constants.FILTERS_CONTAINER_SELECTOR);
-    this.#sortsPresenter.init(filtersContainer);
+    this.#sortsPresenter.init();
     this.#filmListAllPresenter.init();
     this.#filmListTopRatedPresenter.init();
     this.#filmListMostCommentedPresenter.init();
