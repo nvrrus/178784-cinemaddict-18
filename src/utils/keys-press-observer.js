@@ -15,13 +15,6 @@ class KeysPressObserver extends Observable{
     document.addEventListener(EventTypes.KEYUP, this.#onKeyUpHandler);
   }
 
-  /**
-   * @returns {KeysPressObserver}
-   */
-  static getInstance() {
-    return KeysPressObserver.#instance;
-  }
-
   #onKeyDownHandler = (evt) => {
     this.#keyPressed[evt.key] = true;
     if (this.#keyPressed[KeyType.ESCAPE]) {
@@ -35,6 +28,13 @@ class KeysPressObserver extends Observable{
   #onKeyUpHandler = (evt) => {
     delete this.#keyPressed[evt.key];
   };
+
+  /**
+   * @returns {KeysPressObserver}
+   */
+  static getInstance() {
+    return KeysPressObserver.#instance;
+  }
 }
 
 // eslint-disable-next-line no-unused-vars -- Init singletone

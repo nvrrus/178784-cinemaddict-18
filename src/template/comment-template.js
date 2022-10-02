@@ -1,5 +1,5 @@
 import he from 'he';
-import { formatStringToDateAndTime, getEmojiUrl } from '../utils/film';
+import { formatStringHumanizeDuration, getEmojiUrl } from '../utils/film';
 
 export const getCommentTemplate = (commentObj, isDeleting) => {
   const { emotion, comment, author, date, id } = commentObj;
@@ -11,7 +11,7 @@ export const getCommentTemplate = (commentObj, isDeleting) => {
     <p class="film-details__comment-text">${comment ? he.encode(comment) : ''}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${formatStringToDateAndTime(date)}</span>
+      <span class="film-details__comment-day">${formatStringHumanizeDuration(date)}</span>
       <button class="film-details__comment-delete" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete'}</button>
     </p>
   </div>

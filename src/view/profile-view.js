@@ -1,3 +1,4 @@
+import { Settings } from '../constants/constants.module';
 import AbstractView from '../framework/view/abstract-view';
 
 export default class ProfileView extends AbstractView {
@@ -20,10 +21,10 @@ export default class ProfileView extends AbstractView {
       return '';
     }
     let profileName;
-    if (this.#watchedCount <= 10) {
+    if (this.#watchedCount < Settings.FUN_FILMS_COUNT) {
       profileName = 'Novice';
     }
-    else if (this.#watchedCount <= 20) {
+    else if (this.#watchedCount < Settings.MOVIE_BUFF_FILMS_COUNT) {
       profileName = 'Fan';
     }
     else {

@@ -4,20 +4,6 @@ import { getPopupTemplate } from '../template/popup-template';
 import KeysPressObserver from '../utils/keys-press-observer';
 
 export default class PopupView extends WrappedAbstractStatefulView {
-  static parseFilmDataToState(film, filmComments) {
-    return { ...film, filmComments: filmComments };
-  }
-
-  static parseNewCommentFromState(state) {
-    if (!state.newComment || !state.commentEmoji) {
-      return null;
-    }
-    return {
-      comment: state.newComment,
-      emotion: state.commentEmoji
-    };
-  }
-
   #bodyElement = document.querySelector(CssSelectors.BODY);
 
   constructor(film, filmComments) {
@@ -43,6 +29,34 @@ export default class PopupView extends WrappedAbstractStatefulView {
     this.#bodyElement.classList.add(CssClasses.HIDE_OVERFLOW);
   };
 
+  removeElement() {
+    super.removeElement();
+    this.#bodyElement.classList.remove(CssClasses.HIDE_OVERFLOW);
+  }
+
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.element.querySelector(CssSelectors.FILM_POPUP_CLOSE_BTN)
+      .addEventListener(EventTypes.CLICK, this.#onCloseClickHandler);
+  }
+
+  setControlButtonClickHandler(callback) {
+    this._callback.controlButtonClick = callback;
+    this.element.querySelector(CssSelectors.POPUP_CONTROLS_CONTAINER)
+      .addEventListener(EventTypes.CLICK, this.#onControlButtonClickHandler);
+  }
+
+  setDeleteCommentClick(callback) {
+    this._callback.deleteCommentClick = callback;
+    this.element
+      .querySelector(CssSelectors.COMMENTS_LIST)
+      .addEventListener(EventTypes.CLICK, this.#onDeleteCommentClickHandler);
+  }
+
+  setAddNewCommentHandler(callback) {
+    this._callback.addNewComment = callback;
+  }
+
   #setInnerHandlers() {
     this.element.querySelector(CssSelectors.POPUP_EMOJI_CONTAINER)
       .querySelectorAll(`input[type=radio][name=${Constants.POPUP_EMOJI_RADIO_NAME}]`)
@@ -57,27 +71,10 @@ export default class PopupView extends WrappedAbstractStatefulView {
     this.element.addEventListener(EventTypes.SCROLL, this.#onScrollHandler);
   }
 
-  removeElement() {
-    super.removeElement();
-    this.#bodyElement.classList.remove(CssClasses.HIDE_OVERFLOW);
-  }
-
-  setCloseClickHandler(callback) {
-    this._callback.closeClick = callback;
-    this.element.querySelector(CssSelectors.FILM_POPUP_CLOSE_BTN)
-      .addEventListener(EventTypes.CLICK, this.#onCloseClickHandler);
-  }
-
   #onCloseClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closeClick(evt);
   };
-
-  setControlButtonClickHandler(callback) {
-    this._callback.controlButtonClick = callback;
-    this.element.querySelector(CssSelectors.POPUP_CONTROLS_CONTAINER)
-      .addEventListener(EventTypes.CLICK, this.#onControlButtonClickHandler);
-  }
 
   #onControlButtonClickHandler = (evt) => {
     evt.preventDefault();
@@ -100,13 +97,6 @@ export default class PopupView extends WrappedAbstractStatefulView {
       this._callback.controlButtonClick(ControlType.WATCHED, this._state.id);
     }
   };
-
-  setDeleteCommentClick(callback) {
-    this._callback.deleteCommentClick = callback;
-    this.element
-      .querySelector(CssSelectors.COMMENTS_LIST)
-      .addEventListener(EventTypes.CLICK, this.#onDeleteCommentClickHandler);
-  }
 
   #onDeleteCommentClickHandler = (evt) => {
     evt.preventDefault();
@@ -139,10 +129,6 @@ export default class PopupView extends WrappedAbstractStatefulView {
     });
   };
 
-  setAddNewCommentHandler(callback) {
-    this._callback.addNewComment = callback;
-  }
-
   #onKeyPressed = (keyPressType) => {
     if (keyPressType === KeysPressType.CONTROL_ENTER) {
       const newComment = PopupView.parseNewCommentFromState(this._state);
@@ -151,4 +137,18 @@ export default class PopupView extends WrappedAbstractStatefulView {
       }
     }
   };
+
+  static parseFilmDataToState(film, filmComments) {
+    return { ...film, filmComments: filmComments };
+  }
+
+  static parseNewCommentFromState(state) {
+    if (!state.newComment || !state.commentEmoji) {
+      return null;
+    }
+    return {
+      comment: state.newComment,
+      emotion: state.commentEmoji
+    };
+  }
 }

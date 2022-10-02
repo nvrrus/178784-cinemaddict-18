@@ -31,7 +31,7 @@ export default class FiltersView extends AbstractView {
     if (!link) {
       return;
     }
-    const clickedFilterType = evt.target.dataset?.type;
+    const clickedFilterType = link.dataset?.type;
     if (!clickedFilterType) {
       throw new Error('Expected data attribute type in filter link');
     }

@@ -5,6 +5,9 @@ export const Settings = {
   FILMS_BATCH_SIZE: 5,
   ERROR_ALERT_TIMEOUT: 3000,
   MAX_FILM_CARD_DESCRIPTION_LENGTH: 139,
+  FUN_FILMS_COUNT: 11,
+  MOVIE_BUFF_FILMS_COUNT: 21,
+
 };
 
 export const CssSelectors = {
@@ -68,6 +71,7 @@ export const Constants = {
 
   FILM_ID_DATASET_KEY: 'id',
   ID_DATA_ATTRIBUTE: 'data-id',
+  NOW: 'now'
 };
 
 export const ControlType = {

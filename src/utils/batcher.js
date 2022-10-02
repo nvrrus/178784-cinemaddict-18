@@ -5,6 +5,7 @@ export default class Batcher {
   #batchSize;
   #batchesCount;
   #nextBatchIndex = 0;
+
   constructor(items, batchSize) {
     if (!items) {
       throw new Error('Items is undefined');

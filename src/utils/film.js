@@ -8,7 +8,13 @@ dayjs.extend(relativeTime);
 
 const getEmojiUrl = (emotion) => `./images/emoji/${emotion}.png`;
 
-const formatStringToDateAndTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
+const formatStringHumanizeDuration = (date) => {
+  if (dayjs(date).diff(dayjs()) >= 0) {
+    return Constants.NOW;
+  }
+  return dayjs(date).fromNow();
+};
+
 const formatStringToDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const formatStringToYear = (date) => dayjs(date).format('YYYY');
 
@@ -31,7 +37,7 @@ const getFilmId = (targetElement) => {
 };
 
 export {
-  getEmojiUrl, formatStringToDateAndTime, formatStringToDate, formatStringToYear,
+  getEmojiUrl, formatStringHumanizeDuration, formatStringToDate, formatStringToYear,
   formatMinutesToTime, getDateSeconds,
   compareCommentsByDate, compareFilmsByRatingDesc, compareFilmsByCommentsCountDesc,
   compareFilmsByReleaseDateDesc, getFilmId

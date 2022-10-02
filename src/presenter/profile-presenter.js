@@ -35,8 +35,7 @@ export default class ProfilePresenter {
     this.#profileView = newView;
   }
 
-  // eslint-disable-next-line no-unused-vars -- not used in this callback
-  #onFilmUpdated = (updateType, filmId) => {
+  #onFilmUpdated = (updateType) => {
     if (updateType === UpdateType.FILM_UPDATE) {
       this.init();
     }
