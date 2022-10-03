@@ -1,5 +1,5 @@
 import { KeysPressType, UiBlockerTimeLimit } from '../constants/constants.module';
-import { remove, render, replace } from '../framework/render';
+import { remove, render } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 import CommentsModel from '../model/comments';
