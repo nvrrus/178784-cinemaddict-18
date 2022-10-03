@@ -42,8 +42,8 @@ export default class PopupPresenter {
     if (film && comments) {
       const newView = new PopupView(film, comments);
       if (this.#popupView) {
-        replace(newView, this.#popupView);
-        this.#popupView.removeElement();
+        remove(this.#popupView);
+        render(newView, this.#footerElement);
       }
       else {
         render(newView, this.#footerElement);
