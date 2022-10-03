@@ -11,7 +11,6 @@ export default class ShowMoreButtonView extends AbstractView {
     this.element.addEventListener(EventTypes.CLICK, this.#onClickHandler);
   }
 
-
   #onClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click(evt);

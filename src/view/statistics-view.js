@@ -11,7 +11,7 @@ export default class StatisticsView extends AbstractView {
   get template() {
     const formated = new Intl.NumberFormat().format(this.#moviesCount);
     return `<section class="footer__statistics">
-    <p>${formated} movies inside</p>
-  </section>`;
+      <p>${formated} movies inside</p>
+    </section>`;
   }
 }

@@ -36,7 +36,6 @@ export default class FiltersPresenter {
     }
     this.#filtersView = newFiltersView;
     this.#filtersView.setFilterChangedHandler(this.#onFilterChange);
-
   };
 
   #onFilterChange = (filterType) => {

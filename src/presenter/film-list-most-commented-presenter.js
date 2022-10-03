@@ -10,16 +10,6 @@ export default class FilmListMostCommentedPresenter extends AbstractFilmListPres
     this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
-  #onFilmsModelUpdate = (updateType, filmId) => {
-    if (updateType === UpdateType.COMMENT_ADD ||
-        updateType === UpdateType.COMMENT_DELETE) {
-      this.init();
-    }
-    else {
-      this._updateFilmCard(filmId);
-    }
-  };
-
   _getFilms() {
     return this._filmsModel.getFilms(FilterType.ALL)
       .sort(compareFilmsByCommentsCountDesc)
@@ -29,4 +19,14 @@ export default class FilmListMostCommentedPresenter extends AbstractFilmListPres
   _getListTitle() {
     return Constants.MOST_COMMENTED_FILM_LIST_TITLE;
   }
+
+  #onFilmsModelUpdate = (updateType, filmId) => {
+    if (updateType === UpdateType.COMMENT_ADD ||
+        updateType === UpdateType.COMMENT_DELETE) {
+      this.init();
+    }
+    else {
+      this._updateFilmCard(filmId);
+    }
+  };
 }

@@ -5,6 +5,7 @@ import { getFilmCardTemlate } from '../template/film-card-temlate';
 export default class FilmCardView extends AbstractView {
   #film;
   #isDisabled;
+
   constructor(film, isDisabled) {
     super();
     this.#film = film;

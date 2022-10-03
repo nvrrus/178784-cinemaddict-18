@@ -4,6 +4,7 @@ import { getCommentTemplate } from '../template/comment-template';
 export default class PopupCommentView extends AbstractView {
   #comment;
   #isDeleting;
+
   constructor(comment, isDeleting) {
     super();
     this.#comment = comment;

@@ -37,6 +37,5 @@ class KeysPressObserver extends Observable{
   }
 }
 
-// eslint-disable-next-line no-unused-vars -- Init singletone
-const keyPressObserver = new KeysPressObserver();
+new KeysPressObserver();
 export default KeysPressObserver;

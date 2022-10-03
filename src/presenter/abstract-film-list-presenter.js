@@ -8,8 +8,6 @@ import FiltersPresenter from './filters-presenter';
 import ErrorAlertPresenter from './error-alert-presenter';
 
 export default class AbstractFilmListPresenter {
-  #filmsContainer;
-
   _isExtra = false;
   _renderPlace = RenderPosition.BEFOREEND;
 
@@ -30,6 +28,8 @@ export default class AbstractFilmListPresenter {
 
   #filmViewByFilmIds = new Map();
 
+  #filmsContainer;
+
   /**
    *
    * @param {FilmsModel} filmsModel
@@ -48,20 +48,6 @@ export default class AbstractFilmListPresenter {
     this.#filmPopupPresenter = filmPopupPresenter;
     this.#filmsContainer = filmsContainer;
   }
-
-  init = () => {
-    if (this._filmListView) {
-      this.#destroy();
-    }
-
-    const films = this._getFilms();
-    if (films?.length > 0) {
-      this._renderNotEmptyFilmList(films);
-    }
-    else {
-      this._renderEmptyFilmList();
-    }
-  };
 
   _getListTitle() {
     return null;
@@ -92,6 +78,33 @@ export default class AbstractFilmListPresenter {
     films.forEach((film) => this.#filmViewByFilmIds.set(film.id, this.#renderFilmCard(film)));
   }
 
+  _updateFilmCard(filmId, isDisabled = false) {
+    if (!this.#filmViewByFilmIds.has(filmId)) {
+      return;
+    }
+    const film = this._filmsModel.getById(filmId);
+    const newFilmView = new FilmCardView(film, isDisabled);
+    const oldFilmView = this.#filmViewByFilmIds.get(film.id);
+
+    replace(newFilmView, oldFilmView);
+    oldFilmView.removeElement();
+    this.#filmViewByFilmIds.set(film.id, newFilmView);
+  }
+
+  init = () => {
+    if (this._filmListView) {
+      this.#destroy();
+    }
+
+    const films = this._getFilms();
+    if (films?.length > 0) {
+      this._renderNotEmptyFilmList(films);
+    }
+    else {
+      this._renderEmptyFilmList();
+    }
+  };
+
   #renderFilmCard(film) {
     const filmView = new FilmCardView(film);
     render(filmView, this._filmListView.cardListContainer);
@@ -100,9 +113,6 @@ export default class AbstractFilmListPresenter {
 
   #onPosterClickAsync = async (filmId) => {
     const film = this._filmsModel.getById(filmId);
-    if (this.#filmPopupPresenter.isOpened()) {
-      return;
-    }
     await this.#filmPopupPresenter.init(film);
     this.#filmPopupPresenter.setControlButtonClickHandler(this.#onControlButtonClickAsync);
   };
@@ -126,20 +136,6 @@ export default class AbstractFilmListPresenter {
       }
     }
   };
-
-
-  _updateFilmCard(filmId, isDisabled = false) {
-    if (!this.#filmViewByFilmIds.has(filmId)) {
-      return;
-    }
-    const film = this._filmsModel.getById(filmId);
-    const newFilmView = new FilmCardView(film, isDisabled);
-    const oldFilmView = this.#filmViewByFilmIds.get(film.id);
-
-    replace(newFilmView, oldFilmView);
-    oldFilmView.removeElement();
-    this.#filmViewByFilmIds.set(film.id, newFilmView);
-  }
 
   #destroy() {
     remove(this._filmListView);

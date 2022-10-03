@@ -10,10 +10,6 @@ export default class FilmListTopRatedPresenter extends AbstractFilmListPresenter
     this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
-  #onFilmsModelUpdate = (updateType, filmId) => {
-    this._updateFilmCard(filmId);
-  };
-
   _getFilms() {
     return this._filmsModel.getFilms(FilterType.ALL)
       .sort(compareFilmsByRatingDesc)
@@ -24,4 +20,8 @@ export default class FilmListTopRatedPresenter extends AbstractFilmListPresenter
   _getListTitle() {
     return Constants.TOP_RATED_FILM_LIST_TITLE;
   }
+
+  #onFilmsModelUpdate = (updateType, filmId) => {
+    this._updateFilmCard(filmId);
+  };
 }

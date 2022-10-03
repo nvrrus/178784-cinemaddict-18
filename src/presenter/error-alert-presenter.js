@@ -19,13 +19,6 @@ class ErrorAlertPresenter {
     this.#container = document.querySelector(CssSelectors.BODY);
   }
 
-  /**
-   * @returns {ErrorAlertPresenter}
-   */
-  static getInstance() {
-    return ErrorAlertPresenter.#instance;
-  }
-
   showError(message) {
     if (this.#view) {
       return;
@@ -38,9 +31,15 @@ class ErrorAlertPresenter {
       this.#view = null;
     }, Settings.ERROR_ALERT_TIMEOUT);
   }
+
+  /**
+   * @returns {ErrorAlertPresenter}
+   */
+  static getInstance() {
+    return ErrorAlertPresenter.#instance;
+  }
 }
 
-// eslint-disable-next-line no-unused-vars -- Init singletone
-const errorAlertPresenter = new ErrorAlertPresenter();
+new ErrorAlertPresenter();
 export default ErrorAlertPresenter;
 

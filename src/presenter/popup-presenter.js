@@ -1,5 +1,5 @@
 import { KeysPressType, UiBlockerTimeLimit } from '../constants/constants.module';
-import { remove, render } from '../framework/render';
+import { remove, render, replace } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 import CommentsModel from '../model/comments';
@@ -36,29 +36,48 @@ export default class PopupPresenter {
   }
 
   init = async (film) => {
-    if (this.#popupView) {
-      return;
-    }
     this.#film = film;
     const comments = await this.#getComments(film.id);
 
     if (film && comments) {
-      this.#popupView = new PopupView(film, comments);
-      render(this.#popupView, this.#footerElement);
+      const newView = new PopupView(film, comments);
+      if (this.#popupView) {
+        replace(newView, this.#popupView);
+        this.#popupView.removeElement();
+      }
+      else {
+        render(newView, this.#footerElement);
+        this.#filmsModel.addObserver(this.#onFilmsModelUpdateAsync);
+        KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
+      }
+      this.#popupView = newView;
       this.#popupView.setCloseClickHandler(this.#onClickPopupCloseBtn);
       this.#popupView.setDeleteCommentClick(this.#onDeleteCommentAsync);
       this.#popupView.setAddNewCommentHandler(this.#onAddNewCommentAsync);
-
-      this.#filmsModel.addObserver(this.#onFilmsModelUpdateAsync);
-      KeysPressObserver.getInstance().addObserver(this.#onKeyPressed);
     }
   };
 
   isOpened() {
+    return !!this.#popupView;
+  }
+
+  setDisabled(isDisabled) {
     if (this.#popupView) {
-      return true;
+      this.#popupView.updateElement({isDisabled: isDisabled});
     }
-    return false;
+  }
+
+  setAboarting() {
+    if (this.#popupView) {
+      this.setDisabled(false);
+      this.#popupView.shake();
+    }
+  }
+
+  setControlButtonClickHandler(onControlButtonClick) {
+    if (this.#popupView) {
+      this.#popupView.setControlButtonClickHandler(onControlButtonClick);
+    }
   }
 
   #onClickPopupCloseBtn = () => {
@@ -114,12 +133,6 @@ export default class PopupPresenter {
     KeysPressObserver.getInstance().removeObserver(this.#onKeyPressed);
   };
 
-  setControlButtonClickHandler(onControlButtonClick) {
-    if (this.#popupView) {
-      this.#popupView.setControlButtonClickHandler(onControlButtonClick);
-    }
-  }
-
   #onFilmsModelUpdateAsync = async (updateType, updatedFilmId) => {
     if (updatedFilmId !== this.#film.id || !this.#popupView) {
       return;
@@ -141,18 +154,5 @@ export default class PopupPresenter {
       ErrorAlertPresenter.getInstance().showError('Не удалось получить комментарии');
     }
     return [];
-  }
-
-  setDisabled(isDisabled) {
-    if (this.#popupView) {
-      this.#popupView.updateElement({isDisabled: isDisabled});
-    }
-  }
-
-  setAboarting() {
-    if (this.#popupView) {
-      this.setDisabled(false);
-      this.#popupView.shake();
-    }
   }
 }

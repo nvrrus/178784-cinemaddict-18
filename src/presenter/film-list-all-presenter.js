@@ -26,15 +26,6 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
     this._filmsModel.addObserver(this.#onFilmsModelUpdate);
   }
 
-  #onFilmsModelUpdate = (updateType, filmId) => {
-    if (this._filtersModel.getFilterType() === FilterType.ALL) {
-      this._updateFilmCard(filmId);
-    }
-    else {
-      this.init();
-    }
-  };
-
   _getFilms() {
     const filterType = this._filtersModel.getFilterType();
     const sortType = this.#sortsModel.getSortType();
@@ -71,6 +62,15 @@ export default class FilmListAllPresenter extends AbstractFilmListPresenter {
   _renderEmptyFilmList() {
     super._renderEmptyFilmList(RenderPosition.AFTERBEGIN);
   }
+
+  #onFilmsModelUpdate = (updateType, filmId) => {
+    if (this._filtersModel.getFilterType() === FilterType.ALL) {
+      this._updateFilmCard(filmId);
+    }
+    else {
+      this.init();
+    }
+  };
 
   #onShowMoreClick = () => {
     const batch = this.#batcher.nextBatch();
